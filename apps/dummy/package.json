@@ -6,6 +6,9 @@
   "author": "example.com",
   "homepage": "https://electron-vite.org",
   "scripts": {
+    "format": "prettier --write .",
+    "lint": "eslint --cache .",
+    "madge": "madge --circular --extensions ts src/main src/common src/preload",
     "typecheck:node": "tsc --noEmit -p tsconfig.node.json --composite false",
     "typecheck:web": "vue-tsc --noEmit -p tsconfig.web.json --composite false",
     "typecheck": "pnpm run typecheck:node && pnpm run typecheck:web",
