@@ -2,6 +2,7 @@ import { app, shell, BrowserWindow, ipcMain } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
+import { sharedHello } from '@shared/root'
 
 function createWindow(): void {
   // Create the browser window.
@@ -25,6 +26,8 @@ function createWindow(): void {
     shell.openExternal(details.url)
     return { action: 'deny' }
   })
+
+  console.log(sharedHello('This is a test!'))
 
   // HMR for renderer base on electron-vite cli.
   // Load the remote URL for development or the local html file for production.
