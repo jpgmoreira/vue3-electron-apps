@@ -1,0 +1,6 @@
+{
+  "name": "vue3-electron-apps",
+  "version": "1.0.0",
+  "description": "Monorepo for study applications built with Vue3 and Electron",
+  "packageManager": "pnpm@10.27.0"
+}
