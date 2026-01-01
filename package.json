@@ -2,5 +2,11 @@
   "name": "vue3-electron-apps",
   "private": true,
   "description": "Monorepo for study applications built with Vue3 and Electron",
-  "packageManager": "pnpm@10.27.0"
+  "packageManager": "pnpm@10.27.0",
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "electron",
+      "esbuild"
+    ]
+  }
 }
