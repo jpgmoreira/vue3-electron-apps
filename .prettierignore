@@ -1,18 +1,15 @@
-# dependencies
 node_modules/
 
-# pnpm
 .pnpm-store/
 
-# build outputs
 dist/
 out/
+build/
 
-# logs
 *.log*
 
-# eslint
 .eslintcache
 
-# OS
 .DS_Store
+
+pnpm-lock.yaml
