@@ -1,0 +1,10 @@
+{
+  "name": "@apps/dummy",
+  "description": "Dummy app for testing shared content",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "dependencies": {
+    "@shared/root": "workspace:*"
+  }
+}
