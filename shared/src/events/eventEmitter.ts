@@ -2,7 +2,6 @@ type Listener = (...args: any[]) => void;
 
 /**
  * Singleton for emitting and listening to events.
- * Access via EventEmitter.instance
  */
 export class EventEmitter {
   static #instance: EventEmitter;
