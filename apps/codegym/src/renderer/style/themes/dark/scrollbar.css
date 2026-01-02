@@ -1,0 +1,7 @@
+/* - Scrollbar - */
+.theme-dark ::-webkit-scrollbar-thumb {
+  background-color: #8f8f8f;
+}
+.theme-dark ::-webkit-scrollbar-thumb:hover {
+  background-color: rgb(94, 94, 94);
+}

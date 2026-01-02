@@ -1,0 +1,106 @@
+/* ========================
+   TreeView - Dark Theme 
+   (by my old dear friend ChatGPT)
+   ======================== */
+
+.theme-dark .treeview {
+  background-color: #282828;
+}
+
+/* Caret Icon */
+.theme-dark .treeview .node-caret {
+  background-image: url('@renderer/assets/images/arrow-down.png');
+}
+
+/* Base Node */
+.theme-dark .treeview .node-input {
+  color: #dedede;
+  border-radius: 4px;
+  transition:
+    background 0.2s ease,
+    box-shadow 0.2s ease,
+    color 0.2s ease;
+}
+
+/* Hover (default state) */
+.theme-dark .treeview .node-input:not(.active):hover {
+  background-color: #454d57;
+}
+
+/* ========================
+     SELECTED NODE
+     ======================== */
+.theme-dark .treeview .node-input.selected {
+  background: #2f4261;
+  box-shadow: inset 0 0 0 2px #4da3ffcc;
+  color: #e7f1ff;
+  font-weight: 500;
+}
+
+/* Hover for selected */
+.theme-dark .treeview .node-input.selected:hover {
+  background: #2f4261;
+  box-shadow: inset 0 0 0 2px #69b8ffdd;
+  color: #ffffff;
+}
+
+/* ========================
+     ACTIVE NODE
+     ======================== */
+.theme-dark .treeview .node-input.active {
+  position: relative;
+  z-index: 1;
+  box-shadow:
+    0 0 0 3px #ffc660aa,
+    0 0 6px 2px #ffc66033;
+}
+
+/* Active + Selected */
+.theme-dark .treeview .node-input.active.selected {
+  z-index: 2;
+  box-shadow:
+    inset 0 0 0 2px #4da3ffcc,
+    /* selected */ 0 0 0 3px #ffc660aa,
+    /* active outline */ 0 0 8px 3px #ffc66033; /* glow */
+}
+
+/* ========================
+     STRUCTURE & MISC
+     ======================== */
+
+/* Indent line */
+.theme-dark .treeview .indent-span::after {
+  background-color: #606368;
+}
+
+/* Icons */
+.theme-dark .treeview .file-icon {
+  background-image: url('@renderer/assets/images/book.png');
+  width: 25px;
+  height: 25px;
+}
+
+/* Hint text */
+.theme-dark .treeview .files-hint {
+  color: #8e8e8e;
+}
+
+/* ========================
+     Selected Badge (contextual)
+     ======================== */
+.theme-dark .treeview .files-selected-badge {
+  background-color: #1e1e1e;
+  color: #e2e2e2;
+  border: 1px solid #2e2e2e;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.45);
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease;
+}
+
+/* Hover effect for badge */
+.theme-dark .treeview .files-selected-badge:hover {
+  background-color: #2a2d2f;
+  color: #fff;
+  border-color: #3a3d3f;
+}

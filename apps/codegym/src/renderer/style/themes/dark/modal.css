@@ -1,0 +1,15 @@
+/* Modal */
+
+.theme-dark .modal-container .modal {
+  background-color: #2d373f;
+  border: 1px solid #1b2125;
+}
+.theme-dark .modal-container .modal-header {
+  border-bottom: 1px solid #1b2125;
+}
+.theme-dark .modal-container .modal-footer {
+  border-top: 1px solid #1b2125;
+}
+.theme-dark .modal-container .backdrop {
+  background-color: #aaaaaa7c;
+}

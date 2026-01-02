@@ -1,0 +1,52 @@
+{
+  "appId": "com.codegym.app",
+  "icon": "build/icon",
+  "directories": {
+    "buildResources": "build"
+  },
+  "files": ["out/**/*"],
+  "win": {
+    "executableName": "codegym",
+    "target": "nsis"
+  },
+  "nsis": {
+    "artifactName": "${name}-${version}-setup.${ext}",
+    "shortcutName": "${productName}",
+    "uninstallDisplayName": "${productName}",
+    "createDesktopShortcut": true,
+    "oneClick": false,
+    "allowToChangeInstallationDirectory": true,
+    "perMachine": false,
+    "createStartMenuShortcut": true,
+    "installerIcon": "build/icon.ico",
+    "uninstallerIcon": "build/icon.ico",
+    "installerHeaderIcon": "build/icon.ico"
+  },
+  "mac": {
+    "entitlementsInherit": "build/entitlements.mac.plist",
+    "extendInfo": {
+      "NSCameraUsageDescription": "Application requests access to the device's camera.",
+      "NSMicrophoneUsageDescription": "Application requests access to the device's microphone.",
+      "NSDocumentsFolderUsageDescription": "Application requests access to the user's Documents folder.",
+      "NSDownloadsFolderUsageDescription": "Application requests access to the user's Downloads folder."
+    },
+    "notarize": false,
+    "category": "Education",
+    "target": ["dmg", "zip"]
+  },
+  "dmg": {
+    "artifactName": "${name}-${version}.${ext}"
+  },
+  "linux": {
+    "target": ["deb", "rpm"],
+    "category": "Education"
+  },
+  "appImage": {
+    "artifactName": "${name}-${version}.${ext}"
+  },
+  "npmRebuild": false,
+  "publish": {
+    "provider": "generic",
+    "url": "https://example.com/auto-updates"
+  }
+}

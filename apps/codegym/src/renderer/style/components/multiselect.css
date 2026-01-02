@@ -1,0 +1,32 @@
+/* Common styles to control the Multiselect component */
+
+.multiselect {
+  border-radius: 5px;
+}
+.multiselect .context-menu {
+  border-radius: 10px;
+}
+.multiselect .context-menu .option {
+  padding: 5px 10px;
+}
+.multiselect .badge {
+  font-size: 0.92rem;
+  line-height: 1.2rem;
+  border-radius: 5px;
+  padding: 2px 4px;
+}
+.multiselect .badge .close-button {
+  padding-left: 3px;
+  padding-right: 1px;
+  margin-left: 4px;
+  border-left-width: 1px;
+  border-radius: 0px;
+}
+.multiselect .badges-container {
+  padding: 8px;
+  padding-bottom: 4px;
+  gap: 4px;
+}
+.multiselect .badges-container:empty {
+  padding: 0;
+}

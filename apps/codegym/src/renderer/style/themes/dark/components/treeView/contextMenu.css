@@ -1,0 +1,34 @@
+/* Treeview context menu (Dark theme) */
+
+.theme-dark .treeview .context-menu {
+  background-color: #1e1e1e;
+  color: #e2e2e2;
+  border: 1px solid #2e2e2e;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.45);
+}
+
+.theme-dark .treeview .item.danger {
+  color: #ff5c5c;
+}
+
+.theme-dark .treeview .context-menu .item:hover {
+  background-color: #2a2d2f;
+  color: #fff;
+}
+
+.theme-dark .treeview .context-menu .item.danger:hover {
+  color: #ffffff;
+  background-color: #b93a3a;
+}
+
+.theme-dark .treeview .context-menu .item:active {
+  background-color: #3a3d3f;
+}
+
+.theme-dark .treeview .context-menu > div:not(:last-child) {
+  border-bottom: 1px solid #262626;
+}
+
+.theme-dark .treeview .context-menu .separator {
+  background-color: #3d3d3d;
+}

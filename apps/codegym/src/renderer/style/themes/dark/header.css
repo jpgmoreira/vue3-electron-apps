@@ -1,0 +1,15 @@
+/* Header */
+
+.theme-dark header {
+  background-color: #393d41;
+}
+
+.theme-dark header *,
+.theme-dark header *:hover {
+  color: #ccc;
+}
+
+.theme-dark header a:hover,
+.theme-dark header a.router-link-exact-active {
+  background-color: #51565e;
+}

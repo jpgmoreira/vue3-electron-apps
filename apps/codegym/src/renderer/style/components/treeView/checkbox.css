@@ -1,0 +1,46 @@
+/* Customizable treeview checkbox common styles */
+
+.theme-dark .treeview input[type='checkbox'] {
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  padding: 0;
+  border-radius: 4px;
+  position: relative;
+  transition: all 0.12s ease-in-out;
+}
+
+.theme-dark .treeview input[type='checkbox']:not(.cursor-not-allowed) {
+  cursor: pointer;
+}
+
+.theme-dark .treeview input[type='checkbox']:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.theme-dark .treeview input[type='checkbox']:checked::after {
+  content: '';
+  position: absolute;
+  left: 5px;
+  top: 1px;
+  transform: rotate(45deg);
+  width: 5px;
+  height: 10px;
+  border-width: 0 2px 2px 0;
+}
+
+.theme-dark .treeview input[type='checkbox']:focus {
+  outline: none;
+}
+
+.theme-dark .treeview input[type='checkbox'].indeterminate::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 2px;
+  width: 10px;
+  height: 2px;
+  transform: translateY(-50%);
+  border-radius: 1px;
+}

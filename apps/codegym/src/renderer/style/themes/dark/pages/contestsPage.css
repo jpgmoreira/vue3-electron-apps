@@ -1,0 +1,73 @@
+/* Contests page */
+
+.theme-dark .contests-page .header-section {
+  background-color: #282b30;
+  border: 1px solid #40444b;
+}
+
+.theme-dark .contests-page td,
+.theme-dark .contests-page th {
+  border: 1px solid #40444b;
+  background-color: #26292b;
+}
+
+.theme-dark .contests-page thead {
+  border-bottom: 2px solid #f1f1f1;
+}
+
+.theme-dark .contests-page textarea {
+  background-color: #373b41;
+}
+
+.theme-dark .contests-page td input,
+.theme-dark .contests-page td textarea {
+  background-color: #26292b;
+  color: #e8e8e8;
+}
+
+/* To-do flag: */
+.theme-dark .contests-page .problem-tr.todo input,
+.theme-dark .contests-page .problem-tr.todo textarea {
+  background-color: #3d3705;
+  border-color: #c9a312;
+  color: #f9e27d;
+  box-shadow: 0 0 6px rgba(255, 217, 77, 0.3);
+  transition:
+    background-color 0.25s,
+    box-shadow 0.25s;
+}
+
+.theme-dark .contests-page .problem-tr.todo input:focus,
+.theme-dark .contests-page .problem-tr.todo textarea:focus {
+  background-color: #4a4008;
+  box-shadow: 0 0 10px rgba(255, 217, 77, 0.5);
+}
+
+/* Solved flag: */
+.theme-dark .contests-page .problem-tr.solved input,
+.theme-dark .contests-page .problem-tr.solved textarea {
+  background-color: #053d1a;
+  border-color: #12c967;
+  color: #9df7c0;
+  box-shadow: 0 0 6px rgba(77, 255, 166, 0.25);
+  transition:
+    background-color 0.25s,
+    box-shadow 0.25s;
+}
+
+.theme-dark .contests-page .problem-tr.solved input:focus,
+.theme-dark .contests-page .problem-tr.solved textarea:focus {
+  background-color: #085428;
+  box-shadow: 0 0 10px rgba(77, 255, 166, 0.5);
+}
+
+/* To-do overrides Solved if both present */
+.theme-dark .contests-page .problem-tr.todo.solved input,
+.theme-dark .contests-page .problem-tr.todo.solved textarea,
+.theme-dark .contests-page .problem-tr.solved.todo input,
+.theme-dark .contests-page .problem-tr.solved.todo textarea {
+  background-color: #3d3705;
+  border-color: #c9a312;
+  color: #f9e27d;
+  box-shadow: 0 0 6px rgba(255, 217, 77, 0.4);
+}

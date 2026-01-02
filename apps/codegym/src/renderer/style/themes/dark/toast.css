@@ -1,0 +1,22 @@
+/* Toast */
+
+.theme-dark .toast-container.success {
+  color: #1d922f;
+  background-color: #c3e2c5;
+  border: 1px solid #1d922f;
+}
+.theme-dark .toast-container.error {
+  color: #cc000b;
+  background-color: #ffcdce;
+  border: 1px solid #cc000b;
+}
+.theme-dark .toast-container.warning {
+  color: #7c7917;
+  background-color: #fff829;
+  border: 1px solid #7c7917;
+}
+.theme-dark .toast-container.info {
+  color: #001de6;
+  background-color: #d5d8fd;
+  border: 1px solid #001de6;
+}

@@ -1,0 +1,17 @@
+/* Table */
+
+.theme-dark table {
+  background-color: #232627;
+}
+.theme-dark thead {
+  background-color: #232627;
+  box-shadow: 0 1px 0 0 white;
+}
+.theme-dark tbody tr {
+  border: 1px solid #373b3e;
+  border-left: none;
+  border-right: none;
+}
+.theme-dark tbody tr:not(.no-hover):hover {
+  background-color: #3f4344;
+}

@@ -1,0 +1,40 @@
+/* Customizable treeview context menu common styles */
+
+.theme-dark .treeview .context-menu {
+  border-radius: 8px;
+  min-width: 180px;
+  padding: 6px 0;
+  animation: fadeInContext 0.12s ease-out;
+  user-select: none;
+}
+
+.theme-dark .treeview .context-menu .item {
+  padding: 6px 14px;
+  font-size: 14px;
+  line-height: 1.4;
+  cursor: pointer;
+  transition:
+    background-color 0.12s ease,
+    color 0.12s ease;
+}
+
+.theme-dark .treeview .context-menu > div:not(:last-child) {
+  margin-bottom: 4px;
+  padding-bottom: 4px;
+}
+
+.theme-dark .treeview .context-menu .separator {
+  height: 1px;
+  margin: 4px 0;
+}
+
+@keyframes fadeInContext {
+  from {
+    opacity: 0;
+    transform: scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
