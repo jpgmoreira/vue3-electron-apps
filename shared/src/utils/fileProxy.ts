@@ -24,16 +24,20 @@ export class FileProxy<T extends JSONObject> {
   private filePath: string;
   private timer?: ReturnType<typeof setTimeout>;
   private writingPromise: Promise<void> | null = null;
+  private debounce = 500;
+  private indent = 0;
   private _target: T;
   private _proxy: T;
 
-  constructor(filePath: string, targetObject: T) {
+  constructor(filePath: string, targetObject: T, debounce = 500, indent = 2) {
     this.filePath = filePath;
+    this.debounce = debounce;
+    this.indent = indent;
     const dir = path.dirname(filePath);
     ensureDirExists(dir);
     if (!fs.existsSync(filePath)) {
       this._target = cloneDeep(targetObject);
-      fs.writeFileSync(filePath, JSON.stringify(this._target, null, INDENT));
+      fs.writeFileSync(filePath, JSON.stringify(this._target, null, this.indent));
     } else {
       this._target = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
     }
@@ -90,7 +94,7 @@ export class FileProxy<T extends JSONObject> {
       } else {
         this.writingPromise = this.writeFileAsync();
       }
-    }, DISK_FLUSH_DEBOUNCE);
+    }, this.debounce);
   }
 
   private async writeFileAsync() {
@@ -98,7 +102,7 @@ export class FileProxy<T extends JSONObject> {
     const dir = path.dirname(tmpPath);
     ensureDirExists(dir);
     try {
-      const data = JSON.stringify(this._target, null, INDENT);
+      const data = JSON.stringify(this._target, null, this.indent);
       // 1. Write to temp file:
       await fs.promises.writeFile(tmpPath, data, 'utf-8');
       // 2. Force write to disk (flush):
@@ -108,9 +112,9 @@ export class FileProxy<T extends JSONObject> {
       // 3. Atomically replace the old file:
       await fs.promises.rename(tmpPath, this.filePath);
       this.savedCount++;
-      console.log(`-- ${this.filePath} saved! ${this.savedCount}`);
+      console.log(`-- [fileProxy] ${this.filePath} saved! ${this.savedCount}`);
     } catch (err) {
-      console.error(`-- failed to save ${this.filePath}:`, err);
+      console.error(`-- [fileProxy] failed to save ${this.filePath}:`, err);
     } finally {
       // Clean up if a temp file was left behind:
       fs.promises.unlink(tmpPath).catch(() => {});
