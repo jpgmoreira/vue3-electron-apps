@@ -12,4 +12,9 @@ build/
 
 .DS_Store
 
+.vite
+electron.vite.config.*.mjs
+
+*trash*
+
 pnpm-lock.yaml

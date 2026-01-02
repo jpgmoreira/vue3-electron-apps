@@ -16,3 +16,10 @@ out/
 
 # OS
 .DS_Store
+
+# vite
+.vite
+electron.vite.config.*.mjs
+
+# trash
+*trash*

@@ -1,13 +1,5 @@
 notes
 codegym-data
-dist
-_trash
-node_modules
-out
-.eslintcache
-.vite
-.DS_Store
-*.log*
 src/scripts/*
 !src/scripts/*.py
-electron.vite.config.*.mjs
+
