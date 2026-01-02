@@ -1,5 +1,5 @@
 import { ensureDirExists } from './fileUtils';
-import type { JSONValue, JSONObject } from '@shared/types/json';
+import type { JSONValue, JSONObject } from '@interapp/types/json';
 import fs from 'fs';
 import util from 'util';
 import path from 'path';

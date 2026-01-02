@@ -13,7 +13,7 @@
     "paths": {
       "@main/*": ["./src/main/*"],
       "@common/*": ["./src/common/*"],
-      "@shared/*": ["../../shared/src/*"]
+      "@interapp/*": ["../../interapp/src/*"]
     }
   }
 }

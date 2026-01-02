@@ -8,7 +8,7 @@
       "@renderer/*": ["./src/renderer/*"],
       "@common/*": ["./src/common/*"],
       "@preload/*": ["./src/preload/*"],
-      "@shared/*": ["../../shared/src/*"]
+      "@interapp/*": ["../../interapp/src/*"]
     }
   }
 }
