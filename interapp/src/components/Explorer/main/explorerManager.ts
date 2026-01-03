@@ -1,15 +1,13 @@
-import { randomId } from '@common/utils/utils';
-import { DATA_DIR, TREE_PAGE_SIZE } from '../constants';
-import { FileProxy } from '../fileProxy';
-import { Links, Node, FileNode, DirNode, NodeType, HeadAndTail } from '@common/types/tree';
-import { ModifierKeys } from '@common/types/keys';
-import { TreeOperationResponseDTO } from '@common/dto/treeOperationResponseDTO';
-import { GenericResponseDTO } from '@common/dto/genericResponseDTO';
-import { ContestsManager } from './contestsManager';
-import path from 'path';
-import { ProfileManager } from './profileManager';
+import { randomId } from '@interapp/utils/utils';
+import { FileProxy } from '@interapp/utils/fileProxy';
+import { Links, Node, FileNode, DirNode, NodeType, HeadAndTail } from '../common/tree';
+import { ModifierKeys } from '@interapp/types/modifierKeys';
+import { TreeSnapshot } from '../common/treeSnapshot';
+import { GenericResponseDTO } from '@interapp/dto/genericResponseDTO';
+import fs from 'fs';
+import { setBit, clearBit } from '@interapp/utils/bitMask';
 
-// Contains a linked list of the base nodes of the tree.
+// Contains a linked list of the root nodes.
 type Root = Links & {
   nextDir: number; // Number of the next directory to be created.
   nextFile: number; // Number of the next file to be created.
@@ -20,21 +18,19 @@ type TreeData = {
   idToNode: Record<string, Node>; // Maps node ids to the node objects.
 };
 
-/**
- * Singleton for managing the treeview component operations.
- * Access via TreeManager.instance
- */
-export class TreeManager {
+type DeleteCallback = (node: Node) => Promise<void>;
+
+export class ExplorerManager {
   // -- Class configuration: ---
 
-  static #instance: TreeManager;
+  static #instance: ExplorerManager;
   private _proxy: FileProxy<TreeData> | null = null;
 
   private constructor() {}
 
-  public static get instance(): TreeManager {
+  public static get instance(): ExplorerManager {
     if (!this.#instance) {
-      this.#instance = new TreeManager();
+      this.#instance = new ExplorerManager();
     }
     return this.#instance;
   }
@@ -46,12 +42,25 @@ export class TreeManager {
     return this._proxy!.target;
   }
 
+  private readonly TREE_PAGE_SIZE = 300;
+  private readonly TREE_ITEM_HEIGHT = 28; // px.
+
   // --- Variables and structures: ---
 
   private nSelectedNodes = 0;
   private nSelectedFiles = 0;
+  private nFiles = 0;
   private nOpenDirs = 0;
   private expandedFlat: Node[] = []; // Entire tree flattened into an array.
+  private selectedNodes: string[] = [];
+
+  // --- Registered callbacks: ---
+
+  private deleteCallback: DeleteCallback = async (node: Node) => {};
+
+  public registerDeleteCallback(callback: DeleteCallback) {
+    this.deleteCallback = callback;
+  }
 
   // --- Setup methods: ---
 
@@ -67,11 +76,12 @@ export class TreeManager {
     };
   }
 
-  public loadTree(profileId: string) {
-    const filePath = path.join(DATA_DIR, 'profileData', profileId, 'tree.json');
+  public loadTree(filePath: string) {
+    if (!fs.existsSync(filePath)) {
+      throw new Error(`Tree file does not exist: ${filePath}`);
+    }
     this._proxy = new FileProxy(filePath, this.getEmptyTreeData());
     this.refresh(false);
-    this.clearHidden();
   }
 
   // --- Result and flattening: ---
@@ -83,6 +93,9 @@ export class TreeManager {
       nSubFiles = 0;
     while (curr) {
       array.push(curr);
+      if (curr.selected) {
+        this.selectedNodes.push(curr.id);
+      }
       if (curr.type === 'dir') {
         const dirHead = this.getHead(curr.dirs, false);
         const fileHead = this.getHead(curr.files, false);
@@ -98,6 +111,8 @@ export class TreeManager {
           curr.selected = !!curr.nDesc && curr.nDesc === curr.nSelDesc;
         }
         this.nOpenDirs += curr.open ? 1 : 0;
+      } else {
+        this.nFiles++;
       }
       curr.depth = depth;
       const sel = curr.selected ? 1 : 0;
@@ -111,42 +126,75 @@ export class TreeManager {
     return { nSub, nSubSel, nSubFiles };
   }
 
-  public buildResult(anchor: number): TreeOperationResponseDTO {
-    const visibleNodes: Node[] = [];
+  private getLastDirectChild(node: Node): Node | null {
+    if (node.type !== 'dir') return null;
+    const file = this.getTail(node.files, false);
+    const dir = this.getTail(node.dirs, false);
+    return file || dir || null;
+  }
+
+  private calculateUiDepths() {
+    const depthSet = new Set<string>();
+    let currDepth = 0;
+    for (const node of this.expandedFlat) {
+      node.ui.depths = currDepth;
+      if (depthSet.has(node.id)) {
+        currDepth = clearBit(currDepth, node.depth - 1);
+      }
+      // - Set current node last direct child status:
+      const parent = this.getParent(node, false);
+      if (parent) {
+        const parentLastDirectChild = this.getLastDirectChild(parent);
+        node.ui.isLastChild = node === parentLastDirectChild;
+      }
+      // - Find last direct child of node, and set it as limit in the set:
+      const lastDirectChild = this.getLastDirectChild(node);
+      if (lastDirectChild) {
+        depthSet.add(lastDirectChild.id);
+        currDepth = setBit(currDepth, node.depth);
+      }
+    }
+  }
+
+  public buildResult(scrollTop: number): TreeSnapshot {
+    const page: Node[] = [];
+    const tolerance = scrollTop - (this.TREE_PAGE_SIZE / 2) * this.TREE_ITEM_HEIGHT;
     let nSurfaceNodes = 0;
     for (let i = 0; i < this.expandedFlat.length; i++) {
       const node = this.expandedFlat[i];
-      if (!node.hidden) {
-        if (nSurfaceNodes >= anchor && visibleNodes.length < TREE_PAGE_SIZE) {
-          visibleNodes.push(node);
-        }
-        nSurfaceNodes++;
+      const currScroll = this.TREE_ITEM_HEIGHT * nSurfaceNodes;
+      node.ui.position = nSurfaceNodes;
+      if (currScroll >= tolerance && page.length < this.TREE_PAGE_SIZE) {
+        page.push(node);
       }
-      if (node.type === 'dir' && (node.hidden || !node.open)) {
+      nSurfaceNodes++;
+      if (node.type === 'dir' && !node.open) {
         i += node.nDesc;
       }
     }
-    if (nSurfaceNodes && !visibleNodes.length) {
-      // If current anchor is larger than nSurfaceNodes.
-      return this.buildResult(Math.max(0, nSurfaceNodes - TREE_PAGE_SIZE));
+    if (nSurfaceNodes && !page.length) {
+      // If current scrollTop is larger than the size of the tree:
+      const fakeScrollTop = (nSurfaceNodes - 1) * this.TREE_ITEM_HEIGHT;
+      return this.buildResult(fakeScrollTop);
     }
     return {
-      nSelectedNodes: this.nSelectedNodes,
-      nSelectedFiles: this.nSelectedFiles,
-      nTotalNodes: this.expandedFlat.length,
-      nOpenDirs: this.nOpenDirs,
-      anchor,
-      nSurfaceNodes,
-      visibleNodes,
+      selectedNodes: this.nSelectedNodes,
+      selectedFiles: this.nSelectedFiles,
+      totalNodes: this.expandedFlat.length,
+      openDirs: this.nOpenDirs,
+      surfaceNodes: nSurfaceNodes,
+      page,
     };
   }
 
   /**
    * Refreshes:
    *  - this.expandedFlat;
+   *  - this.selectedNotes;
    *  - this.nSelectedNodes;
    *  - this.nSelectedFiles;
    *  - this.nOpenDirs;
+   *  - this.nFiles;
    * For every node, updates:
    *  - depth;
    *  - nDesc;
@@ -156,15 +204,25 @@ export class TreeManager {
   private refresh(flush: boolean) {
     const dirHead = this.getHead(this.target.root.dirs, false);
     const fileHead = this.getHead(this.target.root.files, false);
-    this.expandedFlat.length = 0;
+    this.selectedNodes = [];
+    this.expandedFlat = [];
     this.nSelectedNodes = 0;
     this.nSelectedFiles = 0;
     this.nOpenDirs = 0;
+    this.nFiles = 0;
     this.flatten(dirHead, 0, this.expandedFlat);
     this.flatten(fileHead, 0, this.expandedFlat);
     if (flush) {
       this._proxy!.queueWrite();
     }
+  }
+
+  public getSelectedNodes(): string[] {
+    return [...this.selectedNodes];
+  }
+
+  public getNFiles(): number {
+    return this.nFiles;
   }
 
   // --- Helpers: ---
@@ -209,7 +267,6 @@ export class TreeManager {
       depth: 0,
       open: false,
       selected: false,
-      hidden: false,
       parentId,
       nextId: null,
       prevId: null,
@@ -224,24 +281,30 @@ export class TreeManager {
       nDesc: 0,
       nSelDesc: 0,
       nFileDesc: 0,
+      ui: {
+        position: 0,
+        isLastChild: false,
+        depths: 0,
+      },
     } as const;
   }
 
   private createFileNode(prefix: string, parentId: string | null): FileNode {
     const text = `${prefix} ${this.target.root.nextFile}`;
-    const contestId = ContestsManager.instance.createContest(text);
     return {
       id: randomId(),
       type: 'file',
       text,
       depth: 0,
       selected: false,
-      hidden: false,
       parentId,
       nextId: null,
       prevId: null,
-      contestId,
-      active: false,
+      ui: {
+        position: 0,
+        isLastChild: false,
+        depths: 0,
+      },
     } as const;
   }
 
@@ -296,7 +359,7 @@ export class TreeManager {
     return newNode;
   }
 
-  public createNode(type: NodeType, prefix: string, parentId: string | null) {
+  public createNode(type: NodeType, prefix: string, parentId: string | null): Node {
     const newNode = this.createNodeHelper(type, prefix, parentId);
     const parent = this.getParent(newNode, false);
     if (parent) {
@@ -307,6 +370,8 @@ export class TreeManager {
       this.appendNode(newNode, this.target.root);
     }
     this.refresh(true);
+    this.calculateUiDepths();
+    return newNode;
   }
 
   public createNodeAbove(type: NodeType, prefix: string, baseNodeId: string) {
@@ -317,6 +382,7 @@ export class TreeManager {
     if (parent) newNode.selected = parent.selected;
     this.appendNodeAbove(newNode, baseNode);
     this.refresh(true);
+    this.calculateUiDepths();
   }
 
   public createNodeBelow(type: NodeType, prefix: string, baseNodeId: string) {
@@ -327,6 +393,7 @@ export class TreeManager {
     if (parent) newNode.selected = parent.selected;
     this.appendNodeBelow(newNode, baseNode);
     this.refresh(true);
+    this.calculateUiDepths();
   }
 
   // --- Handle directory open/closed state: ---
@@ -386,31 +453,32 @@ export class TreeManager {
       }
     }
     node.text = newName;
-    if (node.type === 'file') {
-      ContestsManager.instance.renameContest(node.contestId, newName);
-    }
     return { status: 'success' };
   }
 
   // --- Selection handling: ---
 
-  public clearSelection(clearActive: boolean) {
+  public clearSelection() {
     for (const node of this.expandedFlat) {
       node.selected = false;
-      if (node.type === 'file' && clearActive) node.active = false;
       if (node.type === 'dir') node.nSelDesc = 0;
     }
     this.nSelectedFiles = 0;
     this.nSelectedNodes = 0;
+    this.selectedNodes = [];
     this._proxy!.queueWrite();
   }
 
   public selectAll() {
     this.nSelectedFiles = 0;
+    this.selectedNodes = [];
     for (const node of this.expandedFlat) {
       node.selected = true;
       if (node.type === 'dir') node.nSelDesc = node.nDesc;
-      if (node.type === 'file') this.nSelectedFiles++;
+      if (node.type === 'file') {
+        this.nSelectedFiles++;
+        this.selectedNodes.push(node.id);
+      }
     }
     this.nSelectedNodes = this.expandedFlat.length;
     this._proxy!.queueWrite();
@@ -435,18 +503,13 @@ export class TreeManager {
   public handleSelection(nodeId: string, keys: ModifierKeys) {
     const node = this.target.idToNode[nodeId];
     const nextState = !node.selected;
-    const newActive = Boolean(!keys.ctrl && node.type === 'file' && nextState);
     if (!keys.ctrl) {
-      this.clearSelection(newActive);
+      this.clearSelection();
       if (!nextState) return;
     }
     node.selected = nextState;
     if (node.type === 'dir') {
       this.setSubtreeSelection(node, nextState);
-    }
-    if (node.type === 'file' && newActive) {
-      node.active = true;
-      ProfileManager.instance.setCurrContest(node.contestId);
     }
     this.refresh(true);
   }
@@ -473,97 +536,50 @@ export class TreeManager {
     node.parentId = null;
   }
 
-  private deleteSubtree(control: Links) {
+  private async deleteSubtree(control: Links) {
     const dirHead = this.getHead(control.dirs, false);
     const fileHead = this.getHead(control.files, false);
     let curr: Node | null = dirHead;
     while (curr) {
-      this.deleteCallback(curr);
+      await this.deleteCallback(curr);
       this.deleteSubtree(curr as DirNode);
       delete this.target.idToNode[curr.id];
       curr = this.getNext(curr, false);
     }
     curr = fileHead;
     while (curr) {
-      this.deleteCallback(curr);
+      await this.deleteCallback(curr);
       delete this.target.idToNode[curr.id];
       curr = this.getNext(curr, false);
     }
   }
 
-  private deleteCallback(node: Node) {
-    if (node.type !== 'file') return;
-    ProfileManager.instance.contestDeleted(node.contestId);
-    ContestsManager.instance.deleteContest(node.contestId);
-  }
-
-  public deleteNode(nodeId: string) {
+  public async deleteNode(nodeId: string) {
     const node = this.target.idToNode[nodeId];
     if (!node) return;
     this.removeNodeFromTree(node);
-    this.deleteCallback(node);
     if (node.type === 'dir') {
       this.deleteSubtree(node);
     }
     delete this.target.idToNode[nodeId];
     this.refresh(true);
+    this.calculateUiDepths();
+    await this.deleteCallback(node);
   }
 
-  public deleteSelectedNodes() {
+  public async deleteSelectedNodes() {
     for (const node of this.expandedFlat) {
       if (node.selected) {
         this.removeNodeFromTree(node);
-        this.deleteCallback(node);
+        await this.deleteCallback(node);
         delete this.target.idToNode[node.id];
       }
     }
     this.refresh(true);
+    this.calculateUiDepths();
   }
 
-  // --- Search: ---
-
-  public search(text: string) {
-    text = text.trim();
-    if (!text) {
-      this.clearHidden();
-      return;
-    }
-    const regex = new RegExp(text, 'i');
-    // Clear selection on search to avoid confusion.
-    this.nSelectedFiles = 0;
-    this.nSelectedNodes = 0;
-    for (const node of this.expandedFlat) {
-      node.hidden = true;
-      node.selected = false;
-    }
-    for (let i = this.expandedFlat.length - 1; i >= 0; i--) {
-      const node = this.expandedFlat[i];
-      if (node.type === 'file') {
-        if (regex.test(node.text)) {
-          node.hidden = false;
-          const parent = this.getParent(node, false);
-          if (parent) {
-            parent.hidden = false;
-            this.openDir(parent);
-          }
-        }
-      } else {
-        if (!node.hidden) {
-          const parent = this.getParent(node, false);
-          if (parent) {
-            parent.hidden = false;
-            this.openDir(parent);
-          }
-        }
-      }
-    }
-  }
-
-  private clearHidden() {
-    for (const node of this.expandedFlat) node.hidden = false;
-  }
-
-  //  -- Movement: ---
+  //  --- Movement: ---
 
   public moveSelectedFilesAbove(baseNodeId: string) {
     const baseNode = this.target.idToNode[baseNodeId];
@@ -577,6 +593,7 @@ export class TreeManager {
       }
     }
     this.refresh(true);
+    this.calculateUiDepths();
   }
 
   public moveSelectedFilesBelow(baseNodeId: string) {
@@ -592,6 +609,7 @@ export class TreeManager {
       }
     }
     this.refresh(true);
+    this.calculateUiDepths();
   }
 
   public moveSelectedFoldersAbove(baseNodeId: string) {
@@ -608,6 +626,7 @@ export class TreeManager {
       }
     }
     this.refresh(true);
+    this.calculateUiDepths();
   }
 
   public moveSelectedFoldersBelow(baseNodeId: string) {
@@ -625,6 +644,7 @@ export class TreeManager {
       }
     }
     this.refresh(true);
+    this.calculateUiDepths();
   }
 
   public moveSelectedNodesInto(destinationId: string | null) {
@@ -642,5 +662,6 @@ export class TreeManager {
       }
     }
     this.refresh(true);
+    this.calculateUiDepths();
   }
 }

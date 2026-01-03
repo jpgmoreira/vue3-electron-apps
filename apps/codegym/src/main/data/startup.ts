@@ -5,8 +5,10 @@ import { ProfileManager } from '../managers/profileManager';
 import { HistoryManager } from '../managers/historyManager';
 import { StartupData } from '@common/schemas/startup';
 import { CacheManager } from '../managers/cacheManager';
-import { TreeManager } from '../managers/treeManager';
+import { ExplorerManager } from '@interapp/components/Explorer/main/explorerManager';
 import { ContestsManager } from '../managers/contestsManager';
+import { DATA_DIR } from '@common/constants';
+import path from 'path';
 
 export async function loadStartupData(): Promise<StartupData> {
   await CacheManager.instance.loadCache();
@@ -19,7 +21,8 @@ export async function loadStartupData(): Promise<StartupData> {
     await GraphManager.instance.loadGraph(currProfile.id);
     graphData = await GraphManager.instance.getGraphData();
     await HistoryManager.instance.loadHistory(currProfile.id);
-    TreeManager.instance.loadTree(currProfile.id);
+    const treePath = path.join(DATA_DIR, 'profileData', currProfile.id, 'tree.json');
+    ExplorerManager.instance.loadTree(treePath);
   }
   const result = {
     ojMeta,
