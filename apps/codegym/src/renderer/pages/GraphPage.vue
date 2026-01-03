@@ -1,6 +1,6 @@
 <script lang="ts" setup>
   import { onBeforeMount, ref } from 'vue';
-  import SettingsPageHeader from '@renderer/components/Header/custom/SettingsPageHeader.vue';
+  import SettingsPageHeader from '@renderer/components/Header/SettingsPageHeader.vue';
   import LineChart, { LineChartProps } from '@renderer/components/UI/LineChart.vue';
   import { OjList, OjNames, OjColors } from '@common/types/oj';
   import { parseNumericDate, incrementDate, getTodayDate } from '@interapp/utils/dateUtils';

@@ -8,7 +8,7 @@
   import { parseTimestamp } from '@interapp/utils/dateUtils';
   import { useRouter } from 'vue-router';
   import packageJson from '../../../package.json';
-  import SettingsPageHeader from '@renderer/components/Header/custom/SettingsPageHeader.vue';
+  import SettingsPageHeader from '@renderer/components/Header/SettingsPageHeader.vue';
   import Modal from '@renderer/components/UI/Modal.vue';
   import { APP_NAME } from '@common/constants';
   const profileStore = useProfileStore();

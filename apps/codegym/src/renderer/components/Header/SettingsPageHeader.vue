@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-  import Header from '../Header.vue';
-  import HeaderButton from '../HeaderButton.vue';
+  import Header from '@interapp/components/Header/Header.vue';
+  import HeaderButton from '@interapp/components/Header/HeaderButton.vue';
 </script>
 
 <template>

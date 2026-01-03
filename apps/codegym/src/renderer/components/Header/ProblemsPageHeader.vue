@@ -1,7 +1,7 @@
 <script lang="ts" setup>
   import { ref } from 'vue';
-  import Header from '../Header.vue';
-  import HeaderButton from '../HeaderButton.vue';
+  import Header from '@interapp/components/Header/Header.vue';
+  import HeaderButton from '@interapp/components/Header/HeaderButton.vue';
   import { useProfileStore } from '@renderer/store/profile';
   import { OjNames } from '@common/types/oj';
   const store = useProfileStore();

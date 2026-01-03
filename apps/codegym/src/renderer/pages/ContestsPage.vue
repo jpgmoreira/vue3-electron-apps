@@ -5,7 +5,7 @@
   import { useGraphStore } from '@renderer/store/graph';
   import { getTodayDate, parseTimestamp } from '@interapp/utils/dateUtils';
   import TreeView from '@renderer/components/UI/TreeView/TreeView.vue';
-  import SettingsPageHeader from '@renderer/components/Header/custom/SettingsPageHeader.vue';
+  import SettingsPageHeader from '@renderer/components/Header/SettingsPageHeader.vue';
   import { InvokeChannels } from '@preload/channels/invoke';
   import solved from '@renderer/assets/images/solved.png';
   import todo from '@renderer/assets/images/to-do-list.png';
