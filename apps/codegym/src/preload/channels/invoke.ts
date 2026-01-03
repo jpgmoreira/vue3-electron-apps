@@ -1,8 +1,4 @@
-/**
- * Allowed communication channels between main and renderer processes.
- */
-export enum Channels {
-  loadStartupData = 'load-startup-data',
+export enum InvokeChannels {
   updateCurrOj = 'update-curr-oj',
   updateCurrPage = 'update-curr-page',
   createProfile = 'create-profile',
