@@ -5,6 +5,7 @@
   "main": "src/index.ts",
   "types": "src/index.ts",
   "dependencies": {
+    "pinia": "^3.0.4",
     "slugify": "^1.6.6",
     "sqlite": "^5.1.1"
   }

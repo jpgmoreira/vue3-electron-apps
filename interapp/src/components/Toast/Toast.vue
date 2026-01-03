@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-  import { useUIStore } from '@renderer/store/ui';
-  const store = useUIStore();
+  import { useToastStore } from '@interapp/store/toast';
+  const store = useToastStore();
 </script>
 <template>
   <Transition name="toast-transition">

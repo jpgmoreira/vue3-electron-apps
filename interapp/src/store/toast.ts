@@ -2,13 +2,12 @@ import { defineStore } from 'pinia';
 
 export type ToastType = 'success' | 'warning' | 'error' | 'info';
 
-export const useUIStore = defineStore('ui', {
+export const useToastStore = defineStore('toast', {
   state: () => ({
     toast: {
       visible: false,
       message: '',
-      type: 'success',
-      timer: null,
+      type: 'success' as ToastType,
     },
   }),
   actions: {
