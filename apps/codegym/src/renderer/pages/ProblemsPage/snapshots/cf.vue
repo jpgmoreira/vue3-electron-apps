@@ -2,7 +2,7 @@
   import { computed, ref } from 'vue';
   import { useProfileStore } from '@renderer/store/profile';
   import { useOjMetaStore } from '@renderer/store/ojMeta';
-  import { toLocaleNumber } from '@common/utils/utils';
+  import { toLocaleNumber } from '@interapp/utils/utils';
   const profileStore = useProfileStore();
   const ojMetaStore = useOjMetaStore();
   const snapshot = computed(() => profileStore.currProfile!.ojContext['cf'].snapshot!);

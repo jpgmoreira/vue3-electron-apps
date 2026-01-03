@@ -3,25 +3,25 @@ import { AuthPage } from '@common/types/authPage';
 import { getEmptyProfileRegistry, Profile } from '@common/schemas/profile';
 import { StartupData } from '@common/schemas/startup';
 import { Oj } from '@common/types/oj';
-import { Channels } from '@common/types/channels';
+import { InvokeChannels } from '@preload/channels/invoke';
 import { CreateProfileResponseDTO } from '@common/dto/createProfileResponseDTO';
 import { useOjStatusStore } from './ojStatus';
 import { useOjMetaStore } from './ojMeta';
 import { useGraphStore } from './graph';
 import { GetOjProblemResponseDTO } from '@common/dto/getOjProblemResponseDTO';
-import { getTodayDate } from '@common/utils/dateUtils';
+import { getTodayDate } from '@interapp/utils/dateUtils';
 import { toRaw } from 'vue';
 import { OjProblem } from '@common/schemas/problems';
-import { GenericResponseDTO } from '@common/dto/genericResponseDTO';
-import { EventEmitter } from '@common/helpers/eventEmitter';
-import { Events } from '@renderer/events/events';
+import { GenericResponseDTO } from '@interapp/dto/genericResponseDTO';
+import { EventEmitter } from '@interapp/events/eventEmitter';
+import { CommonEvents } from '@interapp/events/commonEvents';
 import { Contest } from '@common/schemas/contests';
 
-EventEmitter.instance.on(Events.loadInitialData, (data: StartupData) => {
+EventEmitter.instance.on(CommonEvents.loadInitialData, (data: StartupData) => {
   useProfileStore().initFromStartupData(data);
 });
 
-EventEmitter.instance.on(Events.clearProfileData, () => {
+EventEmitter.instance.on(CommonEvents.clearProfileData, () => {
   useProfileStore().clear();
 });
 
@@ -37,30 +37,30 @@ export const useProfileStore = defineStore('profile', {
     },
     updateCurrPage(newPage: AuthPage) {
       this.currProfile!.page = newPage;
-      window.api.send(Channels.updateCurrPage, newPage);
+      window.api.invoke(InvokeChannels.updateCurrPage, newPage);
     },
     updateCurrOj(oj: Oj) {
       this.currProfile!.currOj = oj;
-      window.api.send(Channels.updateCurrOj, oj);
+      window.api.invoke(InvokeChannels.updateCurrOj, oj);
     },
     async createProfile(name: string) {
       const result = await window.api.invoke<CreateProfileResponseDTO>(
-        Channels.createProfile,
+        InvokeChannels.createProfile,
         name
       );
       if (result.status === 'success') {
-        EventEmitter.instance.emit(Events.loadInitialData, result.data);
+        EventEmitter.instance.emit(CommonEvents.loadInitialData, result.data);
       }
       return result;
     },
     async login(profileId: string) {
-      const result = await window.api.invoke<StartupData>(Channels.login, profileId);
-      EventEmitter.instance.emit(Events.loadInitialData, result);
+      const result = await window.api.invoke<StartupData>(InvokeChannels.login, profileId);
+      EventEmitter.instance.emit(CommonEvents.loadInitialData, result);
       return result;
     },
     logout() {
-      EventEmitter.instance.emit(Events.clearProfileData);
-      window.api.send(Channels.logout);
+      EventEmitter.instance.emit(CommonEvents.clearProfileData);
+      window.api.invoke(InvokeChannels.logout);
     },
     clear() {
       this.currProfile = null;
@@ -68,7 +68,7 @@ export const useProfileStore = defineStore('profile', {
     },
     deleteProfile() {
       const currProfileId = this.currProfile!.id;
-      EventEmitter.instance.emit(Events.clearProfileData);
+      EventEmitter.instance.emit(CommonEvents.clearProfileData);
       const { profileRecords } = this.registry;
       for (let i = 0; i < profileRecords.length; i++) {
         if (profileRecords[i].id === currProfileId) {
@@ -76,7 +76,7 @@ export const useProfileStore = defineStore('profile', {
           break;
         }
       }
-      window.api.send(Channels.deleteCurrProfile);
+      window.api.invoke(InvokeChannels.deleteCurrProfile);
     },
     async requestNewProblem() {
       const oj = this.currProfile!.currOj;
@@ -115,21 +115,25 @@ export const useProfileStore = defineStore('profile', {
         graphStore.updateGraphData(currOj, today, 1);
       }
       snapshot.solvedDate = value ? today : null;
-      window.api.send(Channels.setCurrSnapshotSolvedDate, snapshot.solvedDate);
+      window.api.invoke(InvokeChannels.setCurrSnapshotSolvedDate, snapshot.solvedDate);
     },
     updateOjFilters() {
       const oj = this.currProfile!.currOj;
-      window.api.send(Channels.updateOjFilters, oj, toRaw(this.currProfile!.ojContext[oj].filters));
+      window.api.invoke(
+        InvokeChannels.updateOjFilters,
+        oj,
+        toRaw(this.currProfile!.ojContext[oj].filters)
+      );
     },
     setCurrOjSnapshot(snapshot: OjProblem[Oj]) {
       const currOj = this.currProfile!.currOj;
       const ojContext = this.currProfile!.ojContext[currOj];
       ojContext.snapshot = snapshot;
-      window.api.send(Channels.setCurrOjSnapshot, toRaw(snapshot));
+      window.api.invoke(InvokeChannels.setCurrOjSnapshot, toRaw(snapshot));
     },
     async renameCurrProfile(newName: string) {
       const result = await window.api.invoke<GenericResponseDTO>(
-        Channels.renameCurrProfile,
+        InvokeChannels.renameCurrProfile,
         newName
       );
       if (result.status === 'success') {
@@ -142,7 +146,7 @@ export const useProfileStore = defineStore('profile', {
     async getCurrContest() {
       const currContestId = this.currProfile?.currContestId;
       if (!currContestId) return null;
-      const result = window.api.invoke<Contest | null>(Channels.getContest, currContestId);
+      const result = window.api.invoke<Contest | null>(InvokeChannels.getContest, currContestId);
       if (currContestId && !result) {
         // Contest was deleted.
         this.currProfile!.currContestId = null;

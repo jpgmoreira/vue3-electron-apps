@@ -1,6 +1,6 @@
-import { Channels } from '@common/types/channels';
+import { InvokeChannels } from '@preload/channels/invoke';
 import { defineStore } from 'pinia';
-import { useUIStore } from './ui';
+import { useToastStore } from '@interapp/store/toast';
 import { useOjMetaStore } from './ojMeta';
 import { useProfileStore } from './profile';
 import { Oj, OjList } from '@common/types/oj';
@@ -26,11 +26,11 @@ export const useOjStatusStore = defineStore('ojStatus', {
     async updateOjCache(oj: Oj) {
       this[oj].isUpdatingCache = true;
       try {
-        const meta: OjMeta[typeof oj] = await window.api.invoke(Channels.updateOjCache, oj);
+        const meta: OjMeta[typeof oj] = await window.api.invoke(InvokeChannels.updateOjCache, oj);
         useOjMetaStore().updateOjMeta(oj, meta);
       } catch (e) {
-        const uiStore = useUIStore();
-        uiStore.showToast('Error while updating the cache.', 'error');
+        const toastStore = useToastStore();
+        toastStore.showToast('Error while updating the cache.', 'error');
         throw e;
       } finally {
         this[oj].isUpdatingCache = false;
@@ -40,15 +40,15 @@ export const useOjStatusStore = defineStore('ojStatus', {
       this[oj].isRequestingProblem = true;
       try {
         const result = await window.api.invoke<GetOjProblemResponseDTO<typeof oj>>(
-          Channels.getOjProblem,
+          InvokeChannels.getOjProblem,
           oj
         );
         const profileStore = useProfileStore();
         profileStore.currProfile!.ojContext[oj].hasEverFiltered = true;
         return result;
       } catch (e) {
-        const uiStore = useUIStore();
-        uiStore.showToast('Error while requesting a new problem.', 'error');
+        const toastStore = useToastStore();
+        toastStore.showToast('Error while requesting a new problem.', 'error');
         throw e;
       } finally {
         this[oj].isRequestingProblem = false;

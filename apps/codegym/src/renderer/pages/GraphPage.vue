@@ -3,8 +3,8 @@
   import SettingsPageHeader from '@renderer/components/Header/custom/SettingsPageHeader.vue';
   import LineChart, { LineChartProps } from '@renderer/components/UI/LineChart.vue';
   import { OjList, OjNames, OjColors } from '@common/types/oj';
-  import { parseNumericDate, incrementDate, getTodayDate } from '@common/utils/dateUtils';
-  import { randomId } from '@common/utils/utils';
+  import { parseNumericDate, incrementDate, getTodayDate } from '@interapp/utils/dateUtils';
+  import { randomId } from '@interapp/utils/utils';
   import { useGraphStore } from '@renderer/store/graph';
   const content: LineChartProps = {
     allXValues: [],
@@ -66,7 +66,7 @@
 </script>
 
 <template>
-  <div class="w-[100vw] h-[100vh] flex flex-col">
+  <div class="w-full h-full flex flex-col">
     <SettingsPageHeader />
     <LineChart v-if="hasContent" v-bind="content" />
     <div v-else class="flex grow items-center justify-center text-xl opacity-70">

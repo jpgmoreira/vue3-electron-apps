@@ -1,13 +1,13 @@
 <script lang="ts" setup>
   import { ref } from 'vue';
   import { useRouter } from 'vue-router';
-  import { useUIStore } from '@renderer/store/ui';
+  import { useToastStore } from '@interapp/store/toast';
   import { useProfileStore } from '@renderer/store/profile';
   import Header from '@renderer/components/Header/Header.vue';
   import HeaderButton from '@renderer/components/Header/HeaderButton.vue';
   import { APP_NAME } from '@common/constants';
   const profileStore = useProfileStore();
-  const uiStore = useUIStore();
+  const toastStore = useToastStore();
   const router = useRouter();
   const name = ref('');
   const fetching = ref(false);
@@ -17,7 +17,7 @@
       .createProfile(name.value)
       .finally(() => (fetching.value = false));
     if (result.status === 'error') {
-      uiStore.showToast(result.errorMsg, 'error');
+      toastStore.showToast(result.errorMsg, 'error');
     } else {
       document.title = `${profileStore.currProfile!.name}@${APP_NAME}`;
       router.replace(profileStore.currProfile!.page);

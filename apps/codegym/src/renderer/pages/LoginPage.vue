@@ -2,7 +2,7 @@
   import { ref, computed } from 'vue';
   import { useRouter } from 'vue-router';
   import { useProfileStore } from '@renderer/store/profile';
-  import { parseTimestamp } from '@common/utils/dateUtils';
+  import { parseTimestamp } from '@interapp/utils/dateUtils';
   import Header from '@renderer/components/Header/Header.vue';
   import HeaderButton from '@renderer/components/Header/HeaderButton.vue';
   import { APP_NAME } from '@common/constants';

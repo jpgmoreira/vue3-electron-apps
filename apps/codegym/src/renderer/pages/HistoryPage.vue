@@ -2,12 +2,12 @@
   import ProblemsPageHeader from '@renderer/components/Header/custom/ProblemsPageHeader.vue';
   import { FetchHistoryPageResponseDTO } from '@common/dto/fetchHistoryPageResponseDTO';
   import { OjProblem } from '@common/schemas/problems';
-  import { Channels } from '@common/types/channels';
+  import { InvokeChannels } from '@preload/channels/invoke';
   import { Oj } from '@common/types/oj';
   import { useProfileStore } from '@renderer/store/profile';
-  import { handleProblemClick } from '@renderer/utils/utils';
+  import { handleProblemClick } from '@renderer/helpers/helpers';
   import { useRouter } from 'vue-router';
-  import { parseTimestamp } from '@common/utils/dateUtils';
+  import { parseTimestamp } from '@interapp/utils/dateUtils';
   import { ref, onMounted, computed, watch, useTemplateRef } from 'vue';
 
   const router = useRouter();
@@ -33,7 +33,7 @@
 
   async function fetchHistory(newAnchor: number) {
     const result = await window.api.invoke<FetchHistoryPageResponseDTO<typeof currOj.value>>(
-      Channels.fetchHistoryPage,
+      InvokeChannels.fetchHistoryPage,
       currOj.value,
       newAnchor
     );

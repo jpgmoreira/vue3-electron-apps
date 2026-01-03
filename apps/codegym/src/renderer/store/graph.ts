@@ -1,16 +1,16 @@
-import { EventEmitter } from '@common/helpers/eventEmitter';
 import { getEmptyGraphRecord, GraphRecord } from '@common/schemas/graph';
 import { StartupData } from '@common/schemas/startup';
 import { OjWithContests } from '@common/types/oj';
-import { getTodayDate } from '@common/utils/dateUtils';
-import { Events } from '@renderer/events/events';
+import { getTodayDate } from '@interapp/utils/dateUtils';
+import { EventEmitter } from '@interapp/events/eventEmitter';
+import { CommonEvents } from '@interapp/events/commonEvents';
 import { defineStore } from 'pinia';
 
-EventEmitter.instance.on(Events.loadInitialData, (data: StartupData) => {
+EventEmitter.instance.on(CommonEvents.loadInitialData, (data: StartupData) => {
   useGraphStore().initFromStartupData(data);
 });
 
-EventEmitter.instance.on(Events.clearProfileData, () => {
+EventEmitter.instance.on(CommonEvents.clearProfileData, () => {
   useGraphStore().clear();
 });
 

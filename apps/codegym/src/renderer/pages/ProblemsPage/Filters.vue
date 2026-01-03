@@ -6,7 +6,7 @@
   import neps from './filters/neps.vue';
   import timus from './filters/timus.vue';
   import uva from './filters/uva.vue';
-  import { toLocaleNumber } from '@common/utils/utils';
+  import { toLocaleNumber } from '@interapp/utils/utils';
   import { Oj } from '@common/types/oj';
   import { OjContext } from '@common/schemas/ojContext';
   const props = defineProps<{

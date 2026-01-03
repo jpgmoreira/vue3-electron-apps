@@ -6,7 +6,7 @@
   import neps from './snapshots/neps.vue';
   import timus from './snapshots/timus.vue';
   import uva from './snapshots/uva.vue';
-  import { handleProblemClick } from '../../utils/utils';
+  import { handleProblemClick } from '../../helpers/helpers';
   import { OjProblem } from '@common/schemas/problems';
   import { Oj } from '@common/types/oj';
   import { OjContext } from '@common/schemas/ojContext';

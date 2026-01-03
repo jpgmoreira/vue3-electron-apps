@@ -4,8 +4,8 @@
   import { useProfileStore } from '@renderer/store/profile';
   import { useOjMetaStore } from '@renderer/store/ojMeta';
   import { useOjStatusStore } from '@renderer/store/ojStatus';
-  import { useUIStore } from '@renderer/store/ui';
-  import { parseTimestamp } from '@common/utils/dateUtils';
+  import { useToastStore } from '@interapp/store/toast';
+  import { parseTimestamp } from '@interapp/utils/dateUtils';
   import { useRouter } from 'vue-router';
   import packageJson from '../../../package.json';
   import SettingsPageHeader from '@renderer/components/Header/custom/SettingsPageHeader.vue';
@@ -14,7 +14,7 @@
   const profileStore = useProfileStore();
   const ojMetaStore = useOjMetaStore();
   const ojStatusStore = useOjStatusStore();
-  const uiStore = useUIStore();
+  const toastStore = useToastStore();
   const router = useRouter();
   const name = ref<string>(profileStore.currProfile!.name);
   const modalVisible = ref<boolean>(false);
@@ -37,15 +37,15 @@
   async function handleRename() {
     const newName = name.value.trim();
     if (!newName) {
-      uiStore.showToast('Profile name cannot be empty!', 'error');
+      toastStore.showToast('Profile name cannot be empty!', 'error');
       return;
     }
     const result = await profileStore.renameCurrProfile(newName);
     if (result.status === 'success') {
-      uiStore.showToast('Profile renamed successfully!', 'success');
+      toastStore.showToast('Profile renamed successfully!', 'success');
       document.title = `${newName}@${APP_NAME}`;
     } else {
-      uiStore.showToast(result.errorMsg, 'error');
+      toastStore.showToast(result.errorMsg, 'error');
     }
   }
   function handleLogout() {
@@ -69,10 +69,10 @@
     navigator.clipboard
       .writeText(packageJson.homepage)
       .then(() => {
-        uiStore.showToast('URL copied to the clipboard!', 'success');
+        toastStore.showToast('URL copied to the clipboard!', 'success');
       })
       .catch(() => {
-        uiStore.showToast('Error on copying URL!', 'error');
+        toastStore.showToast('Error on copying URL!', 'error');
       });
   }
 </script>

@@ -2,10 +2,10 @@ import { defineStore } from 'pinia';
 import { StartupData } from '@common/schemas/startup';
 import { getEmptyOjMeta, OjMeta } from '@common/schemas/ojMeta';
 import { Oj } from '@common/types/oj';
-import { EventEmitter } from '@common/helpers/eventEmitter';
-import { Events } from '@renderer/events/events';
+import { EventEmitter } from '@interapp/events/eventEmitter';
+import { CommonEvents } from '@interapp/events/commonEvents';
 
-EventEmitter.instance.on(Events.loadInitialData, (data: StartupData) => {
+EventEmitter.instance.on(CommonEvents.loadInitialData, (data: StartupData) => {
   useOjMetaStore().initFromStartupData(data);
 });
 

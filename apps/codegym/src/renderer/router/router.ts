@@ -1,6 +1,6 @@
 import { createMemoryHistory, createRouter } from 'vue-router';
 import { useProfileStore } from '@renderer/store/profile';
-import { isAuthPage } from '@common/utils/utils';
+import { isAuthPage } from '@common/types/authPage';
 import LoginPage from '@renderer/pages/LoginPage.vue';
 import SignupPage from '@renderer/pages/SignupPage.vue';
 import ProblemsPage from '@renderer/pages/ProblemsPage/ProblemsPage.vue';

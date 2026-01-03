@@ -1,6 +1,6 @@
 import { Oj } from '@common/types/oj';
 import { OjProblem } from '@common/schemas/problems';
-import { useUIStore } from '@renderer/store/ui';
+import { useToastStore } from '@interapp/store/toast';
 
 export function buildOjProblemUrl(oj: Oj, path: string): string {
   let result = '';
@@ -28,14 +28,14 @@ export function buildOjProblemUrl(oj: Oj, path: string): string {
 }
 
 export function handleProblemClick(problem: OjProblem[Oj]) {
-  const uiStore = useUIStore();
+  const store = useToastStore();
   const url = buildOjProblemUrl(problem.oj, problem.path);
   navigator.clipboard
     .writeText(url)
     .then(() => {
-      uiStore.showToast('URL copied to the clipboard!', 'success');
+      store.showToast('URL copied to the clipboard!', 'success');
     })
     .catch(() => {
-      uiStore.showToast('Error on copying URL!', 'error');
+      store.showToast('Error on copying URL!', 'error');
     });
 }

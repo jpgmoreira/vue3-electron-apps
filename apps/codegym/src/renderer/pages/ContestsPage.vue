@@ -3,10 +3,10 @@
   import { Contest, ContestProblem, ContestProblemFlag } from '@common/schemas/contests';
   import { useProfileStore } from '@renderer/store/profile';
   import { useGraphStore } from '@renderer/store/graph';
-  import { getTodayDate, parseTimestamp } from '@common/utils/dateUtils';
+  import { getTodayDate, parseTimestamp } from '@interapp/utils/dateUtils';
   import TreeView from '@renderer/components/UI/TreeView/TreeView.vue';
   import SettingsPageHeader from '@renderer/components/Header/custom/SettingsPageHeader.vue';
-  import { Channels } from '@common/types/channels';
+  import { InvokeChannels } from '@preload/channels/invoke';
   import solved from '@renderer/assets/images/solved.png';
   import todo from '@renderer/assets/images/to-do-list.png';
   import trash from '@renderer/assets/images/trash.png';
@@ -43,17 +43,17 @@
   }
 
   async function addProblem() {
-    const problem = await window.api.invoke<ContestProblem>(Channels.addCurrContestProblem);
+    const problem = await window.api.invoke<ContestProblem>(InvokeChannels.addCurrContestProblem);
     contest.value?.problems.push(problem);
   }
 
   function updateContestNotes() {
     if (!contest.value) return;
-    window.api.send(Channels.updateCurrContestNotes, contest.value.notes);
+    window.api.invoke(InvokeChannels.updateCurrContestNotes, contest.value.notes);
   }
 
   function updateCurrContestProblem(problem: ContestProblem) {
-    window.api.send(Channels.updateCurrContestProblem, toRaw(problem));
+    window.api.invoke(InvokeChannels.updateCurrContestProblem, toRaw(problem));
   }
 
   function acceptedInputChange(problem: ContestProblem, e: Event) {
@@ -103,7 +103,7 @@
   async function toggleProblemFlag(problem: ContestProblem, flag: ContestProblemFlag) {
     // await here because the tree can be updated in the back with this call,
     // and "problem[flag] = !problem[flag]" will trigger a new tree refetch.
-    await window.api.invoke(Channels.toggleCurrContestProblemFlag, problem.id, flag);
+    await window.api.invoke(InvokeChannels.toggleCurrContestProblemFlag, problem.id, flag);
     problem[flag] = !problem[flag];
     if (flag === 'solved') {
       const prevDate = problem.solvedDate;
@@ -123,7 +123,7 @@
 
   async function deleteProblem(problem: ContestProblem) {
     if (!contest.value) return;
-    await window.api.invoke(Channels.deleteCurrContestProblem, problem.id);
+    await window.api.invoke(InvokeChannels.deleteCurrContestProblem, problem.id);
     contest.value.problems = contest.value.problems.filter((p) => p.id !== problem.id);
   }
 
