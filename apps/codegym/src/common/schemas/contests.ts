@@ -1,5 +1,3 @@
-import { randomId } from '@common/utils/utils';
-
 export type ContestProblemFlag = 'todo' | 'favorite' | 'solved';
 
 // "solvedDate" is a number in the format YYYYMMDD. It is calculated based on the user's local time.
@@ -33,8 +31,7 @@ export function getEmptyContest(id: string, name: string, createdAt: number): Co
   };
 }
 
-export function getEmptyContestProblem(): ContestProblem {
-  const id = randomId();
+export function getEmptyContestProblem(id: string): ContestProblem {
   return {
     id,
     title: '',

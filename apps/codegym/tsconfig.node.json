@@ -5,15 +5,16 @@
     "vite.alias.ts",
     "src/main/**/*",
     "src/preload/**/*",
-    "src/common/**/*"
+    "src/common/**/*",
+    "../../interapp/src/**/*"
   ],
   "compilerOptions": {
     "composite": true,
     "types": ["electron-vite/node", "vitest/globals"],
     "paths": {
+      "@interapp/*": ["../../interapp/src/*"],
       "@main/*": ["./src/main/*"],
-      "@common/*": ["./src/common/*"],
-      "@interapp/*": ["../../interapp/src/*"]
+      "@common/*": ["./src/common/*"]
     }
   }
 }
