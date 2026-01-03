@@ -7,7 +7,8 @@
   "scripts": {
     "format": "prettier --write .",
     "lint": "eslint --cache .",
-    "madge": "madge --circular --extensions ts src"
+    "madge": "madge --circular --extensions ts src",
+    "typecheck": "vue-tsc --noEmit"
   },
   "dependencies": {
     "pinia": "^3.0.4",
