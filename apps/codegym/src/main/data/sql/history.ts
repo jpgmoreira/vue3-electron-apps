@@ -1,9 +1,9 @@
 import { FetchHistoryPageResponseDTO } from '@common/dto/fetchHistoryPageResponseDTO';
 import { Oj } from '@common/types/oj';
 import type { Database } from 'sqlite';
-import { HISTORY_MAX_SIZE_PER_OJ, HISTORY_PAGE_SIZE } from '../constants';
+import { HISTORY_MAX_SIZE_PER_OJ, HISTORY_PAGE_SIZE } from '@common/constants';
 import { OjFields, OjProblem } from '@common/schemas/problems';
-import { getOjProblemColumnsAndValues } from '../utils';
+import { getOjProblemColumnsAndValues } from './helpers';
 
 export async function createHistoryTables(db: Database) {
   await Promise.all([

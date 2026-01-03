@@ -1,22 +1,18 @@
 import { getEmptyGraphRecord, GraphRecord } from '@common/schemas/graph';
-import { DATA_DIR } from '../constants';
+import { DATA_DIR } from '@common/constants';
 import path from 'path';
 import { OjWithContests } from '@common/types/oj';
-import { EventEmitter } from '@common/helpers/eventEmitter';
-import { Events } from '@main/utils/events';
+import { EventEmitter } from '@interapp/events/eventEmitter';
+import { CommonEvents } from '@interapp/events/commonEvents';
 import sqlite3 from 'sqlite3';
 import { open, type Database } from 'sqlite';
-import { createGraphTable, upsertGraphRecord } from '../sql/graph';
-import { setDbPragmas } from '../utils';
+import { createGraphTable, upsertGraphRecord } from '../data/sql/graph';
+import { setDbPragmas } from '@interapp/utils/sql';
 
-EventEmitter.instance.on(Events.clearProfileData, () => {
+EventEmitter.instance.on(CommonEvents.clearProfileData, () => {
   GraphManager.instance.clear();
 });
 
-/**
- * Singleton for managing graph data.
- * Access via GraphManager.instance
- */
 export class GraphManager {
   static #instance: GraphManager;
 

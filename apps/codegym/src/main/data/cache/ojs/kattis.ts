@@ -1,7 +1,7 @@
 import { POPULARITY_GROUP_SIZE } from '@common/constants';
 import { KattisProblem } from '@common/schemas/problems';
 import { OjMeta } from '@common/schemas/ojMeta';
-import { OjMetaManager } from '@main/data/managers/ojMetaManager';
+import { OjMetaManager } from '@main/managers/ojMetaManager';
 import { type Database } from 'sqlite';
 import * as cheerio from 'cheerio';
 import { replaceCacheProblems } from '@main/data/sql/cache/cache';

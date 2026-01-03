@@ -1,5 +1,5 @@
 import { LeetcodeProblem } from '@common/schemas/problems';
-import { ProfileManager } from '@main/data/managers/profileManager';
+import { ProfileManager } from '@main/managers/profileManager';
 import type { Database } from 'sqlite';
 
 export async function filterLeetcodeProblems(db: Database): Promise<LeetcodeProblem[]> {
@@ -9,12 +9,12 @@ export async function filterLeetcodeProblems(db: Database): Promise<LeetcodeProb
   const maxp = filters.popularity.max;
   const premium = filters.premium.value;
   const difficulties = filters.difficulty.values
-    .map((d) => {
+    .map((d: string) => {
       if (d === 'easy') return 1;
       if (d === 'medium') return 2;
       return 3;
     })
-    .filter((x) => x !== undefined);
+    .filter((x?: number) => x !== undefined);
 
   let sql = 'SELECT * FROM leetcode WHERE TRUE';
 

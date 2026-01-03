@@ -1,4 +1,4 @@
-import { DATA_DIR } from '../constants';
+import { DATA_DIR } from '@common/constants';
 import {
   Contest,
   ContestProblem,
@@ -6,18 +6,20 @@ import {
   getEmptyContest,
   getEmptyContestProblem,
 } from '@common/schemas/contests';
-import { ensureDirExists } from '../utils';
-import { FileProxy } from '../fileProxy';
-import { buildId } from '@common/utils/utils';
+import { ensureDirExists } from '@interapp/utils/fileUtils';
+import { FileProxy } from '@interapp/utils/fileProxy';
+import { buildId, randomId } from '@interapp/utils/utils';
+import { CommonEvents } from '@interapp/events/commonEvents';
+import { EventEmitter } from '@interapp/events/eventEmitter';
 import path from 'path';
 import fs from 'fs';
 import { GraphManager } from './graphManager';
-import { getTodayDate } from '@common/utils/dateUtils';
+import { getTodayDate } from '@interapp/utils/dateUtils';
 
-/**
- * Singleton for managing contests.
- * Access via ContestsManager.instance
- */
+EventEmitter.instance.on(CommonEvents.clearProfileData, () => {
+  ContestsManager.instance.clear();
+});
+
 export class ContestsManager {
   static #instance: ContestsManager;
   private proxy: FileProxy<Contest> | null = null;
@@ -37,6 +39,10 @@ export class ContestsManager {
     this.profileId = profileId;
     const contestsDir = path.join(DATA_DIR, 'profileData', profileId, 'contests');
     ensureDirExists(contestsDir);
+  }
+
+  public clear() {
+    this.profileId = null;
   }
 
   public getContest(contestId: string): Contest | null {
@@ -105,7 +111,8 @@ export class ContestsManager {
   }
 
   public addCurrContestProblem(): ContestProblem {
-    const newProblem = getEmptyContestProblem();
+    const id = randomId();
+    const newProblem = getEmptyContestProblem(id);
     this.proxy?.proxy.problems.push(newProblem);
     return newProblem;
   }

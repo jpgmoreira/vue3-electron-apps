@@ -1,24 +1,14 @@
 import { OjFields, OjProblem } from '@common/schemas/problems';
 import { Oj } from '@common/types/oj';
-import fs from 'fs';
-import type { Database } from 'sqlite';
-
-export function ensureDirExists(dir: string) {
-  fs.mkdirSync(dir, { recursive: true });
-}
-
-export async function setDbPragmas(db: Database) {
-  await db.exec(`
-      PRAGMA journal_mode = WAL;
-      PRAGMA synchronous = NORMAL;
-      PRAGMA temp_store = MEMORY;
-      PRAGMA foreign_keys = ON;
-    `);
-}
 
 /**
  * Returns all columns and values for an OJ problem, with JSON and boolean handling.
  * Optionally excludes specific columns (e.g. ["timestamp", "solvedDate"]).
+ * Return type:
+ * {
+ *  columns: string[],  (array with the names of all the columns)
+ *  values: any[]       (array with the corresponding values)
+ * }
  */
 export function getOjProblemColumnsAndValues<T extends Oj>(
   problem: OjProblem[T],

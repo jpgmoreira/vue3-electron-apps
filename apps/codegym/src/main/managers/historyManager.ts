@@ -1,8 +1,8 @@
 import { OjProblem } from '@common/schemas/problems';
-import { DATA_DIR } from '../constants';
+import { DATA_DIR } from '@common/constants';
 import { Oj } from '@common/types/oj';
-import { EventEmitter } from '@common/helpers/eventEmitter';
-import { Events } from '@main/utils/events';
+import { EventEmitter } from '@interapp/events/eventEmitter';
+import { CommonEvents } from '@interapp/events/commonEvents';
 import { open, type Database } from 'sqlite';
 import sqlite3 from 'sqlite3';
 import path from 'path';
@@ -12,17 +12,13 @@ import {
   fetchHistoryPage,
   insertIntoHistory,
   replaceHistorySnapshot,
-} from '../sql/history';
-import { setDbPragmas } from '../utils';
+} from '../data/sql/history';
+import { setDbPragmas } from '@interapp/utils/sql';
 
-EventEmitter.instance.on(Events.clearProfileData, () => {
+EventEmitter.instance.on(CommonEvents.clearProfileData, () => {
   HistoryManager.instance.clear();
 });
 
-/**
- * Singleton for managing history data.
- * Access via HistoryManager.instance
- */
 export class HistoryManager {
   static #instance: HistoryManager;
 

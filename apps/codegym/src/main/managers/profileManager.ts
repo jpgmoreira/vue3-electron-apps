@@ -4,27 +4,23 @@ import {
   Profile,
   ProfileRegistry,
 } from '@common/schemas/profile';
-import { FileProxy } from '../fileProxy';
+import { FileProxy } from '@interapp/utils/fileProxy';
 import path from 'path';
-import { DATA_DIR } from '../constants';
+import { DATA_DIR } from '@common/constants';
 import { Oj } from '@common/types/oj';
 import { AuthPage } from '@common/types/authPage';
-import { buildId } from '@common/utils/utils';
+import { buildId } from '@interapp/utils/utils';
 import { OjContext } from '@common/schemas/ojContext';
 import { OjProblem } from '@common/schemas/problems';
-import { EventEmitter } from '@common/helpers/eventEmitter';
-import { Events } from '@main/utils/events';
-import { GenericResponseDTO } from '@common/dto/genericResponseDTO';
+import { EventEmitter } from '@interapp/events/eventEmitter';
+import { CommonEvents } from '@interapp/events/commonEvents';
+import { GenericResponseDTO } from '@interapp/dto/genericResponseDTO';
 import fs from 'fs';
 
-EventEmitter.instance.on(Events.clearProfileData, () => {
+EventEmitter.instance.on(CommonEvents.clearProfileData, () => {
   ProfileManager.instance.clear();
 });
 
-/**
- * Singleton for managing profiles.
- * Access via ProfileManager.instance
- */
 export class ProfileManager {
   static #instance: ProfileManager;
 
@@ -79,7 +75,7 @@ export class ProfileManager {
   }
 
   public logout() {
-    EventEmitter.instance.emit(Events.clearProfileData);
+    EventEmitter.instance.emit(CommonEvents.clearProfileData);
   }
 
   public clear() {

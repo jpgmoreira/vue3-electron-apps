@@ -1,5 +1,5 @@
 import { UvaProblem } from '@common/schemas/problems';
-import { ProfileManager } from '@main/data/managers/profileManager';
+import { ProfileManager } from '@main/managers/profileManager';
 import type { Database } from 'sqlite';
 
 export async function filterUvaProblems(db: Database): Promise<UvaProblem[]> {

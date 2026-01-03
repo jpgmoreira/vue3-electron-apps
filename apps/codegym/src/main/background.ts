@@ -1,43 +1,7 @@
-import { app, BrowserWindow, Menu, globalShortcut } from 'electron';
+import { app, BrowserWindow, globalShortcut } from 'electron';
 import type { Event, WebContents, WebPreferences } from 'electron';
-import { join } from 'path';
-import { electronApp, optimizer, is } from '@electron-toolkit/utils';
-import { installExtension, VUEJS_DEVTOOLS } from 'electron-devtools-installer';
-import { loadStartupData } from './data/startup';
-import { Channels } from '@common/types/channels';
-
-function createWindow(): void {
-  const mainWindow = new BrowserWindow({
-    width: 1200,
-    height: 800,
-    show: false,
-    icon: join(__dirname, '../../build/icon.png'),
-    webPreferences: {
-      preload: join(__dirname, '../preload/index.js'),
-      spellcheck: false,
-    },
-  });
-  Menu.setApplicationMenu(null);
-
-  if (is.dev && process.env['ELECTRON_RENDERER_URL']) {
-    mainWindow.loadURL(process.env['ELECTRON_RENDERER_URL']);
-  } else {
-    mainWindow.loadFile(join(__dirname, '../renderer/index.html'));
-  }
-
-  mainWindow.once('ready-to-show', async () => {
-    const startupData = await loadStartupData();
-    mainWindow.webContents.send(Channels.loadStartupData, startupData);
-    mainWindow.show();
-  });
-
-  if (is.dev) {
-    installExtension(VUEJS_DEVTOOLS)
-      .then((ext) => console.log(`Added Extension:  ${ext.name}`))
-      .catch((err) => console.log('An error occurred: ', err));
-    mainWindow.webContents.openDevTools({ mode: 'right' });
-  }
-}
+import { electronApp, optimizer } from '@electron-toolkit/utils';
+import { WindowManager } from './managers/windowManager';
 
 app.whenReady().then(() => {
   // Set app user model id for windows
@@ -54,11 +18,13 @@ app.whenReady().then(() => {
       }
     });
   });
-  createWindow();
+  WindowManager.instance.createMainWindow();
   app.on('activate', function () {
     // On macOS it's common to re-create a window in the app when the
     // dock icon is clicked and there are no other windows open.
-    if (BrowserWindow.getAllWindows().length === 0) createWindow();
+    if (BrowserWindow.getAllWindows().length === 0) {
+      WindowManager.instance.createMainWindow();
+    }
   });
 });
 

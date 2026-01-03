@@ -1,12 +1,12 @@
 import { GraphRecord } from '@common/schemas/graph';
-import { GraphManager } from './managers/graphManager';
-import { OjMetaManager } from './managers/ojMetaManager';
-import { ProfileManager } from './managers/profileManager';
-import { HistoryManager } from './managers/historyManager';
+import { GraphManager } from '../managers/graphManager';
+import { OjMetaManager } from '../managers/ojMetaManager';
+import { ProfileManager } from '../managers/profileManager';
+import { HistoryManager } from '../managers/historyManager';
 import { StartupData } from '@common/schemas/startup';
-import { CacheManager } from './managers/cacheManager';
-import { TreeManager } from './managers/treeManager';
-import { ContestsManager } from './managers/contestsManager';
+import { CacheManager } from '../managers/cacheManager';
+import { TreeManager } from '../managers/treeManager';
+import { ContestsManager } from '../managers/contestsManager';
 
 export async function loadStartupData(): Promise<StartupData> {
   await CacheManager.instance.loadCache();

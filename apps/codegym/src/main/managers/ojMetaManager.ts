@@ -1,13 +1,9 @@
 import { getEmptyOjMeta, OjMeta } from '@common/schemas/ojMeta';
-import { FileProxy } from '../fileProxy';
-import { DATA_DIR } from '../constants';
+import { FileProxy } from '@interapp/utils/fileProxy';
+import { DATA_DIR } from '@common/constants';
 import path from 'path';
 import { Oj } from '@common/types/oj';
 
-/**
- * Singleton for managing oj metadata.
- * Access via OjMetaManager.instance
- */
 export class OjMetaManager {
   static #instance: OjMetaManager;
   private proxy: FileProxy<OjMeta>;

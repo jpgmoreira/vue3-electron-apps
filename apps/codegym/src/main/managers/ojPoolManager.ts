@@ -3,12 +3,12 @@ import { OjProblem } from '@common/schemas/problems';
 import { Oj, OjList } from '@common/types/oj';
 import { ProfileManager } from './profileManager';
 import { CacheManager } from './cacheManager';
-import { shuffleArray, toBase62 } from '@common/utils/utils';
+import { shuffleArray, toBase62 } from '@interapp/utils/utils';
 import { HistoryManager } from './historyManager';
-import { EventEmitter } from '@common/helpers/eventEmitter';
-import { Events } from '@main/utils/events';
+import { EventEmitter } from '@interapp/events/eventEmitter';
+import { CommonEvents } from '@interapp/events/commonEvents';
 
-EventEmitter.instance.on(Events.clearProfileData, () => {
+EventEmitter.instance.on(CommonEvents.clearProfileData, () => {
   OjPoolManager.instance.clear();
 });
 
@@ -23,10 +23,6 @@ type OjPoolType = {
   };
 };
 
-/**
- * Singleton for managing the pool of currently filtered OJ problems.
- * Access via OjPoolManager.instance
- */
 export class OjPoolManager {
   static #instance: OjPoolManager;
   private pool!: OjPoolType;
@@ -70,7 +66,7 @@ export class OjPoolManager {
     const snapshot = structuredClone(pool.shuffledProblems[pool.index] || null);
     if (snapshot) {
       const now = Date.now();
-      snapshot.id = `snap-${oj}-${snapshot.path}-${toBase62(now)}`;
+      snapshot.id = `snap-${oj}-${snapshot.path}-${toBase62(BigInt(now))}`;
       snapshot.timestamp = now;
       snapshot.solvedDate = null;
       HistoryManager.instance.insertIntoHistory(snapshot);

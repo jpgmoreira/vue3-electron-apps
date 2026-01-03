@@ -1,7 +1,7 @@
 import { OjProblem } from '@common/schemas/problems';
 import { Oj } from '@common/types/oj';
 import type { Database } from 'sqlite';
-import { getOjProblemColumnsAndValues } from '../../utils';
+import { getOjProblemColumnsAndValues } from '../helpers';
 
 const SQLITE_MAX_VARIABLES = 999;
 
