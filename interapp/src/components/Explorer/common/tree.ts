@@ -17,7 +17,6 @@ export type BaseNode = {
   text: string;
   depth: number;
   selected: boolean;
-  hidden: boolean;
   parentId: string | null;
   nextId: string | null; // Next sibling ID, in the same doubly linked list.
   prevId: string | null; // Previous sibling ID, in the same doubly linked list.
