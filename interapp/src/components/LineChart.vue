@@ -4,10 +4,14 @@
    * Line chart component.
    * Supports plotting several series, panning and zooming.
    * Worked reasonably well with 10k points.
-   * I didn't test changing the props on the parent component to see what happens.
    */
   import { useTemplateRef, onMounted, onBeforeUnmount, ref, reactive, computed, watch } from 'vue';
-  import { throttle, randomId } from '@common/utils/utils';
+  import { throttle, randomId } from '@interapp/utils/utils';
+  // --- Exposes: ---
+  // Exposes the flush function so you can flush the graph upon prop changes:
+  defineExpose({
+    flush,
+  });
   // --- Props: ---
   export type LineChartProps = {
     // "allXValues" and "allXLabels":
@@ -16,6 +20,8 @@
     // - Not required to be sorted though.
     allXValues: number[];
     allXLabels: string[];
+    // Show all Y tick values, or only those that appear in the data.
+    yTickMode: 'all' | 'data-only';
     data: {
       // Series come here.
       id: string;
@@ -43,7 +49,10 @@
     x: number;
     y: number;
   };
-  const props = defineProps<LineChartProps>();
+  const props = withDefaults(defineProps<LineChartProps>(), {
+    yTickMode: 'all',
+  });
+
   // --- Canvas: ---
   const mainCanvasRef = useTemplateRef('main-canvas-ref');
   const hoverCanvasRef = useTemplateRef('hover-canvas-ref');
@@ -90,7 +99,7 @@
     visible: false,
   });
   // --- Functions: ---
-  function init() {
+  function flush() {
     const { allXValues, allXLabels, data } = props;
     xValueToLabel.clear();
     xValueToXaxis.clear();
@@ -118,6 +127,7 @@
     }
     allYvalues.clear(); // Not needed anymore.
     allYvaluesSorted.sort((a, b) => a - b);
+    fixCanvasSize();
   }
   function resetContextState() {
     contextState.label = null;
@@ -273,6 +283,13 @@
       }
     }
   }
+  function drawHorizontalLine(y: number, x0: number) {
+    if (!mainCtx) return;
+    mainCtx.beginPath();
+    mainCtx.moveTo(xLeft, y);
+    mainCtx.lineTo(x0, y);
+    mainCtx.stroke();
+  }
   function drawGrid() {
     if (!mainCtx) return;
     mainCtx.save();
@@ -281,14 +298,23 @@
     mainCtx.strokeStyle = '#aaa';
     // Horizontal lines:
     const x0 = _toCanvasCoordX(0, scaleX, offsetX);
-    for (let i = 1; i <= maxYvalue; i++) {
-      const y = toCanvasCoordY(i, scaleY, offsetY);
-      if (y < 0) break;
-      if (y > yBottom) continue;
-      mainCtx.beginPath();
-      mainCtx.moveTo(xLeft, y);
-      mainCtx.lineTo(x0, y);
-      mainCtx.stroke();
+    let lastY = 0;
+    if (props.yTickMode === 'all') {
+      for (let yVal = 1; yVal <= maxYvalue; yVal++) {
+        const y = toCanvasCoordY(yVal, scaleY, offsetY);
+        if (y < 0) break;
+        if (y > yBottom) continue;
+        drawHorizontalLine(y, x0);
+      }
+    } else {
+      for (const yVal of allYvaluesSorted) {
+        const y = toCanvasCoordY(yVal, scaleY, offsetY);
+        if (y < 0) break;
+        if (y > yBottom) continue;
+        if (Math.abs(y - lastY) < minYlabelDistance) continue;
+        lastY = y;
+        drawHorizontalLine(y, x0);
+      }
     }
     // Vertical lines:
     if (scaleX > 0.2) {
@@ -509,8 +535,7 @@
     window.addEventListener('mousemove', windowMouseMove);
     window.addEventListener('keydown', windowKeyDown);
     window.addEventListener('keyup', windowKeyUp);
-    init();
-    fixCanvasSize();
+    flush();
   });
   onBeforeUnmount(() => {
     window.removeEventListener('mouseup', windowMouseUp);
