@@ -17,15 +17,19 @@
    *
    *  - Pass the "options" prop as an array of objects in the form:
    *    {
-   *      text: <string>
-   *      value: string
+   *      text: string,
+   *      value: string,
+   *      class?: string
    *    }
    *    You should not have duplicate values in the options.
    *
-   *  On the parent component, you can listen to the following events:
+   *  - On the parent component, you can listen to the following events:
    *    - select-option   (passes an option value);
    *    - deselect-option (passes an option value);
    *    - create-option   (passes an option name);
+   *    - change-mode     (passes "all" or "any");
+   *
+   * The "class" property allows to pass a class that will be added to the option's badge.
    *
    * Optional props:
    *   - placeholder     <string>         A placeholder for the text input;
@@ -35,6 +39,9 @@
    *   - direction:      <"up" | "down">  The opening direction for the context menu. Default is down.
    *   - badgeNumbers:   <boolean>        Show a small index in front of the badge text. Default is false.
    *   - optionNumbers:  <boolean>        Show a small index in front of the option text. Default is false.
+   *   - mode:           <boolean>        Show a select component that allows switching between all or any mode.
+   *   - allText:        <string>         Text for the "all" option, when "mode" is true. Default to "All".
+   *   - anyText:        <string>         Text for the "any" option, when "mode" is true. Default to "Any".
    *
    * Styling:
    *   - You can apply the styling for this component's elements using the
@@ -47,17 +54,21 @@
    *        .multiselect .context-menu .option .option-index
    *        .multiselect .context-menu .highlight
    *        .multiselect .badge
+   *        .multiselect .badge:focus
    *        .multiselect .badge .badge-index
    *        .multiselect .badge .close-button
    *        .multiselect .badge .close-button svg path  (set the "stroke" CSS property to change X color)
    *        .multiselect .badges-container
    *        .multiselect .editor
+   *        .multiselect .mode-select
    */
-  import { toLocaleNumber } from '@common/utils/utils';
+  import { toLocaleNumber } from '@interapp/utils/utils';
   import { computed, reactive, useTemplateRef, ref, watch } from 'vue';
+  export type Mode = 'all' | 'any';
   export type MultiselectOption = {
     text: string;
     value: string;
+    class?: string;
   };
   export type MultiselectProps = {
     options: MultiselectOption[];
@@ -65,22 +76,30 @@
     selected?: string[];
     create?: boolean;
     close?: boolean;
+    mode?: Mode;
+    allText?: string;
+    anyText?: string;
     direction?: 'up' | 'down';
     badgeNumbers?: boolean;
     optionNumbers?: boolean;
   };
+  const props = withDefaults(defineProps<MultiselectProps>(), {
+    allText: 'All',
+    anyText: 'Any',
+  });
+
   type SearchSegment = { text: string; match: boolean };
   const emit = defineEmits<{
     (e: 'selectOption', optionValue: string): void;
     (e: 'createOption', optionText: string): void;
     (e: 'deselectOption', optionValue: string): void;
+    (e: 'changeMode', newMode: Mode): void;
   }>();
   const optionHeight = 30;
   const pageSize = 100;
   const anchor = ref(0);
   const scrollOffset = ref(0);
   const scrollTimer = ref<ReturnType<typeof setTimeout> | undefined>(undefined);
-  const props = defineProps<MultiselectProps>();
   const editor = useTemplateRef('editor');
   const contextMenu = useTemplateRef('context-menu');
   const optionsContainer = useTemplateRef('options-container');
@@ -136,7 +155,7 @@
     const option = contextOptions.value[state.highlightedContextIndex];
     if (option) {
       selectOption(option.value);
-    } else if (props.create) {
+    } else if (props.create && state.content.trim()) {
       emit('createOption', state.content);
       state.content = '';
       state.highlightedContextIndex = 0;
@@ -228,6 +247,10 @@
     }
     return result;
   }
+  function changeMode(event: Event) {
+    const target = event.target as HTMLSelectElement;
+    emit('changeMode', target.value as Mode);
+  }
   watch(showContextMenu, () => {
     anchor.value = 0;
     scrollOffset.value = 0;
@@ -279,6 +302,7 @@
         v-for="(option, index) in selectedOptions"
         :key="option.value"
         class="badge"
+        :class="option.class || ''"
         tabindex="0"
         @keydown="badgeKeydown($event, option.value)"
         @mousedown.stop
@@ -299,20 +323,26 @@
         </button>
       </span>
     </div>
-    <input
-      ref="editor"
-      v-model.trim="state.content"
-      type="text"
-      class="editor"
-      :placeholder="props.placeholder"
-      @input="editorInput"
-      @focus="state.editorHasFocus = true"
-      @blur="editorBlur"
-      @keydown.up.prevent="contextUp"
-      @keydown.down.prevent="contextDown"
-      @keydown.enter.prevent="editorEnter"
-      @keydown.escape.prevent="clear"
-    />
+    <div class="input-parent">
+      <input
+        ref="editor"
+        v-model.trim="state.content"
+        type="text"
+        class="editor"
+        :placeholder="props.placeholder"
+        @input="editorInput"
+        @focus="state.editorHasFocus = true"
+        @blur="editorBlur"
+        @keydown.up.prevent="contextUp"
+        @keydown.down.prevent="contextDown"
+        @keydown.enter.prevent="editorEnter"
+        @keydown.escape.prevent="clear"
+      />
+      <select v-if="props.mode" :value="props.mode" @change="changeMode" class="mode-select">
+        <option value="all">{{ props.allText }}</option>
+        <option value="any">{{ props.anyText }}</option>
+      </select>
+    </div>
   </div>
 </template>
 

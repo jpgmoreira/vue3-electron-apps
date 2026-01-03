@@ -1,6 +1,6 @@
 <script lang="ts" setup>
   import './style/index.css';
-  import Toast from '@interapp/components/Toast/Toast.vue';
+  import Toast from '@interapp/components/Toast.vue';
 </script>
 
 <template>
