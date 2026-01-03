@@ -1,10 +1,10 @@
 <script lang="ts" setup>
-  import { TreeOperationResponse } from '../common/treeOperationResponse';
+  import { TreeSnapshot } from '../common/treeSnapshot';
   import { NodeType, Node } from '../common/tree';
   import { ref, watch, computed } from 'vue';
 
   export type ContextProps = {
-    tree: TreeOperationResponse | null;
+    tree: TreeSnapshot | null;
     visible: boolean;
     type: NodeType | 'root';
     nSelectedFolders: number;
@@ -36,11 +36,11 @@
   const props = defineProps<ContextProps>();
   const style = ref<Record<string, string>>({});
 
-  const nSelectedNodes = computed(() => props.tree?.nSelectedNodes || 0);
-  const nSelectedFiles = computed(() => props.tree?.nSelectedFiles || 0);
+  const nSelectedNodes = computed(() => props.tree?.selectedNodes || 0);
+  const nSelectedFiles = computed(() => props.tree?.selectedFiles || 0);
 
   const showSelectAll = computed(() =>
-    Boolean(props.tree && props.tree.nTotalNodes > props.tree.nSelectedNodes)
+    Boolean(props.tree && props.tree.totalNodes > props.tree.selectedNodes)
   );
   const showRootSelection = computed(() =>
     Boolean(nSelectedNodes.value || props.nOpenDirs || showSelectAll.value)

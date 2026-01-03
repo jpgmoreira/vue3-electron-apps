@@ -2,7 +2,7 @@ import { randomId } from '@interapp/utils/utils';
 import { FileProxy } from '@interapp/utils/fileProxy';
 import { Links, Node, FileNode, DirNode, NodeType, HeadAndTail } from '../common/tree';
 import { ModifierKeys } from '@interapp/types/modifierKeys';
-import { TreeOperationResponse } from '../common/treeOperationResponse';
+import { TreeSnapshot } from '../common/treeSnapshot';
 import { GenericResponseDTO } from '@interapp/dto/genericResponseDTO';
 import fs from 'fs';
 import { setBit, clearBit } from '@interapp/utils/bitMask';
@@ -156,7 +156,7 @@ export class TreeManager {
     }
   }
 
-  public buildResult(scrollTop: number): TreeOperationResponse {
+  public buildResult(scrollTop: number): TreeSnapshot {
     const page: Node[] = [];
     const tolerance = scrollTop - (this.TREE_PAGE_SIZE / 2) * this.TREE_ITEM_HEIGHT;
     let nSurfaceNodes = 0;
@@ -178,11 +178,11 @@ export class TreeManager {
       return this.buildResult(fakeScrollTop);
     }
     return {
-      nSelectedNodes: this.nSelectedNodes,
-      nSelectedFiles: this.nSelectedFiles,
-      nTotalNodes: this.expandedFlat.length,
-      nOpenDirs: this.nOpenDirs,
-      nSurfaceNodes,
+      selectedNodes: this.nSelectedNodes,
+      selectedFiles: this.nSelectedFiles,
+      totalNodes: this.expandedFlat.length,
+      openDirs: this.nOpenDirs,
+      surfaceNodes: nSurfaceNodes,
       page,
     };
   }

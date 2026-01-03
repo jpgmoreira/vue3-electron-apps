@@ -1,9 +1,9 @@
 <script lang="ts" setup>
   import ContextMenu from './ContextMenu.vue';
-  import { TreeOperationResponseDTO } from '@common/dto/treeOperationResponseDTO';
-  import { NodeType, Node, DirNode } from '@common/types/tree';
-  import { ModifierKeys } from '@common/types/keys';
-  import { TreeChannels } from '@preload/channels/tree';
+  import { TreeSnapshot } from '../common/treeSnapshot';
+  import { NodeType, Node, DirNode } from '../common/tree';
+  import { ModifierKeys } from '@interapp/types/modifierKeys';
+  import { TreeChannels } from '../preload/channels';
   import {
     ref,
     onMounted,
@@ -13,17 +13,14 @@
     useTemplateRef,
     computed,
     onActivated,
-    watch,
   } from 'vue';
-  import { GenericResponseDTO } from '@common/dto/genericResponseDTO';
-  import { useUIStore } from '@renderer/store/ui';
-  import { toLocaleNumber } from '@common/utils/utils';
-  import { hasBit } from '@common/utils/bitMask';
-  import { useNotesStore } from '@renderer/store/notes';
-  import verticalIndent from '@renderer/assets/images/vertical.png';
-  import middleIndent from '@renderer/assets/images/middle.png';
-  import endIndent from '@renderer/assets/images/end.png';
-  import DeleteModal from './DeleteModal.vue';
+  import { useToastStore } from '@interapp/store/toast';
+  import { GenericResponseDTO } from '@interapp/dto/genericResponseDTO';
+  import { toLocaleNumber } from '@interapp/utils/utils';
+  import { hasBit } from '@interapp/utils/bitMask';
+  import verticalIndent from './assets/vertical.png';
+  import middleIndent from './assets/middle.png';
+  import endIndent from './assets/end.png';
 
   // --- Types: ---
 
@@ -36,20 +33,12 @@
     y: number;
   };
 
-  export type ModalState = {
-    visible: boolean;
-    currentNode: Node | null;
-    multiple: boolean;
-    isDeleting: boolean;
-  };
-
   // --- Props and emits: ---
 
   const props = withDefaults(
     defineProps<{
       checkbox?: boolean;
       filesHint?: boolean;
-      search?: boolean;
       dirIcon?: boolean;
       fileIcon?: boolean;
       selectionOnly?: boolean;
@@ -57,7 +46,6 @@
     {
       checkbox: false,
       filesHint: false,
-      search: false,
       dirIcon: false,
       fileIcon: false,
       selectionOnly: false,
@@ -76,18 +64,16 @@
   const paddingBottom = 250;
   const indentSpanWidth = 20;
 
-  const uiStore = useUIStore();
-  const notesStore = useNotesStore();
+  const toastStore = useToastStore();
 
   const keys: ModifierKeys = {
     ctrl: false,
   };
 
-  const initialScrollTop = uiStore.settings.explorerScrollTop;
-  const lastScrollTop = ref(initialScrollTop);
+  const lastScrollTop = ref(0);
 
   const hasLoaded = ref(false);
-  const tree = ref<TreeOperationResponseDTO | null>(null);
+  const tree = ref<TreeSnapshot | null>(null);
   const contextState = reactive<ContextState>({
     type: 'root',
     visible: false,
@@ -97,20 +83,11 @@
     y: 0,
   });
 
-  const modalState = reactive<ModalState>({
-    currentNode: null,
-    multiple: false,
-    visible: false,
-    isDeleting: false,
-  });
-
   const renamingNode = ref<Node | null>(null);
   const originalName = ref('');
-  const searchText = ref('');
   const scrollTimer = ref<ReturnType<typeof setTimeout> | undefined>(undefined);
   const firstActivation = ref(true);
 
-  const isSearching = ref(false);
   const showFilesSelectedBadge = ref(false);
   const nodeContainerOffset = ref(0);
 
@@ -118,18 +95,18 @@
   const treeView = useTemplateRef('tree-view');
 
   const ghostStyle = computed(() => ({
-    height: `${rowHeight * (tree.value?.nSurfaceNodes || 0) + paddingBottom}px`,
+    height: `${rowHeight * (tree.value?.surfaceNodes || 0) + paddingBottom}px`,
   }));
 
   const selectedFilesText = computed(() => {
     if (!tree.value) return '0 notes';
-    const val = toLocaleNumber(tree.value.nSelectedFiles);
+    const val = toLocaleNumber(tree.value.selectedFiles);
     return val === '1' ? '1 note' : `${val} notes`;
   });
 
   const nSelectedFolders = computed(() => {
     if (!tree.value) return 0;
-    return tree.value.nSelectedNodes - tree.value.nSelectedFiles;
+    return tree.value.selectedNodes - tree.value.selectedFiles;
   });
 
   const selectedFoldersText = computed(() => {
@@ -138,11 +115,7 @@
     return val === '1' ? '1 folder' : `${val} folders`;
   });
 
-  const nSelectedFiles = computed(() => tree.value?.nSelectedFiles || 0);
-
-  // --- Watches: ---
-
-  watch(nSelectedFiles, notesStore.fetchNoteStatistics);
+  const selectedFiles = computed(() => tree.value?.selectedFiles || 0);
 
   // --- Context menu: ---
 
@@ -161,7 +134,7 @@
     const node = contextState.activeNode;
     const parentId = node ? node.id : null;
     const prefix = type === 'dir' ? 'Folder' : 'Note';
-    const newTree = await window.api.invoke<TreeOperationResponseDTO>(
+    const newTree = await window.explorer.invoke<TreeSnapshot>(
       TreeChannels.createNode,
       lastScrollTop.value,
       type,
@@ -175,7 +148,7 @@
     const node = contextState.activeNode;
     if (!node) return;
     const prefix = type === 'dir' ? 'Folder' : 'Note';
-    const newTree = await window.api.invoke<TreeOperationResponseDTO>(
+    const newTree = await window.explorer.invoke<TreeSnapshot>(
       TreeChannels.createNodeAbove,
       lastScrollTop.value,
       type,
@@ -189,7 +162,7 @@
     const node = contextState.activeNode;
     if (!node) return;
     const prefix = type === 'dir' ? 'Folder' : 'Note';
-    const newTree = await window.api.invoke<TreeOperationResponseDTO>(
+    const newTree = await window.explorer.invoke<TreeSnapshot>(
       TreeChannels.createNodeBelow,
       lastScrollTop.value,
       type,
@@ -202,7 +175,7 @@
   // --- Toggle dir open: ---
 
   async function toggleDirOpen(node: Node) {
-    const newTree = await window.api.invoke<TreeOperationResponseDTO>(
+    const newTree = await window.explorer.invoke<TreeSnapshot>(
       TreeChannels.toggleDirOpen,
       lastScrollTop.value,
       node.id
@@ -211,7 +184,7 @@
   }
 
   async function collapseAll() {
-    const newTree = await window.api.invoke<TreeOperationResponseDTO>(
+    const newTree = await window.explorer.invoke<TreeSnapshot>(
       TreeChannels.collapseAll,
       lastScrollTop.value
     );
@@ -234,20 +207,20 @@
     if (!node) return;
     const newName = node.text.trim();
     if (!newName) {
-      uiStore.showToast('Name cannot be empty!', 'error');
+      toastStore.showToast('Name cannot be empty!', 'error');
       node.text = originalName.value;
     } else if (newName !== originalName.value) {
-      const result = await window.api.invoke<GenericResponseDTO>(
+      const result = await window.explorer.invoke<GenericResponseDTO>(
         TreeChannels.renameNode,
         node.id,
         newName
       );
       if (result.status === 'error') {
-        uiStore.showToast(result.errorMsg, 'error');
+        toastStore.showToast(result.errorMsg, 'error');
         node.text = originalName.value;
       } else {
         if (node.type === 'file') {
-          emit('rename', node.noteId, newName);
+          emit('rename', node.id, newName);
         }
       }
     }
@@ -271,10 +244,9 @@
   // --- Selection: ---
 
   async function handleSelection(node: Node) {
-    if (isNodeDisabled(node)) return; // Do not allow folder selection while searching.
     const localKeys = { ...keys };
     if (props.checkbox) localKeys.ctrl = true;
-    const newTree = await window.api.invoke<TreeOperationResponseDTO>(
+    const newTree = await window.explorer.invoke<TreeSnapshot>(
       TreeChannels.handleSelection,
       lastScrollTop.value,
       node.id,
@@ -284,7 +256,7 @@
   }
 
   async function clearSelection() {
-    const newTree = await window.api.invoke<TreeOperationResponseDTO>(
+    const newTree = await window.explorer.invoke<TreeSnapshot>(
       TreeChannels.clearSelection,
       lastScrollTop.value
     );
@@ -292,7 +264,7 @@
   }
 
   async function selectAll() {
-    const newTree = await window.api.invoke<TreeOperationResponseDTO>(
+    const newTree = await window.explorer.invoke<TreeSnapshot>(
       TreeChannels.selectAll,
       lastScrollTop.value
     );
@@ -302,21 +274,21 @@
   // --- Deletion: ---
 
   async function deleteNode() {
-    const node = modalState.currentNode;
-    if (!node) return;
-    const newTree = await window.api.invoke<TreeOperationResponseDTO>(
+    const node = contextState.activeNode;
+    if (!node) throw new Error('Cannot delete null node!');
+    const newTree = await window.explorer.invoke<TreeSnapshot>(
       TreeChannels.deleteNode,
       lastScrollTop.value,
       node.id
     );
     updateTree(newTree);
     if (node.type === 'file') {
-      emit('deleteSingle', node.noteId);
+      emit('deleteSingle', node.id);
     }
   }
 
   async function deleteSelectedNodes() {
-    const newTree = await window.api.invoke<TreeOperationResponseDTO>(
+    const newTree = await window.explorer.invoke<TreeSnapshot>(
       TreeChannels.deleteSelectedNodes,
       lastScrollTop.value
     );
@@ -324,72 +296,15 @@
     emit('deleteMultiple');
   }
 
-  async function handleDeletion() {
-    modalState.isDeleting = true;
-    if (modalState.multiple) await deleteSelectedNodes();
-    else await deleteNode();
-    modalState.isDeleting = false;
-    closeModal();
-  }
-
-  function openDeleteNodeModal() {
-    modalState.currentNode = contextState.activeNode;
-    modalState.visible = true;
-    modalState.multiple = false;
-  }
-
-  function openDeleteSelectedNodesModal() {
-    modalState.currentNode = null;
-    modalState.visible = true;
-    modalState.multiple = true;
-  }
-
-  function closeModal() {
-    if (modalState.isDeleting) return;
-    modalState.currentNode = null;
-    modalState.visible = false;
-    modalState.multiple = false;
-  }
-
-  // --- Search: ---
-
-  async function search() {
-    const text = searchText.value.trim();
-    const newTree = await window.api.invoke<TreeOperationResponseDTO>(
-      TreeChannels.search,
-      lastScrollTop.value,
-      text
-    );
-    nextTick(() => {
-      isSearching.value = Boolean(text);
-    });
-    updateTree(newTree);
-  }
-
   // --- Node click: ---
 
-  function nodeClick(node: Node) {
-    if (props.selectionOnly) return;
-    if (node.type === 'file') {
-      notesStore.explorerNoteClicked(node.noteId);
-    }
-  }
-
-  function openNote() {
-    if (props.selectionOnly) return;
-    const node = contextState.activeNode;
-    if (!node) return;
-    if (node.type === 'file') {
-      notesStore.explorerNoteClicked(node.noteId);
-      notesStore.explorerNoteClicked(node.noteId);
-    }
-  }
+  function nodeClick(node: Node) {}
 
   // --- Movement: ---
 
   async function moveSelection(channel: TreeChannels) {
     if (!tree.value) return;
-    const newTree = await window.api.invoke<TreeOperationResponseDTO>(
+    const newTree = await window.explorer.invoke<TreeSnapshot>(
       channel,
       lastScrollTop.value,
       contextState.activeNode?.id || null
@@ -399,7 +314,7 @@
 
   async function moveSelectionToRoot() {
     if (!tree.value) return;
-    const newTree = await window.api.invoke<TreeOperationResponseDTO>(
+    const newTree = await window.explorer.invoke<TreeSnapshot>(
       TreeChannels.moveSelectedNodesInto,
       lastScrollTop.value,
       null
@@ -413,15 +328,11 @@
     return Boolean(node.type === 'dir' && node.nSelDesc && node.nSelDesc < node.nDesc);
   }
 
-  function isNodeDisabled(node: Node) {
-    return node.type === 'dir' && isSearching.value;
-  }
-
   function fileHintText(node: DirNode) {
     return node.nFileDesc === 1 ? '1 note' : `${toLocaleNumber(node.nFileDesc)} notes`;
   }
 
-  function updateTree(newTree: TreeOperationResponseDTO) {
+  function updateTree(newTree: TreeSnapshot) {
     tree.value = newTree;
   }
 
@@ -460,12 +371,11 @@
     const scrollTop = scrollContainer.value.scrollTop;
     if (scrollTop === lastScrollTop.value) return; // Do not react on x scroll;
     lastScrollTop.value = scrollTop;
-    uiStore.updateSettings({ explorerScrollTop: scrollTop });
     clearTimeout(scrollTimer.value);
     scrollTimer.value = setTimeout(async () => {
       const container = scrollContainer.value;
       if (!container) return;
-      const newTree = await window.api.invoke<TreeOperationResponseDTO>(
+      const newTree = await window.explorer.invoke<TreeSnapshot>(
         TreeChannels.getState,
         lastScrollTop.value
       );
@@ -475,7 +385,7 @@
   }
 
   function containerMouseEnter() {
-    if (tree.value?.nTotalNodes) {
+    if (tree.value?.totalNodes) {
       showFilesSelectedBadge.value = true;
     }
   }
@@ -507,7 +417,7 @@
       firstActivation.value = false;
       return;
     }
-    const newTree = await window.api.invoke<TreeOperationResponseDTO>(
+    const newTree = await window.explorer.invoke<TreeSnapshot>(
       TreeChannels.getState,
       lastScrollTop.value
     );
@@ -515,14 +425,12 @@
     scrollContainer.value!.scrollTop = lastScrollTop.value;
   });
   onMounted(async () => {
-    tree.value = await window.api.invoke<TreeOperationResponseDTO>(
-      TreeChannels.getState,
-      initialScrollTop
-    );
+    const firstTree = await window.explorer.invoke<TreeSnapshot>(TreeChannels.getState, 0);
+    updateTree(firstTree);
     hasLoaded.value = true;
     await nextTick();
     if (scrollContainer.value) {
-      scrollContainer.value.scrollTop = initialScrollTop;
+      scrollContainer.value.scrollTop = 0;
     }
     nodeContainerOffset.value = (tree.value?.page[0]?.ui.position || 0) * rowHeight;
     window.addEventListener('click', windowClick);
@@ -546,32 +454,22 @@
     @mouseenter="containerMouseEnter"
     @mouseleave="containerMouseLeave"
   >
-    <DeleteModal
-      :modal-state="modalState"
-      :close-modal="closeModal"
-      :tree="tree"
-      :n-selected-folders="nSelectedFolders"
-      :handle-deletion="handleDeletion"
-    />
-
     <ContextMenu
       class="z-[3]"
       :tree="tree"
       :n-selected-folders="nSelectedFolders"
-      :n-open-dirs="tree?.nOpenDirs || 0"
-      :is-searching="isSearching"
+      :n-open-dirs="tree?.openDirs || 0"
       :selection-only="props.selectionOnly"
       v-bind="contextState"
       @create-node="createNode"
       @create-node-above="createNodeAbove"
       @create-node-below="createNodeBelow"
       @rename-node="startRenaming"
-      @delete-node="openDeleteNodeModal"
-      @delete-selected-nodes="openDeleteSelectedNodesModal"
+      @delete-node="deleteNode"
+      @delete-selected-nodes="deleteSelectedNodes"
       @collapse-all="collapseAll"
       @clear-selection="clearSelection"
       @select-all="selectAll"
-      @open-note="openNote"
       @move-selected-files-above="() => moveSelection(TreeChannels.moveSelectedFilesAbove)"
       @move-selected-files-below="() => moveSelection(TreeChannels.moveSelectedFilesBelow)"
       @move-selected-folders-above="() => moveSelection(TreeChannels.moveSelectedFoldersAbove)"
@@ -587,7 +485,7 @@
     </Transition>
 
     <div
-      v-if="!isSearching && !tree?.page.length"
+      v-if="!tree?.page.length"
       class="absolute-center flex justify-center whitespace-nowrap text-lg opacity-70 w-full overflow-hidden"
     >
       Right-click here
@@ -598,16 +496,6 @@
       class="absolute top-0 left-0 w-full z-[1] overflow-auto h-full"
       @scroll="handleScroll"
     >
-      <div v-if="props.search" class="flex w-full sticky left-0 right-0">
-        <input
-          v-model.trim="searchText"
-          class="w-full !rounded-none !border-none"
-          type="text"
-          placeholder="Search for notes..."
-          @keydown.enter="search"
-        />
-        <button type="button" class="btn-primary rounded-none" @click="search">Search</button>
-      </div>
       <div class="relative">
         <div :style="ghostStyle"></div>
         <div
@@ -637,30 +525,18 @@
                   type="checkbox"
                   :checked="node.selected"
                   :indeterminate="isCheckIndeterminate(node)"
-                  :disabled="isNodeDisabled(node)"
                   :class="{
                     indeterminate: isCheckIndeterminate(node),
                   }"
                 />
 
-                <span
-                  v-if="node.type === 'file' && props.fileIcon"
-                  class="file-icon"
-                  :class="{ 'cursor-not-allowed': isNodeDisabled(node) }"
-                ></span>
-                <span
-                  v-if="node.type === 'dir' && props.dirIcon"
-                  class="dir-icon"
-                  :class="{ 'cursor-not-allowed': isNodeDisabled(node) }"
-                ></span>
+                <span v-if="node.type === 'file' && props.fileIcon" class="file-icon"></span>
+                <span v-if="node.type === 'dir' && props.dirIcon" class="dir-icon"></span>
 
                 <input
                   v-model.trim="node.text"
                   class="node-input"
-                  :class="{
-                    selected: node.selected,
-                    'cursor-not-allowed': isNodeDisabled(node),
-                  }"
+                  :class="{ selected: node.selected }"
                   :readonly="renamingNode !== node"
                   @mousedown.prevent
                   @keydown.enter="applyRenaming"
