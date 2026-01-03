@@ -1,5 +1,6 @@
 /**
- * Allowed communication channels between main and renderer processes to perform treeview operations.
+ * Allowed communication channels between main and renderer processes to perform explorer operations.
+ * All the channels are sent from the renderer to the main via invoke.
  */
 export enum TreeChannels {
   createNode = 'create-node',
@@ -11,7 +12,6 @@ export enum TreeChannels {
   handleSelection = 'handle-selection',
   deleteNode = 'delete-node',
   deleteSelectedNodes = 'delete-selected-nodes',
-  search = 'search',
   collapseAll = 'collapse-all',
   clearSelection = 'clear-selection',
   selectAll = 'select-all',
