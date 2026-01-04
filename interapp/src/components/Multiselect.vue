@@ -34,14 +34,14 @@
    * Optional props:
    *   - placeholder     <string>         A placeholder for the text input;
    *   - selected        <string[]>       An array of string containing the pre-selected values;
-   *   - create:         <boolean>        Used to allow the creation of new options. Default is false.
-   *   - close:          <boolean>        Display or not close buttons inside the badges. Default is false;
-   *   - direction:      <"up" | "down">  The opening direction for the context menu. Default is down.
-   *   - badgeNumbers:   <boolean>        Show a small index in front of the badge text. Default is false.
-   *   - optionNumbers:  <boolean>        Show a small index in front of the option text. Default is false.
-   *   - mode:           <boolean>        Show a select component that allows switching between all or any mode.
-   *   - allText:        <string>         Text for the "all" option, when "mode" is true. Default to "All".
-   *   - anyText:        <string>         Text for the "any" option, when "mode" is true. Default to "Any".
+   *   - create          <boolean>        Used to allow the creation of new options. Default is false.
+   *   - close           <boolean>        Display or not close buttons inside the badges. Default is false;
+   *   - direction       <"up" | "down">  The opening direction for the context menu. Default is down.
+   *   - badgeNumbers    <boolean>        Show a small index in front of the badge text. Default is false.
+   *   - optionNumbers   <boolean>        Show a small index in front of the option text. Default is false.
+   *   - mode            <boolean>        Show a select component that allows switching between all or any mode.
+   *   - allText         <string>         Text for the "all" option, when "mode" is true. Default to "All".
+   *   - anyText         <string>         Text for the "any" option, when "mode" is true. Default to "Any".
    *
    * Styling:
    *   - You can apply the styling for this component's elements using the
