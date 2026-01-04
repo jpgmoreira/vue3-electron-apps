@@ -2,7 +2,7 @@
   /**
    * [August 17th 2025]
    *
-   * Tested with 50K options and around 100 options selected, and worked nicely.
+   * Worked well with 50K options and around 100 options selected.
    *
    * A multiselect component with reactive props written for Vue 3.
    * If anything changes on the input props, the component will
