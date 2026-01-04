@@ -42,14 +42,16 @@
   const showSelectAll = computed(() =>
     Boolean(props.tree && props.tree.totalNodes > props.tree.selectedNodes)
   );
-  const showRootSelection = computed(() =>
+
+  // Selection and collapse all:
+  const showRootOperations = computed(() =>
     Boolean(nSelectedNodes.value || props.nOpenDirs || showSelectAll.value)
   );
 
   // Root sections
   const rootSections = computed(() => ({
     create: !props.selectionOnly,
-    select: showRootSelection.value,
+    operations: showRootOperations.value,
     move: !props.selectionOnly && nSelectedNodes.value > 0,
     delete: !props.selectionOnly && nSelectedNodes.value > 0,
   }));
@@ -96,31 +98,20 @@
         <div class="item" @click="emit('createNode', 'file')">New file</div>
         <div class="item" @click="emit('createNode', 'dir')">New folder</div>
       </div>
-      <div v-if="rootSections.create && rootSections.select" class="separator"></div>
 
-      <div v-if="rootSections.select">
+      <div v-if="rootSections.operations">
         <div v-if="showSelectAll" class="item" @click="emit('selectAll')">Select all</div>
         <div v-if="nSelectedNodes" class="item" @click="emit('clearSelection')">
           Clear selection
         </div>
         <div v-if="props.nOpenDirs" class="item" @click="emit('collapseAll')">Collapse all</div>
       </div>
-      <div
-        v-if="(rootSections.create || rootSections.select) && rootSections.move"
-        class="separator"
-      ></div>
 
       <div v-if="rootSections.move">
         <div class="item" @click="emit('moveSelectedNodesToRoot')">
           Move selected items to the root
         </div>
       </div>
-      <div
-        v-if="
-          (rootSections.create || rootSections.select || rootSections.move) && rootSections.delete
-        "
-        class="separator"
-      ></div>
 
       <div v-if="rootSections.delete">
         <div class="item danger" @click="emit('deleteSelectedNodes')">Delete selected</div>
@@ -135,7 +126,6 @@
         <div class="item" @click="emit('createNodeAbove', 'dir')">Create folder above</div>
         <div class="item" @click="emit('createNodeBelow', 'dir')">Create folder below</div>
       </div>
-      <div v-if="dirSections.create && dirSections.move" class="separator"></div>
 
       <div v-if="dirSections.move">
         <div class="item" @click="emit('moveSelectedNodesInto')">
@@ -148,10 +138,6 @@
           Move selected folders below
         </div>
       </div>
-      <div
-        v-if="(dirSections.create || dirSections.move) && dirSections.change"
-        class="separator"
-      ></div>
 
       <div v-if="dirSections.change">
         <div class="item" @click="emit('renameNode')">Rename</div>
@@ -162,19 +148,14 @@
     <!-- File context -->
     <div v-else-if="props.type === 'file'">
       <div v-if="fileSections.create">
-        <div class="item" @click="emit('createNodeAbove', 'file')">Create note above</div>
-        <div class="item" @click="emit('createNodeBelow', 'file')">Create note below</div>
+        <div class="item" @click="emit('createNodeAbove', 'file')">Create file above</div>
+        <div class="item" @click="emit('createNodeBelow', 'file')">Create file below</div>
       </div>
-      <div v-if="fileSections.create && fileSections.move" class="separator"></div>
 
       <div v-if="fileSections.move">
-        <div class="item" @click="emit('moveSelectedFilesAbove')">Move selected notes above</div>
-        <div class="item" @click="emit('moveSelectedFilesBelow')">Move selected notes below</div>
+        <div class="item" @click="emit('moveSelectedFilesAbove')">Move selected files above</div>
+        <div class="item" @click="emit('moveSelectedFilesBelow')">Move selected files below</div>
       </div>
-      <div
-        v-if="(fileSections.create || fileSections.move) && fileSections.change"
-        class="separator"
-      ></div>
 
       <div v-if="fileSections.change">
         <div class="item" @click="emit('renameNode')">Rename</div>
