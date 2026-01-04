@@ -1,11 +1,11 @@
-/* Customizable TreeView common styles */
+/* Customizable explorer common styles */
 
-.theme-dark .treeview .node-input.selected {
+.theme-dark .explorer .node-input.selected {
   outline: none;
 }
 
 /* Files selected badge - same style as context menu */
-.theme-dark .treeview .files-selected-badge {
+.theme-dark .explorer .files-selected-badge {
   border-radius: 8px;
   padding: 8px 12px; /* um pouco maior que antes */
   font-size: 14px; /* slightly larger text */
@@ -21,21 +21,21 @@
 }
 
 /* Fade + slight move animation */
-.theme-dark .treeview .fade-enter-active,
-.theme-dark .treeview .fade-leave-active {
+.theme-dark .explorer .fade-enter-active,
+.theme-dark .explorer .fade-leave-active {
   transition:
     opacity 0.25s ease,
     transform 0.25s ease;
 }
 
-.theme-dark .treeview .fade-enter-from,
-.theme-dark .treeview .fade-leave-to {
+.theme-dark .explorer .fade-enter-from,
+.theme-dark .explorer .fade-leave-to {
   opacity: 0;
   transform: translateY(5px);
 }
 
-.theme-dark .treeview .fade-enter-to,
-.theme-dark .treeview .fade-leave-from {
+.theme-dark .explorer .fade-enter-to,
+.theme-dark .explorer .fade-leave-from {
   opacity: 1;
   transform: translateY(0);
 }

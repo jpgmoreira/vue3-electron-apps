@@ -92,7 +92,7 @@
   const nodeContainerOffset = ref(0);
 
   const scrollContainer = useTemplateRef('scroll-container');
-  const treeView = useTemplateRef('tree-view');
+  const explorer = useTemplateRef('explorer');
 
   const ghostStyle = computed(() => ({
     height: `${rowHeight * (tree.value?.surfaceNodes || 0) + paddingBottom}px`,
@@ -403,7 +403,7 @@
   }
 
   function windowClick(e: MouseEvent) {
-    const root = treeView.value;
+    const root = explorer.value;
     if (!root) return;
     if (contextState.visible && !root.contains(e.target as globalThis.Node)) {
       contextState.visible = false;
@@ -447,8 +447,8 @@
 <template>
   <div
     v-if="hasLoaded"
-    ref="tree-view"
-    class="treeview relative h-full"
+    ref="explorer"
+    class="explorer relative h-full"
     @click.right="(e) => showContextMenu('root', null, e)"
     @click="() => (contextState.visible = false)"
     @mouseenter="containerMouseEnter"

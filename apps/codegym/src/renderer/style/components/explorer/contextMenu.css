@@ -1,6 +1,6 @@
-/* Customizable treeview context menu common styles */
+/* Customizable explorer context menu common styles */
 
-.theme-dark .treeview .context-menu {
+.theme-dark .explorer .context-menu {
   border-radius: 8px;
   min-width: 180px;
   padding: 6px 0;
@@ -8,7 +8,7 @@
   user-select: none;
 }
 
-.theme-dark .treeview .context-menu .item {
+.theme-dark .explorer .context-menu .item {
   padding: 6px 14px;
   font-size: 14px;
   line-height: 1.4;
@@ -18,12 +18,12 @@
     color 0.12s ease;
 }
 
-.theme-dark .treeview .context-menu > div:not(:last-child) {
+.theme-dark .explorer .context-menu > div:not(:last-child) {
   margin-bottom: 4px;
   padding-bottom: 4px;
 }
 
-.theme-dark .treeview .context-menu .separator {
+.theme-dark .explorer .context-menu .separator {
   height: 1px;
   margin: 4px 0;
 }

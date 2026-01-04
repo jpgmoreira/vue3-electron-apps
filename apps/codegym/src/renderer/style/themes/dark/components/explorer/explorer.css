@@ -1,19 +1,19 @@
 /* ========================
-   TreeView - Dark Theme 
+   explorer - Dark Theme 
    (by my old dear friend ChatGPT)
    ======================== */
 
-.theme-dark .treeview {
+.theme-dark .explorer {
   background-color: #282828;
 }
 
 /* Caret Icon */
-.theme-dark .treeview .node-caret {
+.theme-dark .explorer .node-caret {
   background-image: url('@renderer/assets/images/arrow-down.png');
 }
 
 /* Base Node */
-.theme-dark .treeview .node-input {
+.theme-dark .explorer .node-input {
   color: #dedede;
   border-radius: 4px;
   transition:
@@ -23,14 +23,14 @@
 }
 
 /* Hover (default state) */
-.theme-dark .treeview .node-input:not(.active):hover {
+.theme-dark .explorer .node-input:not(.active):hover {
   background-color: #454d57;
 }
 
 /* ========================
      SELECTED NODE
      ======================== */
-.theme-dark .treeview .node-input.selected {
+.theme-dark .explorer .node-input.selected {
   background: #2f4261;
   box-shadow: inset 0 0 0 2px #4da3ffcc;
   color: #e7f1ff;
@@ -38,7 +38,7 @@
 }
 
 /* Hover for selected */
-.theme-dark .treeview .node-input.selected:hover {
+.theme-dark .explorer .node-input.selected:hover {
   background: #2f4261;
   box-shadow: inset 0 0 0 2px #69b8ffdd;
   color: #ffffff;
@@ -47,7 +47,7 @@
 /* ========================
      ACTIVE NODE
      ======================== */
-.theme-dark .treeview .node-input.active {
+.theme-dark .explorer .node-input.active {
   position: relative;
   z-index: 1;
   box-shadow:
@@ -56,7 +56,7 @@
 }
 
 /* Active + Selected */
-.theme-dark .treeview .node-input.active.selected {
+.theme-dark .explorer .node-input.active.selected {
   z-index: 2;
   box-shadow:
     inset 0 0 0 2px #4da3ffcc,
@@ -69,26 +69,26 @@
      ======================== */
 
 /* Indent line */
-.theme-dark .treeview .indent-span::after {
+.theme-dark .explorer .indent-span::after {
   background-color: #606368;
 }
 
 /* Icons */
-.theme-dark .treeview .file-icon {
+.theme-dark .explorer .file-icon {
   background-image: url('@renderer/assets/images/book.png');
   width: 25px;
   height: 25px;
 }
 
 /* Hint text */
-.theme-dark .treeview .files-hint {
+.theme-dark .explorer .files-hint {
   color: #8e8e8e;
 }
 
 /* ========================
      Selected Badge (contextual)
      ======================== */
-.theme-dark .treeview .files-selected-badge {
+.theme-dark .explorer .files-selected-badge {
   background-color: #1e1e1e;
   color: #e2e2e2;
   border: 1px solid #2e2e2e;
@@ -99,7 +99,7 @@
 }
 
 /* Hover effect for badge */
-.theme-dark .treeview .files-selected-badge:hover {
+.theme-dark .explorer .files-selected-badge:hover {
   background-color: #2a2d2f;
   color: #fff;
   border-color: #3a3d3f;

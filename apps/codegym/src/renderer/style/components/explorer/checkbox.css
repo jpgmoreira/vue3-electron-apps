@@ -1,6 +1,6 @@
-/* Customizable treeview checkbox common styles */
+/* Customizable explorer checkbox common styles */
 
-.theme-dark .treeview input[type='checkbox'] {
+.theme-dark .explorer input[type='checkbox'] {
   appearance: none;
   width: 16px;
   height: 16px;
@@ -10,16 +10,16 @@
   transition: all 0.12s ease-in-out;
 }
 
-.theme-dark .treeview input[type='checkbox']:not(.cursor-not-allowed) {
+.theme-dark .explorer input[type='checkbox']:not(.cursor-not-allowed) {
   cursor: pointer;
 }
 
-.theme-dark .treeview input[type='checkbox']:disabled {
+.theme-dark .explorer input[type='checkbox']:disabled {
   cursor: not-allowed;
   opacity: 0.6;
 }
 
-.theme-dark .treeview input[type='checkbox']:checked::after {
+.theme-dark .explorer input[type='checkbox']:checked::after {
   content: '';
   position: absolute;
   left: 5px;
@@ -30,11 +30,11 @@
   border-width: 0 2px 2px 0;
 }
 
-.theme-dark .treeview input[type='checkbox']:focus {
+.theme-dark .explorer input[type='checkbox']:focus {
   outline: none;
 }
 
-.theme-dark .treeview input[type='checkbox'].indeterminate::after {
+.theme-dark .explorer input[type='checkbox'].indeterminate::after {
   content: '';
   position: absolute;
   top: 50%;

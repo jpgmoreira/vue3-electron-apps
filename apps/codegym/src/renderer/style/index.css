@@ -7,9 +7,9 @@
 /* === 2. Components === */
 /* Base component styles (non-themed) */
 @import './components/multiselect.css';
-@import './components/treeView/checkbox.css';
-@import './components/treeView/contextMenu.css';
-@import './components/treeView/treeView.css';
+@import './components/explorer/checkbox.css';
+@import './components/explorer/contextMenu.css';
+@import './components/explorer/explorer.css';
 
 /* === 3. Widgets === */
 /* Smaller, reusable UI parts */
@@ -32,9 +32,9 @@
 
 /* Themed component overrides */
 @import './themes/dark/components/multiselect.css';
-@import './themes/dark/components/treeView/checkbox.css';
-@import './themes/dark/components/treeView/contextMenu.css';
-@import './themes/dark/components/treeView/treeView.css';
+@import './themes/dark/components/explorer/checkbox.css';
+@import './themes/dark/components/explorer/contextMenu.css';
+@import './themes/dark/components/explorer/explorer.css';
 
 /* Themed page-specific styles */
 @import './themes/dark/pages/problemsPage.css';

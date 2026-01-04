@@ -4,7 +4,7 @@
   import { useProfileStore } from '@renderer/store/profile';
   import { useGraphStore } from '@renderer/store/graph';
   import { getTodayDate, parseTimestamp } from '@interapp/utils/dateUtils';
-  import TreeView from '@renderer/components/UI/TreeView/TreeView.vue';
+  import Explorer from '@interapp/components/Explorer/renderer/Explorer.vue';
   import SettingsPageHeader from '@renderer/components/Header/SettingsPageHeader.vue';
   import { InvokeChannels } from '@preload/channels/invoke';
   import solved from '@renderer/assets/images/solved.png';
@@ -164,12 +164,11 @@
     <SettingsPageHeader />
     <div class="flex grow">
       <div :style="{ width: `${treeAreaWidth}px` }">
-        <TreeView
+        <Explorer
           class="select-none"
           files-hint
           search
           file-icon
-          @set-active="setActiveContest"
           @rename="renameContest"
           @delete-single="deleteSingleContest"
           @delete-multiple="deleteMultipleContests"

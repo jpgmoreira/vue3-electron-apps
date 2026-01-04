@@ -1,5 +1,5 @@
 """
-Generate a tree to test the TreeView component.
+Generate a tree to test the explorer component.
 """
 
 import json

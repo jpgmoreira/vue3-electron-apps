@@ -56,7 +56,7 @@ export class ExplorerManager {
 
   // --- Registered callbacks: ---
 
-  private deleteCallback: DeleteCallback = async (node: Node) => {};
+  private deleteCallback: DeleteCallback = async () => {};
 
   public registerDeleteCallback(callback: DeleteCallback) {
     this.deleteCallback = callback;
