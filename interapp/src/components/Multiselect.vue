@@ -62,7 +62,7 @@
    *        .multiselect .editor
    *        .multiselect .mode-select
    */
-  import { toLocaleNumber } from '@interapp/utils/utils';
+  import { toLocaleNumber, clamp } from '@interapp/utils/utils';
   import { computed, reactive, useTemplateRef, ref, watch } from 'vue';
   export type Mode = 'all' | 'any';
   export type MultiselectOption = {
@@ -130,11 +130,6 @@
 
   function focusEditor() {
     editor.value?.focus();
-  }
-  function clamp(min: number, max: number, val: number) {
-    let res = Math.min(val, max);
-    res = Math.max(res, min);
-    return res;
   }
   function selectOption(optionValue: string) {
     emit('selectOption', optionValue);

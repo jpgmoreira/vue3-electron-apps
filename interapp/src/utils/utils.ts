@@ -31,6 +31,12 @@ export function toLocaleNumber(n: number) {
   return new Intl.NumberFormat('en-US').format(n);
 }
 
+export function clamp(min: number, max: number, val: number) {
+  let res = Math.min(val, max);
+  res = Math.max(res, min);
+  return res;
+}
+
 /**
  * Creates a throttled version of a function that executes at most once every 'wait' milliseconds.
  * Subsequent calls within the wait period are ignored.
