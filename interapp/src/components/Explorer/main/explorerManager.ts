@@ -42,7 +42,7 @@ export class ExplorerManager {
     return this._proxy!.target;
   }
 
-  private readonly TREE_PAGE_SIZE = 300;
+  private readonly TREE_PAGE_SIZE = 300; // items.
   private readonly TREE_ITEM_HEIGHT = 28; // px.
 
   // --- Variables and structures: ---
@@ -58,6 +58,7 @@ export class ExplorerManager {
 
   private deleteCallback: DeleteCallback = async () => {};
 
+  // You should call this function for registering the node delete callback.
   public registerDeleteCallback(callback: DeleteCallback) {
     this.deleteCallback = callback;
   }
@@ -93,9 +94,6 @@ export class ExplorerManager {
       nSubFiles = 0;
     while (curr) {
       array.push(curr);
-      if (curr.selected) {
-        this.selectedNodes.push(curr.id);
-      }
       if (curr.type === 'dir') {
         const dirHead = this.getHead(curr.dirs, false);
         const fileHead = this.getHead(curr.files, false);
@@ -116,6 +114,7 @@ export class ExplorerManager {
       }
       curr.depth = depth;
       const sel = curr.selected ? 1 : 0;
+      if (sel) this.selectedNodes.push(curr.id);
       nSub++;
       nSubSel += sel;
       nSubFiles += curr.type === 'file' ? 1 : 0;
