@@ -53,8 +53,8 @@
   );
 
   const emit = defineEmits<{
-    (e: 'rename', noteId: string, newName: string): void;
-    (e: 'deleteSingle', noteId: string): void;
+    (e: 'rename', nodeId: string, newName: string): void;
+    (e: 'deleteSingle', nodeId: string): void;
     (e: 'deleteMultiple'): void;
   }>();
 
@@ -99,9 +99,9 @@
   }));
 
   const selectedFilesText = computed(() => {
-    if (!tree.value) return '0 notes';
+    if (!tree.value) return '0 files';
     const val = toLocaleNumber(tree.value.selectedFiles);
-    return val === '1' ? '1 note' : `${val} notes`;
+    return val === '1' ? '1 file' : `${val} files`;
   });
 
   const nSelectedFolders = computed(() => {
@@ -114,8 +114,6 @@
     const val = toLocaleNumber(nSelectedFolders.value);
     return val === '1' ? '1 folder' : `${val} folders`;
   });
-
-  const selectedFiles = computed(() => tree.value?.selectedFiles || 0);
 
   // --- Context menu: ---
 
@@ -133,7 +131,7 @@
   async function createNode(type: NodeType) {
     const node = contextState.activeNode;
     const parentId = node ? node.id : null;
-    const prefix = type === 'dir' ? 'Folder' : 'Note';
+    const prefix = type === 'dir' ? 'Folder' : 'File';
     const newTree = await window.explorer.invoke<TreeSnapshot>(
       TreeChannels.createNode,
       lastScrollTop.value,
@@ -147,7 +145,7 @@
   async function createNodeAbove(type: NodeType) {
     const node = contextState.activeNode;
     if (!node) return;
-    const prefix = type === 'dir' ? 'Folder' : 'Note';
+    const prefix = type === 'dir' ? 'Folder' : 'File';
     const newTree = await window.explorer.invoke<TreeSnapshot>(
       TreeChannels.createNodeAbove,
       lastScrollTop.value,
@@ -161,7 +159,7 @@
   async function createNodeBelow(type: NodeType) {
     const node = contextState.activeNode;
     if (!node) return;
-    const prefix = type === 'dir' ? 'Folder' : 'Note';
+    const prefix = type === 'dir' ? 'Folder' : 'File';
     const newTree = await window.explorer.invoke<TreeSnapshot>(
       TreeChannels.createNodeBelow,
       lastScrollTop.value,
@@ -329,7 +327,7 @@
   }
 
   function fileHintText(node: DirNode) {
-    return node.nFileDesc === 1 ? '1 note' : `${toLocaleNumber(node.nFileDesc)} notes`;
+    return node.nFileDesc === 1 ? '1 file' : `${toLocaleNumber(node.nFileDesc)} files`;
   }
 
   function updateTree(newTree: TreeSnapshot) {
