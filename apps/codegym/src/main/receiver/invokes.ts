@@ -1,13 +1,12 @@
 import { ipcMain, IpcMainInvokeEvent } from 'electron';
 import { InvokeChannels } from '@preload/channels/invoke';
-import { CreateProfileResponseDTO } from '@common/dto/createProfileResponseDTO';
+import { AuthResponseDTO } from '@common/dto/authResponseDTO';
 import { ProfileManager } from '@main/managers/profileManager';
 import { CacheManager } from '@main/managers/cacheManager';
 import { Oj } from '@common/types/oj';
 import { OjMeta } from '@common/schemas/ojMeta';
 import { GetOjProblemResponseDTO } from '@common/dto/getOjProblemResponseDTO';
 import { OjPoolManager } from '@main/managers/ojPoolManager';
-import { StartupData } from '@common/schemas/startup';
 import { loadStartupData } from '@main/data/startup';
 import { HistoryManager } from '@main/managers/historyManager';
 import { GenericResponseDTO } from '@interapp/dto/genericResponseDTO';
@@ -19,24 +18,31 @@ import { GraphManager } from '@main/managers/graphManager';
 import { OjContext } from '@common/schemas/ojContext';
 import { OjProblem } from '@common/schemas/problems';
 
-ipcMain.handle(
-  InvokeChannels.createProfile,
-  async (_, name: string): Promise<CreateProfileResponseDTO> => {
-    const result = ProfileManager.instance.createProfile(name);
-    if (result.status === 'error') {
-      return result;
-    }
-    const data = await loadStartupData();
+ipcMain.handle(InvokeChannels.createProfile, async (_, name: string): Promise<AuthResponseDTO> => {
+  const result = ProfileManager.instance.createProfile(name);
+  if (result.status === 'error') {
+    return result;
+  }
+  const data = await loadStartupData();
+  return {
+    status: 'success',
+    data,
+  };
+});
+
+ipcMain.handle(InvokeChannels.login, async (_, profileId: string): Promise<AuthResponseDTO> => {
+  try {
+    ProfileManager.instance.loadProfile(profileId);
     return {
       status: 'success',
-      data,
+      data: await loadStartupData(),
+    };
+  } catch (err: unknown) {
+    return {
+      status: 'error',
+      errorMsg: `${err}`,
     };
   }
-);
-
-ipcMain.handle(InvokeChannels.login, (_, profileId: string): Promise<StartupData> => {
-  ProfileManager.instance.loadProfile(profileId);
-  return loadStartupData();
 });
 
 ipcMain.handle(
@@ -61,9 +67,9 @@ ipcMain.handle(
 );
 
 ipcMain.handle(
-  InvokeChannels.renameCurrProfile,
-  async (_, newName: string): Promise<GenericResponseDTO> =>
-    ProfileManager.instance.renameCurrProfile(newName)
+  InvokeChannels.renameProfile,
+  async (_, profileId: string, newName: string): Promise<GenericResponseDTO> =>
+    ProfileManager.instance.renameProfile(profileId, newName)
 );
 
 ipcMain.handle(InvokeChannels.getContest, async (_, contestId: string): Promise<Contest | null> => {
@@ -125,10 +131,9 @@ ipcMain.on(InvokeChannels.setCurrOjSnapshot, (_, snapshot: OjProblem[Oj]) =>
 
 ipcMain.on(InvokeChannels.logout, ProfileManager.instance.logout.bind(ProfileManager.instance));
 
-ipcMain.on(
-  InvokeChannels.deleteCurrProfile,
-  ProfileManager.instance.deleteCurrProfile.bind(ProfileManager.instance)
-);
+ipcMain.on(InvokeChannels.deleteProfile, (_, profileId: string): GenericResponseDTO => {
+  return ProfileManager.instance.deleteProfile(profileId);
+});
 
 ipcMain.on(InvokeChannels.updateCurrContestNotes, (_, notes: string) =>
   ContestsManager.instance.updateCurrContestNotes(notes)

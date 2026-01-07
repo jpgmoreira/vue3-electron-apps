@@ -2,6 +2,7 @@ import {
   getEmptyProfile,
   getEmptyProfileRegistry,
   Profile,
+  ProfileRecord,
   ProfileRegistry,
 } from '@common/schemas/profile';
 import { FileProxy } from '@interapp/utils/fileProxy';
@@ -65,9 +66,14 @@ export class ProfileManager {
     return this.registryProxy!.target;
   }
 
-  public loadProfile(profileId: string) {
+  private findProfileRecord(profileId: string): ProfileRecord | null {
     const records = this.registryProxy!.proxy.profileRecords;
     const record = records.find((p) => p.id === profileId);
+    return record || null;
+  }
+
+  public loadProfile(profileId: string) {
+    const record = this.findProfileRecord(profileId);
     if (!record) return;
     record.lastAccess = Date.now();
     const profilePath = path.join(DATA_DIR, 'profileData', profileId, 'profile.json');
@@ -84,18 +90,24 @@ export class ProfileManager {
     this.registryProxy!.proxy.currProfileId = null;
   }
 
-  public deleteCurrProfile() {
-    const id = this.currProfileProxy!.proxy.id;
-    const { profileRecords } = this.registryProxy!.proxy;
-    for (let i = 0; i < profileRecords.length; i++) {
-      if (profileRecords[i].id === id) {
-        profileRecords.splice(i, 1);
-        break;
+  public deleteProfile(profileId: string): GenericResponseDTO {
+    try {
+      const { profileRecords } = this.registryProxy!.proxy;
+      for (let i = 0; i < profileRecords.length; i++) {
+        if (profileRecords[i].id === profileId) {
+          profileRecords.splice(i, 1);
+          break;
+        }
       }
+      const dirPath = path.join(DATA_DIR, 'profileData', profileId);
+      fs.rmSync(dirPath, { recursive: true, force: true });
+      return { status: 'success' };
+    } catch (err: unknown) {
+      return {
+        status: 'error',
+        errorMsg: `${err}`,
+      };
     }
-    this.logout();
-    const dirPath = path.join(DATA_DIR, 'profileData', id);
-    fs.rmSync(dirPath, { recursive: true, force: true });
   }
 
   public updateCurrOj(oj: Oj) {
@@ -130,22 +142,20 @@ export class ProfileManager {
     ojContext.snapshot = snapshot;
   }
 
-  public renameCurrProfile(newName: string): GenericResponseDTO {
+  public renameProfile(profileId: string, newName: string): GenericResponseDTO {
     newName = newName.trim();
     const validationResult = this.validateProfileName(newName);
     if (validationResult.status === 'error') {
       return validationResult;
     }
-    const { profileRecords, currProfileId } = this.registryProxy!.proxy;
-    const currProfileRecord = profileRecords.find((p) => p.id === currProfileId);
-    if (!currProfileRecord || !this.currProfileProxy) {
+    const record = this.findProfileRecord(profileId);
+    if (!record) {
       return {
         status: 'error',
-        errorMsg: 'Current profile is not valid!',
+        errorMsg: 'Profile not found!',
       };
     }
-    currProfileRecord.name = newName;
-    this.currProfileProxy.proxy.name = newName;
+    record.name = newName;
     return {
       status: 'success',
     };

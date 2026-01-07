@@ -1,6 +1,6 @@
 import { StartupData } from '@common/schemas/startup';
 
-export type CreateProfileResponseDTO =
+export type AuthResponseDTO =
   | {
       status: 'error';
       errorMsg: string;
