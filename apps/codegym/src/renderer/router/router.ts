@@ -1,7 +1,7 @@
 import { createMemoryHistory, createRouter } from 'vue-router';
 import { useProfileStore } from '@renderer/store/profile';
 import { isAuthPage } from '@common/types/authPage';
-import LoginPage from '@renderer/pages/LoginPage.vue';
+import LoginPage from '@renderer/pages/LoginPage/LoginPage.vue';
 import ProblemsPage from '@renderer/pages/ProblemsPage/ProblemsPage.vue';
 import HistoryPage from '@renderer/pages/HistoryPage.vue';
 import GraphPage from '@renderer/pages/GraphPage.vue';

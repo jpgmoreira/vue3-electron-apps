@@ -69,6 +69,7 @@ export class ProfileManager {
     const records = this.registryProxy!.proxy.profileRecords;
     const record = records.find((p) => p.id === profileId);
     if (!record) return;
+    record.lastAccess = Date.now();
     const profilePath = path.join(DATA_DIR, 'profileData', profileId, 'profile.json');
     this.currProfileProxy = new FileProxy(profilePath, getEmptyProfile(record.id, record.name));
     this.registryProxy!.proxy.currProfileId = profileId;
@@ -162,6 +163,7 @@ export class ProfileManager {
       id,
       name,
       createdAt: now,
+      lastAccess: now,
     });
     this.loadProfile(id);
     return { status: 'success' };

@@ -15,6 +15,7 @@ export type ProfileRecord = {
   id: string;
   name: string;
   createdAt: number;
+  lastAccess: number;
 };
 
 export type ProfileRegistry = {
