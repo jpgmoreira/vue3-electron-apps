@@ -10,9 +10,6 @@ window.api.on(OnChannels.loadStartupData, (data: StartupData) => {
   document.documentElement.classList.add('theme-dark');
   if (!data.currProfile) {
     document.title = APP_NAME;
-    if (data.profileRegistry.profileRecords.length === 0) {
-      return router.replace('/signup');
-    }
     return router.replace('/login');
   }
   document.title = `${data.currProfile.name}@${APP_NAME}`;

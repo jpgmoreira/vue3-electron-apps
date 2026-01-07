@@ -2,7 +2,6 @@ import { createMemoryHistory, createRouter } from 'vue-router';
 import { useProfileStore } from '@renderer/store/profile';
 import { isAuthPage } from '@common/types/authPage';
 import LoginPage from '@renderer/pages/LoginPage.vue';
-import SignupPage from '@renderer/pages/SignupPage.vue';
 import ProblemsPage from '@renderer/pages/ProblemsPage/ProblemsPage.vue';
 import HistoryPage from '@renderer/pages/HistoryPage.vue';
 import GraphPage from '@renderer/pages/GraphPage.vue';
@@ -13,10 +12,6 @@ const routes = [
   {
     path: '/login',
     component: LoginPage,
-  },
-  {
-    path: '/signup',
-    component: SignupPage,
   },
   {
     path: '/problems',
