@@ -5,8 +5,8 @@
 
 <template>
   <Header class="flex justify-end">
-    <HeaderButton to="/graph">Graph</HeaderButton>
     <HeaderButton to="/problems">Problems</HeaderButton>
+    <HeaderButton to="/graph">Graph</HeaderButton>
     <HeaderButton to="/contests">Contests</HeaderButton>
     <HeaderButton to="/settings">Settings</HeaderButton>
   </Header>

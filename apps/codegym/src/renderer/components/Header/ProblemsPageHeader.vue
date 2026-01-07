@@ -17,8 +17,8 @@
       <HeaderButton to="/history">History</HeaderButton>
     </div>
     <div class="flex">
-      <HeaderButton to="/graph">Graph</HeaderButton>
       <HeaderButton to="/problems">Problems</HeaderButton>
+      <HeaderButton to="/graph">Graph</HeaderButton>
       <HeaderButton to="/contests">Contests</HeaderButton>
       <HeaderButton to="/settings">Settings</HeaderButton>
     </div>
