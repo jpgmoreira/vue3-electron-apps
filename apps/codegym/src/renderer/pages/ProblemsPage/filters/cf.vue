@@ -45,6 +45,7 @@
       <div class="flex items-center pr-1.5">
         <label>Popularity</label>
         <span class="popularity-info-icon mx-0.5 cursor-help relative">
+          <span class="icon">&#9432;</span>
           <span class="tooltip absolute left-full top-0">
             All problems sorted from most solved to least solved, divided in groups of 20.
           </span>

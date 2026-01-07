@@ -17,16 +17,12 @@
 .theme-dark .problems-page .tag-badge {
   background-color: #0072c7;
 }
-.theme-dark .problems-page .popularity-info-icon {
-  width: 20px;
-  height: 20px;
-  display: inline-block;
-  background-image: url('@renderer/assets/images/information.png');
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center;
-}
 
+.theme-dark .problems-page .popularity-info-icon .icon {
+  font-size: 14px;
+  margin-left: 1px;
+  font-weight: bold;
+}
 .theme-dark .problems-page .popularity-info-icon .tooltip {
   width: 280px;
   z-index: 10;
