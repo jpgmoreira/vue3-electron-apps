@@ -1,12 +1,12 @@
 {
-  "appId": "com.codegym.app",
+  "appId": "com.${name}.app",
   "icon": "build/icon",
   "directories": {
     "buildResources": "build"
   },
   "files": ["out/**/*"],
   "win": {
-    "executableName": "codegym",
+    "executableName": "${name}",
     "target": "nsis"
   },
   "nsis": {

@@ -36,7 +36,6 @@
     "@electron-toolkit/utils": "^4.0.0",
     "cheerio": "^1.1.2",
     "pinia": "^3.0.3",
-    "slugify": "^1.6.6",
     "sqlite": "^5.1.1",
     "sqlite3": "^5.1.7",
     "vue-router": "^4.6.3"
