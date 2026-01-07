@@ -5,6 +5,7 @@ import { contextBridge, ipcRenderer } from 'electron';
 import { type ElectronAPI } from './api';
 import { InvokeChannels } from './channels/invoke';
 import { OnChannels } from './channels/on';
+import '@interapp/components/Explorer/preload';
 
 // https://stackoverflow.com/questions/57807459/how-to-use-preload-js-properly-in-electron
 contextBridge.exposeInMainWorld(
