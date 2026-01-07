@@ -1,5 +1,5 @@
 import { getEmptyGraphRecord, GraphRecord } from '@common/schemas/graph';
-import { DATA_DIR } from '@common/constants';
+import { DATA_DIR } from '@main/constants';
 import path from 'path';
 import { OjWithContests } from '@common/types/oj';
 import { EventEmitter } from '@interapp/events/eventEmitter';

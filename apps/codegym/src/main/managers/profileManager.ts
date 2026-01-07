@@ -7,7 +7,7 @@ import {
 } from '@common/schemas/profile';
 import { FileProxy } from '@interapp/utils/fileProxy';
 import path from 'path';
-import { DATA_DIR } from '@common/constants';
+import { DATA_DIR } from '@main/constants';
 import { Oj } from '@common/types/oj';
 import { AuthPage } from '@common/types/authPage';
 import { buildId } from '@interapp/utils/utils';

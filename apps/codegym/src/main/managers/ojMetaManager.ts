@@ -1,6 +1,6 @@
 import { getEmptyOjMeta, OjMeta } from '@common/schemas/ojMeta';
 import { FileProxy } from '@interapp/utils/fileProxy';
-import { DATA_DIR } from '@common/constants';
+import { DATA_DIR } from '@main/constants';
 import path from 'path';
 import { Oj } from '@common/types/oj';
 

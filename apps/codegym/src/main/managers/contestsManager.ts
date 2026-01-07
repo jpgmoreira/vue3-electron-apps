@@ -1,4 +1,4 @@
-import { DATA_DIR } from '@common/constants';
+import { DATA_DIR } from '@main/constants';
 import {
   Contest,
   ContestProblem,

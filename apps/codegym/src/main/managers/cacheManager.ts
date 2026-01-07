@@ -1,4 +1,4 @@
-import { DATA_DIR } from '@common/constants';
+import { DATA_DIR } from '@main/constants';
 import sqlite3 from 'sqlite3';
 import { open, type Database } from 'sqlite';
 import path from 'path';

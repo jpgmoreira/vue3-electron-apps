@@ -1,5 +1,5 @@
 import { OjProblem } from '@common/schemas/problems';
-import { DATA_DIR } from '@common/constants';
+import { DATA_DIR } from '@main/constants';
 import { Oj } from '@common/types/oj';
 import { EventEmitter } from '@interapp/events/eventEmitter';
 import { CommonEvents } from '@interapp/events/commonEvents';

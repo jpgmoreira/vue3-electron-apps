@@ -7,7 +7,7 @@ import { StartupData } from '@common/schemas/startup';
 import { CacheManager } from '../managers/cacheManager';
 import { ExplorerManager } from '@interapp/components/Explorer/main/explorerManager';
 import { ContestsManager } from '../managers/contestsManager';
-import { DATA_DIR } from '@common/constants';
+import { DATA_DIR } from '@main/constants';
 import path from 'path';
 
 export async function loadStartupData(): Promise<StartupData> {
