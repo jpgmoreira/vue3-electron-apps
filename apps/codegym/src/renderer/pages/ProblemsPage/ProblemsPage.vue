@@ -2,6 +2,7 @@
   import { computed, ref, watch } from 'vue';
   import { useProfileStore } from '@renderer/store/profile';
   import { useOjStatusStore } from '@renderer/store/ojStatus';
+  import ProblemsPageHeader from '@renderer/components/Header/ProblemsPageHeader.vue';
   import Filters from './Filters.vue';
   import Snapshot from './Snapshot.vue';
   const profileStore = useProfileStore();
