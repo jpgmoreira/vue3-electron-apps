@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-  import { ref, computed } from 'vue';
+  import { computed } from 'vue';
   import { OjNames, OjList, Oj } from '@common/types/oj';
   import { useProfileStore } from '@renderer/store/profile';
   import { useOjMetaStore } from '@renderer/store/ojMeta';
@@ -9,15 +9,12 @@
   import { useRouter } from 'vue-router';
   import packageJson from '../../../package.json';
   import SettingsPageHeader from '@renderer/components/Header/SettingsPageHeader.vue';
-  import Modal from '@renderer/components/UI/Modal.vue';
   import { APP_NAME } from '@common/constants';
   const profileStore = useProfileStore();
   const ojMetaStore = useOjMetaStore();
   const ojStatusStore = useOjStatusStore();
   const toastStore = useToastStore();
   const router = useRouter();
-  const name = ref<string>(profileStore.currProfile!.name);
-  const modalVisible = ref<boolean>(false);
   const isUpdatingCache = computed(
     () =>
       Object.fromEntries(OjList.map((oj) => [oj, ojStatusStore[oj].isUpdatingCache])) as Record<
@@ -34,36 +31,10 @@
   function updateCache(oj: Oj) {
     ojStatusStore.updateOjCache(oj);
   }
-  async function handleRename() {
-    const newName = name.value.trim();
-    if (!newName) {
-      toastStore.showToast('Profile name cannot be empty!', 'error');
-      return;
-    }
-    const result = await profileStore.renameCurrProfile(newName);
-    if (result.status === 'success') {
-      toastStore.showToast('Profile renamed successfully!', 'success');
-      document.title = `${newName}@${APP_NAME}`;
-    } else {
-      toastStore.showToast(result.errorMsg, 'error');
-    }
-  }
   function handleLogout() {
     profileStore.logout();
     document.title = APP_NAME;
     router.replace('/login');
-  }
-  function handleDelete() {
-    profileStore.deleteProfile();
-    document.title = APP_NAME;
-    if (profileStore.registry.profileRecords.length) {
-      router.replace('/login');
-    } else {
-      router.replace('/signup');
-    }
-  }
-  function closeModal() {
-    modalVisible.value = false;
   }
   function copyHomePage() {
     navigator.clipboard
@@ -78,24 +49,6 @@
 </script>
 
 <template>
-  <Modal :visible="modalVisible" @close="closeModal">
-    <template #header>Delete Profile</template>
-    <template #body>
-      <div class="flex flex-col text-center">
-        <span>Are you sure you want to delete the current profile ({{ currProfileName }})?</span>
-        <span class="text-danger text-xl my-2">This action cannot be undone!</span>
-        <span class="text-danger">
-          The deletion of a profile will result in the deletion of all its data!
-        </span>
-      </div>
-    </template>
-    <template #footer>
-      <div class="flex justify-between">
-        <button type="button" class="btn-secondary" @click="closeModal">Cancel</button>
-        <button type="button" class="btn-danger" @click="handleDelete">Delete</button>
-      </div>
-    </template>
-  </Modal>
   <SettingsPageHeader />
   <!-- Cache -->
   <div>
@@ -135,20 +88,11 @@
   <hr class="m-5 mb-2" />
   <div class="p-2">
     <h1 class="text-2xl">Profile</h1>
-    <div class="flex items-center px-5">
-      <label for="profile-name" class="mr-1">Profile name:</label>
-      <input
-        id="profile-name"
-        v-model.trim="name"
-        type="text"
-        name="profile-name"
-        @keydown.enter="handleRename"
-      />
-      <button type="button" class="btn-primary ml-1" @click="handleRename">Rename</button>
-    </div>
-    <div class="flex justify-between px-5">
+    <div class="flex">
+      <div>
+        <div>Profile: {{ currProfileName }}</div>
+      </div>
       <button type="button" class="btn-warning" @click="handleLogout">Logout</button>
-      <button type="button" class="btn-danger" @click="modalVisible = true">Delete Profile</button>
     </div>
   </div>
   <!-- Version -->
