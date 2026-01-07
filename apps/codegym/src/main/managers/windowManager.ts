@@ -10,9 +10,9 @@ export class WindowManager {
 
   private mainWindow!: BrowserWindow;
 
-  private readonly indexHtmlPath = join(__dirname, '../../renderer/index.html');
-  private readonly iconPath = join(__dirname, '../../../build/icon.png');
-  private readonly preloadPath = join(__dirname, '../../preload/index.js');
+  private readonly indexHtmlPath = join(__dirname, '../renderer/index.html');
+  private readonly iconPath = join(__dirname, '../build/icon.png');
+  private readonly preloadPath = join(__dirname, '../preload/index.js');
 
   private readonly commonWindowConfig = Object.freeze({
     show: false,
