@@ -5,7 +5,7 @@
 
 <template>
   <Toast />
-  <main class="flex flex-col min-h-full">
+  <main class="flex flex-col min-h-screen">
     <RouterView />
   </main>
 </template>

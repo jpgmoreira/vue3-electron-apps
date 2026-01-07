@@ -67,7 +67,7 @@
 </script>
 
 <template>
-  <div class="w-full h-full flex flex-col">
+  <div class="w-full h-screen flex flex-col">
     <SettingsPageHeader />
     <LineChart v-if="hasContent" v-bind="content" />
     <div v-else class="flex grow items-center justify-center text-xl opacity-70">
