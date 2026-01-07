@@ -1,7 +1,7 @@
 <script lang="ts" setup>
   import { onBeforeMount, ref } from 'vue';
   import SettingsPageHeader from '@renderer/components/Header/SettingsPageHeader.vue';
-  import LineChart, { LineChartProps } from '@renderer/components/UI/LineChart.vue';
+  import LineChart, { LineChartProps } from '@interapp/components/LineChart.vue';
   import { OjList, OjNames, OjColors } from '@common/types/oj';
   import { parseNumericDate, incrementDate, getTodayDate } from '@interapp/utils/dateUtils';
   import { randomId } from '@interapp/utils/utils';
@@ -10,6 +10,7 @@
     allXValues: [],
     allXLabels: [],
     data: [],
+    yTickMode: 'all',
   };
   const store = useGraphStore();
   const hasContent = ref(false);

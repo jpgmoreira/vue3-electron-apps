@@ -2,8 +2,6 @@
   import { computed, ref, watch } from 'vue';
   import { useProfileStore } from '@renderer/store/profile';
   import { useOjStatusStore } from '@renderer/store/ojStatus';
-  import ProblemsPageHeader from '@renderer/components/Header/custom/ProblemsPageHeader.vue';
-  import BusyButton from '@renderer/components/UI/BusyButton.vue';
   import Filters from './Filters.vue';
   import Snapshot from './Snapshot.vue';
   const profileStore = useProfileStore();
@@ -41,14 +39,9 @@
   </div>
 
   <footer class="mt-auto w-full flex justify-around py-1.5">
-    <BusyButton
-      class="flex items-center btn-primary"
-      :callback="handleNewProblemClick"
-      :busy="isBusy"
-    >
-      <template #default>New problem</template>
-      <template #busy>{{ btnText }}</template>
-    </BusyButton>
+    <button class="flex items-center btn-primary" @click="handleNewProblemClick" :disabled="isBusy">
+      {{ btnText }}
+    </button>
     <div class="my-auto flex items-center">
       <label for="solved-checkbox" class="pr-2">Solved?</label>
       <input

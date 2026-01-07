@@ -2,7 +2,7 @@
   import { computed } from 'vue';
   import { useOjMetaStore } from '@renderer/store/ojMeta';
   import { useProfileStore } from '@renderer/store/profile';
-  import Multiselect, { MultiselectOption } from '@renderer/components/UI/Multiselect.vue';
+  import Multiselect, { MultiselectOption } from '@interapp/components/Multiselect.vue';
   const ojMetaStore = useOjMetaStore();
   const profileStore = useProfileStore();
   const ojContext = computed(() => profileStore.currProfile!.ojContext);

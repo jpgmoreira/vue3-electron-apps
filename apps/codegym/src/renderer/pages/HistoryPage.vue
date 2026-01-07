@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-  import ProblemsPageHeader from '@renderer/components/Header/custom/ProblemsPageHeader.vue';
+  import ProblemsPageHeader from '@renderer/components/Header/ProblemsPageHeader.vue';
   import { FetchHistoryPageResponseDTO } from '@common/dto/fetchHistoryPageResponseDTO';
   import { OjProblem } from '@common/schemas/problems';
   import { InvokeChannels } from '@preload/channels/invoke';
