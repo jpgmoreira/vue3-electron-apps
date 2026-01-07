@@ -78,9 +78,6 @@ export class ExplorerManager {
   }
 
   public loadTree(filePath: string) {
-    if (!fs.existsSync(filePath)) {
-      throw new Error(`Tree file does not exist: ${filePath}`);
-    }
     this._proxy = new FileProxy(filePath, this.getEmptyTreeData());
     this.refresh(false);
   }

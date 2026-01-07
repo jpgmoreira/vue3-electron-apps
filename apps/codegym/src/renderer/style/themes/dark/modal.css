@@ -10,6 +10,7 @@
 .theme-dark .modal-container .modal-footer {
   border-top: 1px solid #1b2125;
 }
-.theme-dark .modal-container .backdrop {
-  background-color: #aaaaaa7c;
+.theme-dark .modal-container .modal-backdrop {
+  background-color: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(4px);
 }

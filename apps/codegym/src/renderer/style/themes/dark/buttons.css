@@ -1,5 +1,9 @@
 /* Buttons */
 
+.theme-dark button {
+  border-radius: 0;
+}
+
 .theme-dark button.btn-primary {
   background-color: #0072f9;
 }

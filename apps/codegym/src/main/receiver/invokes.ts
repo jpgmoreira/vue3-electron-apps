@@ -100,11 +100,11 @@ ipcMain.handle(InvokeChannels.updateCurrOj, (_, newOj: Oj) =>
   ProfileManager.instance.updateCurrOj(newOj)
 );
 
-ipcMain.on(InvokeChannels.updateCurrPage, (_, newPage: AuthPage) =>
+ipcMain.handle(InvokeChannels.updateCurrPage, (_, newPage: AuthPage) =>
   ProfileManager.instance.updateCurrPage(newPage)
 );
 
-ipcMain.on(InvokeChannels.setCurrSnapshotSolvedDate, (_, date: number | null) => {
+ipcMain.handle(InvokeChannels.setCurrSnapshotSolvedDate, (_, date: number | null) => {
   const currProfile = ProfileManager.instance.getCurrProfile()!;
   const currOj = currProfile.currOj;
   const ojContext = currProfile.ojContext[currOj];
@@ -117,28 +117,28 @@ ipcMain.on(InvokeChannels.setCurrSnapshotSolvedDate, (_, date: number | null) =>
   HistoryManager.instance.replaceHistorySnapshot(snapshot);
 });
 
-ipcMain.on(
+ipcMain.handle(
   InvokeChannels.updateOjFilters,
-  <T extends Oj>(_: Electron.IpcMainEvent, oj: T, filters: OjContext[T]['filters']) => {
+  <T extends Oj>(_: Electron.IpcMainInvokeEvent, oj: T, filters: OjContext[T]['filters']) => {
     ProfileManager.instance.updateOjFilters(oj, filters);
     OjPoolManager.instance.setDirty(oj);
   }
 );
 
-ipcMain.on(InvokeChannels.setCurrOjSnapshot, (_, snapshot: OjProblem[Oj]) =>
+ipcMain.handle(InvokeChannels.setCurrOjSnapshot, (_, snapshot: OjProblem[Oj]) =>
   ProfileManager.instance.setCurrOjSnapshot(snapshot)
 );
 
-ipcMain.on(InvokeChannels.logout, ProfileManager.instance.logout.bind(ProfileManager.instance));
+ipcMain.handle(InvokeChannels.logout, ProfileManager.instance.logout.bind(ProfileManager.instance));
 
-ipcMain.on(InvokeChannels.deleteProfile, (_, profileId: string): GenericResponseDTO => {
+ipcMain.handle(InvokeChannels.deleteProfile, (_, profileId: string): GenericResponseDTO => {
   return ProfileManager.instance.deleteProfile(profileId);
 });
 
-ipcMain.on(InvokeChannels.updateCurrContestNotes, (_, notes: string) =>
+ipcMain.handle(InvokeChannels.updateCurrContestNotes, (_, notes: string) =>
   ContestsManager.instance.updateCurrContestNotes(notes)
 );
 
-ipcMain.on(InvokeChannels.updateCurrContestProblem, (_, problem: ContestProblem) =>
+ipcMain.handle(InvokeChannels.updateCurrContestProblem, (_, problem: ContestProblem) =>
   ContestsManager.instance.updateCurrContestProblem(problem)
 );
