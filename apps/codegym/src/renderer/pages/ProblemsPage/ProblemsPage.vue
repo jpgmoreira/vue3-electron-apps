@@ -42,6 +42,7 @@
   <footer class="mt-auto w-full flex justify-around py-1.5">
     <button class="flex items-center btn-primary" @click="handleNewProblemClick" :disabled="isBusy">
       {{ btnText }}
+      <span v-if="isUpdatingCache" class="loader ml-1"></span>
     </button>
     <div class="my-auto flex items-center">
       <label for="solved-checkbox" class="pr-2">Solved?</label>

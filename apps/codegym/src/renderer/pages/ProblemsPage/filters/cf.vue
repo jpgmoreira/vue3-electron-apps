@@ -71,8 +71,7 @@
       class="mt-2"
       :options="tagsOptions"
       :selected="selectedTags"
-      :badge-numbers="true"
-      :option-numbers="true"
+      option-numbers
       close
       placeholder="Tags"
       direction="up"

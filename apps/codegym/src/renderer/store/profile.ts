@@ -135,7 +135,7 @@ export const useProfileStore = defineStore('profile', {
         newName
       );
       if (result.status === 'success') {
-        const record = this.registry.profileRecords.find((p) => p.id === this.currProfile!.id);
+        const record = this.registry.profileRecords.find((p) => p.id === profileId);
         record!.name = newName;
       }
       return result;

@@ -156,6 +156,9 @@ export class ProfileManager {
       };
     }
     record.name = newName;
+    const fPath = path.join(DATA_DIR, 'profileData', profileId, 'profile.json');
+    const profileProxy = new FileProxy(fPath, getEmptyProfile(profileId, newName));
+    profileProxy.proxy.name = newName;
     return {
       status: 'success',
     };
