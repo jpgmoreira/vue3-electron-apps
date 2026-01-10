@@ -9,6 +9,7 @@ import { ExplorerManager } from '@interapp/components/Explorer/main/explorerMana
 import { ContestsManager } from '../managers/contestsManager';
 import { DATA_DIR } from '@main/constants';
 import path from 'path';
+import { Node } from '@interapp/components/Explorer/common/tree';
 
 export async function loadStartupData(): Promise<StartupData> {
   await CacheManager.instance.loadCache();
@@ -23,6 +24,9 @@ export async function loadStartupData(): Promise<StartupData> {
     await HistoryManager.instance.loadHistory(currProfile.id);
     const treePath = path.join(DATA_DIR, 'profileData', currProfile.id, 'tree.json');
     ExplorerManager.instance.loadTree(treePath);
+    ExplorerManager.instance.registerDeleteCallback(async (node: Node) => {
+      if (node.type === 'file') ContestsManager.instance.deleteContest(node.id);
+    });
   }
   const result = {
     ojMeta,
