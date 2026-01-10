@@ -59,6 +59,12 @@
     (e: 'rename-file', nodeId: string, newName: string): void;
     (e: 'before-create-node', type: NodeType, callback: CreateNodeCallback): void;
     (e: 'before-delete-node', node: Node, callback: DeleteNodeCallback): void;
+    (
+      e: 'before-delete-selected',
+      files: number,
+      folders: number,
+      callback: DeleteNodeCallback
+    ): void;
   }>();
 
   // --- Variables: ---
@@ -296,6 +302,7 @@
   }
 
   // --- Pre-deletion event handlers: ---
+
   function beforeDeleteNode() {
     const node = contextState.activeNode;
     if (!node) throw new Error('Cannot delete null node!');
@@ -303,7 +310,12 @@
     emit('before-delete-node', node, callback);
   }
 
-  function beforeDeleteSelected() {}
+  function beforeDeleteSelected() {
+    const callback = () => deleteSelectedNodes();
+    const files = tree.value?.selectedFiles || 0;
+    const folders = (tree.value?.selectedNodes || 0) - files;
+    emit('before-delete-selected', files, folders, callback);
+  }
 
   // --- Deletion callbacks: ---
 
@@ -322,7 +334,6 @@
       lastScrollTop.value
     );
     updateTree(newTree);
-    emit('deleteMultiple');
   }
 
   // --- Node click: ---

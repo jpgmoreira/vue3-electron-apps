@@ -30,6 +30,7 @@
     message: '',
     isDeleting: false,
     node: null as Node | null,
+    multiple: false,
     callback: null as DeleteNodeCallback | null,
   });
 
@@ -106,34 +107,49 @@
     modalState.value.visible = true;
     modalState.value.node = node;
     modalState.value.isDeleting = false;
+    modalState.value.multiple = false;
+    modalState.value.callback = callback;
+  }
+
+  function beforeDeleteSelected(files: number, folders: number, callback: DeleteNodeCallback) {
+    let suffix = '';
+    if (files && folders) suffix = `${files} contests and ${folders} folders`;
+    else if (files) suffix = `${files} contests`;
+    else if (folders) suffix = `${folders} folders`;
+    modalState.value.message = `Are you sure you want to delete ${suffix}?`;
+    modalState.value.visible = true;
+    modalState.value.node = null;
+    modalState.value.isDeleting = false;
+    modalState.value.multiple = true;
     modalState.value.callback = callback;
   }
 
   function modalClose() {
+    if (modalState.value.isDeleting) return;
     modalState.value.message = '';
     modalState.value.visible = false;
     modalState.value.node = null;
-    modalState.value.isDeleting = false;
+    modalState.value.multiple = false;
     modalState.value.callback = null;
   }
 
   async function modalDelete() {
     modalState.value.isDeleting = true;
     await sleep(1000);
-    const node = modalState.value.node;
-    if (node?.type === 'file') {
-      await window.api.invoke(InvokeChannels.deleteContest, node.id);
-      if (contest.value?.id === node.id) {
-        profileStore.setCurrContest(null);
+    try {
+      if (!modalState.value.multiple) {
+        const node = modalState.value.node;
+        if (node?.type === 'file') {
+          await window.api.invoke(InvokeChannels.deleteContest, node.id);
+        }
       }
+      await modalState.value.callback!();
+      // Get curr contest again, if it was deleted, back will return null.
+      contest.value = await profileStore.getCurrContest();
+    } finally {
+      modalState.value.isDeleting = false;
     }
-    await modalState.value.callback!();
     modalClose();
-  }
-
-  async function deleteMultipleContests() {
-    // Get curr contest again, if it was deleted, back will return null.
-    contest.value = await profileStore.getCurrContest();
   }
 
   function acceptedInputKeydown(e: KeyboardEvent) {
@@ -231,6 +247,7 @@
           @rename-file="renameContest"
           @before-create-node="beforeCreateNode"
           @before-delete-node="beforeDeleteNode"
+          @before-delete-selected="beforeDeleteSelected"
         />
       </div>
       <div
