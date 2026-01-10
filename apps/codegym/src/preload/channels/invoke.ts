@@ -13,6 +13,7 @@ export enum InvokeChannels {
   renameProfile = 'rename-profile',
   deleteProfile = 'delete-profile',
   getContest = 'get-contest',
+  createContest = 'create-contest',
   addCurrContestProblem = 'add-curr-contest-problem',
   updateCurrContestNotes = 'update-curr-contest-notes',
   updateCurrContestProblem = 'update-curr-contest-problem',

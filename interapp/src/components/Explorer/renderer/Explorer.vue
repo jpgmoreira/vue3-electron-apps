@@ -33,6 +33,8 @@
     y: number;
   };
 
+  export type CreateNodeCallback = (nodeId: string, name: string) => void;
+
   // --- Props and emits: ---
 
   const props = withDefaults(
@@ -54,8 +56,7 @@
 
   const emit = defineEmits<{
     (e: 'rename', nodeId: string, newName: string): void;
-    (e: 'deleteSingle', nodeId: string): void;
-    (e: 'deleteMultiple'): void;
+    (e: 'before-create-node', type: NodeType, callback: CreateNodeCallback): void;
   }>();
 
   // --- Variables: ---
@@ -126,46 +127,69 @@
     contextState.activeDomNode = e.target as HTMLInputElement;
   }
 
-  // --- Node creation: ---
+  // --- Node pre-creation events: ---
 
-  async function createNode(type: NodeType) {
+  function beforeCreateNode(type: NodeType) {
     const node = contextState.activeNode;
     const parentId = node ? node.id : null;
-    const prefix = type === 'dir' ? 'Folder' : 'File';
+    const callback: CreateNodeCallback = (nodeId: string, name: string) => {
+      createNode(nodeId, parentId, type, name);
+    };
+    emit('before-create-node', type, callback);
+  }
+
+  function beforeCreateNodeAbove(type: NodeType) {
+    const node = contextState.activeNode;
+    if (!node) return;
+    const callback: CreateNodeCallback = (nodeId: string, name: string) => {
+      createNodeAbove(nodeId, node.id, type, name);
+    };
+    emit('before-create-node', type, callback);
+  }
+
+  function beforeCreateNodeBelow(type: NodeType) {
+    const node = contextState.activeNode;
+    if (!node) return;
+    const callback: CreateNodeCallback = (nodeId: string, name: string) => {
+      createNodeBelow(nodeId, node.id, type, name);
+    };
+    emit('before-create-node', type, callback);
+  }
+
+  // --- Node creation callbacks: ---
+
+  async function createNode(nodeId: string, parentId: string | null, type: NodeType, name: string) {
     const newTree = await window.explorer.invoke<TreeSnapshot>(
       TreeChannels.createNode,
       lastScrollTop.value,
       type,
-      prefix,
-      parentId
+      nodeId,
+      parentId,
+      name
     );
     updateTree(newTree);
   }
 
-  async function createNodeAbove(type: NodeType) {
-    const node = contextState.activeNode;
-    if (!node) return;
-    const prefix = type === 'dir' ? 'Folder' : 'File';
+  async function createNodeAbove(nodeId: string, baseNodeId: string, type: NodeType, name: string) {
     const newTree = await window.explorer.invoke<TreeSnapshot>(
       TreeChannels.createNodeAbove,
       lastScrollTop.value,
       type,
-      prefix,
-      node.id
+      nodeId,
+      baseNodeId,
+      name
     );
     updateTree(newTree);
   }
 
-  async function createNodeBelow(type: NodeType) {
-    const node = contextState.activeNode;
-    if (!node) return;
-    const prefix = type === 'dir' ? 'Folder' : 'File';
+  async function createNodeBelow(nodeId: string, baseNodeId: string, type: NodeType, name: string) {
     const newTree = await window.explorer.invoke<TreeSnapshot>(
       TreeChannels.createNodeBelow,
       lastScrollTop.value,
       type,
-      prefix,
-      node.id
+      nodeId,
+      baseNodeId,
+      name
     );
     updateTree(newTree);
   }
@@ -459,9 +483,9 @@
       :n-open-dirs="tree?.openDirs || 0"
       :selection-only="props.selectionOnly"
       v-bind="contextState"
-      @create-node="createNode"
-      @create-node-above="createNodeAbove"
-      @create-node-below="createNodeBelow"
+      @create-node="beforeCreateNode"
+      @create-node-above="beforeCreateNodeAbove"
+      @create-node-below="beforeCreateNodeBelow"
       @rename-node="startRenaming"
       @delete-node="deleteNode"
       @delete-selected-nodes="deleteSelectedNodes"

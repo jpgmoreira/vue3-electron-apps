@@ -7,14 +7,8 @@ import { GenericResponseDTO } from '@interapp/dto/genericResponseDTO';
 import fs from 'fs';
 import { setBit, clearBit } from '@interapp/utils/bitMask';
 
-// Contains a linked list of the root nodes.
-type Root = Links & {
-  nextDir: number; // Number of the next directory to be created.
-  nextFile: number; // Number of the next file to be created.
-};
-
 type TreeData = {
-  root: Root;
+  root: Links;
   idToNode: Record<string, Node>; // Maps node ids to the node objects.
 };
 
@@ -68,8 +62,6 @@ export class ExplorerManager {
   private getEmptyTreeData(): TreeData {
     return {
       root: {
-        nextDir: 1,
-        nextFile: 1,
         dirs: { headId: null, tailId: null },
         files: { headId: null, tailId: null },
       },
@@ -255,11 +247,11 @@ export class ExplorerManager {
 
   // --- Creation: ---
 
-  private createDirNode(prefix: string, parentId: string | null): DirNode {
+  private createDirNode(nodeId: string, parentId: string | null, name: string): DirNode {
     return {
-      id: randomId(),
+      id: nodeId,
       type: 'dir',
-      text: `${prefix} ${this.target.root.nextDir}`,
+      text: name,
       depth: 0,
       open: false,
       selected: false,
@@ -285,12 +277,11 @@ export class ExplorerManager {
     } as const;
   }
 
-  private createFileNode(prefix: string, parentId: string | null): FileNode {
-    const text = `${prefix} ${this.target.root.nextFile}`;
+  private createFileNode(nodeId: string, parentId: string | null, name: string): FileNode {
     return {
-      id: randomId(),
+      id: nodeId,
       type: 'file',
-      text,
+      text: name,
       depth: 0,
       selected: false,
       parentId,
@@ -342,21 +333,19 @@ export class ExplorerManager {
     else sub.tailId = node.id;
   }
 
-  private createNodeHelper(type: NodeType, prefix: string, parentId: string | null) {
+  private createNodeHelper(type: NodeType, nodeId: string, parentId: string | null, name: string) {
     let newNode: Node;
     if (type === 'dir') {
-      newNode = this.createDirNode(prefix, parentId);
-      this.proxy.root.nextDir++;
+      newNode = this.createDirNode(nodeId, parentId, name);
     } else {
-      newNode = this.createFileNode(prefix, parentId);
-      this.proxy.root.nextFile++;
+      newNode = this.createFileNode(nodeId, parentId, name);
     }
     this.proxy.idToNode[newNode.id] = newNode;
     return newNode;
   }
 
-  public createNode(type: NodeType, prefix: string, parentId: string | null): Node {
-    const newNode = this.createNodeHelper(type, prefix, parentId);
+  public createNode(type: NodeType, nodeId: string, parentId: string | null, name: string): Node {
+    const newNode = this.createNodeHelper(type, nodeId, parentId, name);
     const parent = this.getParent(newNode, false);
     if (parent) {
       newNode.selected = parent.selected;
@@ -370,22 +359,22 @@ export class ExplorerManager {
     return newNode;
   }
 
-  public createNodeAbove(type: NodeType, prefix: string, baseNodeId: string) {
+  public createNodeAbove(type: NodeType, nodeId: string, baseNodeId: string, name: string) {
     const baseNode = this.target.idToNode[baseNodeId];
     if (!baseNode) return;
     const parent = this.getParent(baseNode, false);
-    const newNode = this.createNodeHelper(type, prefix, parent?.id || null);
+    const newNode = this.createNodeHelper(type, nodeId, parent?.id || null, name);
     if (parent) newNode.selected = parent.selected;
     this.appendNodeAbove(newNode, baseNode);
     this.refresh(true);
     this.calculateUiDepths();
   }
 
-  public createNodeBelow(type: NodeType, prefix: string, baseNodeId: string) {
+  public createNodeBelow(type: NodeType, nodeId: string, baseNodeId: string, name: string) {
     const baseNode = this.target.idToNode[baseNodeId];
     if (!baseNode) return;
     const parent = this.getParent(baseNode, false);
-    const newNode = this.createNodeHelper(type, prefix, parent?.id || null);
+    const newNode = this.createNodeHelper(type, nodeId, parent?.id || null, name);
     if (parent) newNode.selected = parent.selected;
     this.appendNodeBelow(newNode, baseNode);
     this.refresh(true);

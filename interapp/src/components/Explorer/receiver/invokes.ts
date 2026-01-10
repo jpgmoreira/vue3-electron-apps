@@ -5,7 +5,6 @@ import { NodeType } from '../common/tree';
 import { ModifierKeys } from '@interapp/types/modifierKeys';
 import { TreeSnapshot } from '../common/treeSnapshot';
 import { GenericResponseDTO } from '@interapp/dto/genericResponseDTO';
-import { sleep } from '@interapp/utils/utils';
 
 ipcMain.handle(
   TreeChannels.createNode,
@@ -13,10 +12,11 @@ ipcMain.handle(
     _: IpcMainInvokeEvent,
     scrollTop: number,
     type: NodeType,
-    prefix: string,
-    parentId: string | null
+    nodeId: string,
+    parentId: string | null,
+    name: string
   ): TreeSnapshot => {
-    ExplorerManager.instance.createNode(type, prefix, parentId);
+    ExplorerManager.instance.createNode(type, nodeId, parentId, name);
     return ExplorerManager.instance.buildResult(scrollTop);
   }
 );
@@ -27,10 +27,11 @@ ipcMain.handle(
     _: IpcMainInvokeEvent,
     scrollTop: number,
     type: NodeType,
-    prefix: string,
-    baseNodeId: string
+    nodeId: string,
+    baseNodeId: string,
+    name: string
   ): TreeSnapshot => {
-    ExplorerManager.instance.createNodeAbove(type, prefix, baseNodeId);
+    ExplorerManager.instance.createNodeAbove(type, nodeId, baseNodeId, name);
     return ExplorerManager.instance.buildResult(scrollTop);
   }
 );
@@ -41,10 +42,11 @@ ipcMain.handle(
     _: IpcMainInvokeEvent,
     scrollTop: number,
     type: NodeType,
-    prefix: string,
-    baseNodeId: string
+    nodeId: string,
+    baseNodeId: string,
+    name: string
   ): TreeSnapshot => {
-    ExplorerManager.instance.createNodeBelow(type, prefix, baseNodeId);
+    ExplorerManager.instance.createNodeBelow(type, nodeId, baseNodeId, name);
     return ExplorerManager.instance.buildResult(scrollTop);
   }
 );
@@ -79,7 +81,6 @@ ipcMain.handle(
 ipcMain.handle(
   TreeChannels.deleteNode,
   async (_: IpcMainInvokeEvent, scrollTop: number, nodeId: string): Promise<TreeSnapshot> => {
-    await sleep(1000);
     await ExplorerManager.instance.deleteNode(nodeId);
     return ExplorerManager.instance.buildResult(scrollTop);
   }
@@ -88,7 +89,6 @@ ipcMain.handle(
 ipcMain.handle(
   TreeChannels.deleteSelectedNodes,
   async (_: IpcMainInvokeEvent, scrollTop: number): Promise<TreeSnapshot> => {
-    await sleep(1000);
     await ExplorerManager.instance.deleteSelectedNodes();
     return ExplorerManager.instance.buildResult(scrollTop);
   }

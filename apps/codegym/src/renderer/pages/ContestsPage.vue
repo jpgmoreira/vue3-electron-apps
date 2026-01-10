@@ -4,7 +4,9 @@
   import { useProfileStore } from '@renderer/store/profile';
   import { useGraphStore } from '@renderer/store/graph';
   import { getTodayDate, parseTimestamp } from '@interapp/utils/dateUtils';
-  import Explorer from '@interapp/components/Explorer/renderer/Explorer.vue';
+  import Explorer, {
+    CreateNodeCallback,
+  } from '@interapp/components/Explorer/renderer/Explorer.vue';
   import SettingsPageHeader from '@renderer/components/Header/SettingsPageHeader.vue';
   import { InvokeChannels } from '@preload/channels/invoke';
   import solved from '@renderer/assets/images/solved.png';
@@ -45,6 +47,10 @@
   async function addProblem() {
     const problem = await window.api.invoke<ContestProblem>(InvokeChannels.addCurrContestProblem);
     contest.value?.problems.push(problem);
+  }
+
+  async function createContest(callback: CreateNodeCallback) {
+    const contestId = await window.api.invoke<string>(InvokeChannels.createContest);
   }
 
   function updateContestNotes() {
@@ -168,9 +174,9 @@
           files-hint
           search
           file-icon
+          file-name-prefix="Contest"
           @rename="renameContest"
-          @delete-single="deleteSingleContest"
-          @delete-multiple="deleteMultipleContests"
+          @before-create-node="createContest"
         />
       </div>
       <div
