@@ -555,6 +555,10 @@
 </template>
 
 <style scoped>
+  .explorer {
+    user-select: none;
+  }
+
   .node-input {
     height: 28px;
     cursor: pointer;

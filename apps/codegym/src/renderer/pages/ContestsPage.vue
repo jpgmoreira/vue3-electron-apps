@@ -165,7 +165,6 @@
     <div class="flex grow">
       <div :style="{ width: `${treeAreaWidth}px` }">
         <Explorer
-          class="select-none"
           files-hint
           search
           file-icon
