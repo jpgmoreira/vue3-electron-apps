@@ -150,3 +150,7 @@ ipcMain.handle(InvokeChannels.createContest, (_, name: string) =>
 ipcMain.handle(InvokeChannels.renameContest, (_, contestId: string, newName: string) =>
   ContestsManager.instance.renameContest(contestId, newName)
 );
+
+ipcMain.handle(InvokeChannels.deleteContest, (_, contestId: string) =>
+  ContestsManager.instance.deleteContest(contestId)
+);

@@ -33,7 +33,8 @@
     y: number;
   };
 
-  export type CreateNodeCallback = (nodeId: string, name: string) => void;
+  export type CreateNodeCallback = (nodeId: string, name: string) => Promise<void>;
+  export type DeleteNodeCallback = () => Promise<void>;
 
   // --- Props and emits: ---
 
@@ -57,6 +58,7 @@
   const emit = defineEmits<{
     (e: 'rename-file', nodeId: string, newName: string): void;
     (e: 'before-create-node', type: NodeType, callback: CreateNodeCallback): void;
+    (e: 'before-delete-node', node: Node, callback: DeleteNodeCallback): void;
   }>();
 
   // --- Variables: ---
@@ -133,7 +135,7 @@
     const node = contextState.activeNode;
     const parentId = node ? node.id : null;
     const callback: CreateNodeCallback = (nodeId: string, name: string) => {
-      createNode(nodeId, parentId, type, name);
+      return createNode(nodeId, parentId, type, name);
     };
     emit('before-create-node', type, callback);
   }
@@ -142,7 +144,7 @@
     const node = contextState.activeNode;
     if (!node) return;
     const callback: CreateNodeCallback = (nodeId: string, name: string) => {
-      createNodeAbove(nodeId, node.id, type, name);
+      return createNodeAbove(nodeId, node.id, type, name);
     };
     emit('before-create-node', type, callback);
   }
@@ -151,7 +153,7 @@
     const node = contextState.activeNode;
     if (!node) return;
     const callback: CreateNodeCallback = (nodeId: string, name: string) => {
-      createNodeBelow(nodeId, node.id, type, name);
+      return createNodeBelow(nodeId, node.id, type, name);
     };
     emit('before-create-node', type, callback);
   }
@@ -293,20 +295,25 @@
     updateTree(newTree);
   }
 
-  // --- Deletion: ---
-
-  async function deleteNode() {
+  // --- Pre-deletion event handlers: ---
+  function beforeDeleteNode() {
     const node = contextState.activeNode;
     if (!node) throw new Error('Cannot delete null node!');
+    const callback = () => deleteNode(node.id);
+    emit('before-delete-node', node, callback);
+  }
+
+  function beforeDeleteSelected() {}
+
+  // --- Deletion callbacks: ---
+
+  async function deleteNode(nodeId: string) {
     const newTree = await window.explorer.invoke<TreeSnapshot>(
       TreeChannels.deleteNode,
       lastScrollTop.value,
-      node.id
+      nodeId
     );
     updateTree(newTree);
-    if (node.type === 'file') {
-      emit('deleteSingle', node.id);
-    }
   }
 
   async function deleteSelectedNodes() {
@@ -487,8 +494,8 @@
       @create-node-above="beforeCreateNodeAbove"
       @create-node-below="beforeCreateNodeBelow"
       @rename-node="startRenaming"
-      @delete-node="deleteNode"
-      @delete-selected-nodes="deleteSelectedNodes"
+      @delete-node="beforeDeleteNode"
+      @delete-selected-nodes="beforeDeleteSelected"
       @collapse-all="collapseAll"
       @clear-selection="clearSelection"
       @select-all="selectAll"

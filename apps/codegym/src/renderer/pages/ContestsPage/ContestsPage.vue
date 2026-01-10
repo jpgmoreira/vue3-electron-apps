@@ -6,6 +6,7 @@
   import { getTodayDate, parseTimestamp } from '@interapp/utils/dateUtils';
   import Explorer, {
     CreateNodeCallback,
+    DeleteNodeCallback,
   } from '@interapp/components/Explorer/renderer/Explorer.vue';
   import SettingsPageHeader from '@renderer/components/Header/SettingsPageHeader.vue';
   import { InvokeChannels } from '@preload/channels/invoke';
@@ -13,8 +14,9 @@
   import todo from '@renderer/assets/images/to-do-list.png';
   import trash from '@renderer/assets/images/trash.png';
   import star from '@renderer/assets/images/star.png';
-  import { NodeType } from '@interapp/components/Explorer/common/tree';
-  import { randomId } from '@interapp/utils/utils';
+  import type { NodeType, Node } from '@interapp/components/Explorer/common/tree';
+  import { randomId, sleep } from '@interapp/utils/utils';
+  import DeleteModal from './DeleteModal.vue';
 
   const profileStore = useProfileStore();
   const graphStore = useGraphStore();
@@ -22,6 +24,14 @@
   const treeAreaWidth = ref(300);
   const contestsAreaWidth = ref(window.innerWidth - 300);
   const isResizing = ref(false);
+
+  const modalState = ref({
+    visible: false,
+    message: '',
+    isDeleting: false,
+    node: null as Node | null,
+    callback: null as DeleteNodeCallback | null,
+  });
 
   const contest = ref<Contest | null>(null);
   const loaded = ref(false);
@@ -51,7 +61,7 @@
     contest.value?.problems.push(problem);
   }
 
-  async function createNode(type: NodeType, callback: CreateNodeCallback) {
+  async function beforeCreateNode(type: NodeType, callback: CreateNodeCallback) {
     if (type === 'dir') {
       callback(randomId(), 'New folder');
     } else {
@@ -90,11 +100,35 @@
     window.api.invoke(InvokeChannels.renameContest, contestId, newName);
   }
 
-  function deleteSingleContest(contestId: string) {
-    if (!contest.value) return;
-    if (contest.value.id === contestId) {
-      profileStore.setCurrContest(null);
+  function beforeDeleteNode(node: Node, callback: DeleteNodeCallback) {
+    const suffix = `${node.type === 'file' ? 'contest' : 'folder'} ${node.text}`;
+    modalState.value.message = `Are you sure you want to delete ${suffix}?`;
+    modalState.value.visible = true;
+    modalState.value.node = node;
+    modalState.value.isDeleting = false;
+    modalState.value.callback = callback;
+  }
+
+  function modalClose() {
+    modalState.value.message = '';
+    modalState.value.visible = false;
+    modalState.value.node = null;
+    modalState.value.isDeleting = false;
+    modalState.value.callback = null;
+  }
+
+  async function modalDelete() {
+    modalState.value.isDeleting = true;
+    await sleep(1000);
+    const node = modalState.value.node;
+    if (node?.type === 'file') {
+      await window.api.invoke(InvokeChannels.deleteContest, node.id);
+      if (contest.value?.id === node.id) {
+        profileStore.setCurrContest(null);
+      }
     }
+    await modalState.value.callback!();
+    modalClose();
   }
 
   async function deleteMultipleContests() {
@@ -180,6 +214,13 @@
     :class="{ resizing: isResizing }"
   >
     <SettingsPageHeader />
+    <DeleteModal
+      :visible="modalState.visible"
+      :message="modalState.message"
+      :is-deleting="modalState.isDeleting"
+      @close="modalClose"
+      @delete="modalDelete"
+    />
     <div class="flex grow">
       <div :style="{ width: `${treeAreaWidth}px` }">
         <Explorer
@@ -188,7 +229,8 @@
           file-icon
           file-name-prefix="Contest"
           @rename-file="renameContest"
-          @before-create-node="createNode"
+          @before-create-node="beforeCreateNode"
+          @before-delete-node="beforeDeleteNode"
         />
       </div>
       <div
