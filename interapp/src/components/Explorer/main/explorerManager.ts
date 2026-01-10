@@ -1,10 +1,8 @@
-import { randomId } from '@interapp/utils/utils';
 import { FileProxy } from '@interapp/utils/fileProxy';
 import { Links, Node, FileNode, DirNode, NodeType, HeadAndTail } from '../common/tree';
 import { ModifierKeys } from '@interapp/types/modifierKeys';
 import { TreeSnapshot } from '../common/treeSnapshot';
 import { GenericResponseDTO } from '@interapp/dto/genericResponseDTO';
-import fs from 'fs';
 import { setBit, clearBit } from '@interapp/utils/bitMask';
 
 type TreeData = {

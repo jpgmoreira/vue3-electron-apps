@@ -276,7 +276,8 @@
               v-model="contest.notes"
               placeholder="Contest notes"
               class="p-1 contest-notes"
-              @change="updateContestNotes"
+              spellcheck="false"
+              @input="updateContestNotes"
             ></textarea>
             <table class="w-full">
               <colgroup>
@@ -307,7 +308,7 @@
                       v-model="problem.title"
                       class="top-0 bottom-0 left-0 right-0"
                       type="text"
-                      @change="updateCurrContestProblem(problem)"
+                      @input="updateCurrContestProblem(problem)"
                     />
                     <span
                       class="absolute icon solved"
@@ -343,7 +344,7 @@
                     <input
                       type="text"
                       :value="problem.accepted"
-                      @change="(e: Event) => acceptedInputChange(problem, e)"
+                      @input="(e: Event) => acceptedInputChange(problem, e)"
                       @keydown="acceptedInputKeydown"
                     />
                   </td>
@@ -351,7 +352,8 @@
                     <textarea
                       v-model="problem.notes"
                       class="p-1 problem-notes"
-                      @change="updateCurrContestProblem(problem)"
+                      spellcheck="false"
+                      @input="updateCurrContestProblem(problem)"
                     ></textarea>
                   </td>
                 </tr>
