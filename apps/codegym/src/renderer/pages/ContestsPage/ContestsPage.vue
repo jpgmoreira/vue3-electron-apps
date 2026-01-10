@@ -17,6 +17,7 @@
   import type { NodeType, Node } from '@interapp/components/Explorer/common/tree';
   import { randomId, sleep } from '@interapp/utils/utils';
   import DeleteModal from './DeleteModal.vue';
+  import { ModifierKeys } from '@interapp/types/modifierKeys';
 
   const profileStore = useProfileStore();
   const graphStore = useGraphStore();
@@ -30,7 +31,6 @@
     message: '',
     isDeleting: false,
     node: null as Node | null,
-    multiple: false,
     callback: null as DeleteNodeCallback | null,
   });
 
@@ -88,9 +88,10 @@
     updateCurrContestProblem(problem);
   }
 
-  async function setActiveContest(contestId: string) {
+  async function nodeClick(node: Node, keys: ModifierKeys) {
+    if (keys.ctrl || node.type === 'dir') return;
     // Sets the active contest and then retrieve it from back.
-    profileStore.setCurrContest(contestId);
+    profileStore.setCurrContest(node.id);
     contest.value = await profileStore.getCurrContest();
   }
 
@@ -107,7 +108,6 @@
     modalState.value.visible = true;
     modalState.value.node = node;
     modalState.value.isDeleting = false;
-    modalState.value.multiple = false;
     modalState.value.callback = callback;
   }
 
@@ -120,7 +120,6 @@
     modalState.value.visible = true;
     modalState.value.node = null;
     modalState.value.isDeleting = false;
-    modalState.value.multiple = true;
     modalState.value.callback = callback;
   }
 
@@ -129,7 +128,6 @@
     modalState.value.message = '';
     modalState.value.visible = false;
     modalState.value.node = null;
-    modalState.value.multiple = false;
     modalState.value.callback = null;
   }
 
@@ -137,12 +135,6 @@
     modalState.value.isDeleting = true;
     await sleep(1000);
     try {
-      if (!modalState.value.multiple) {
-        const node = modalState.value.node;
-        if (node?.type === 'file') {
-          await window.api.invoke(InvokeChannels.deleteContest, node.id);
-        }
-      }
       await modalState.value.callback!();
       // Get curr contest again, if it was deleted, back will return null.
       contest.value = await profileStore.getCurrContest();
@@ -248,6 +240,7 @@
           @before-create-node="beforeCreateNode"
           @before-delete-node="beforeDeleteNode"
           @before-delete-selected="beforeDeleteSelected"
+          @node-click="nodeClick"
         />
       </div>
       <div

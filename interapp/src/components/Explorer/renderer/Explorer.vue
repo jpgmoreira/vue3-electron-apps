@@ -65,6 +65,7 @@
       folders: number,
       callback: DeleteNodeCallback
     ): void;
+    (e: 'node-click', node: Node, keys: ModifierKeys): void;
   }>();
 
   // --- Variables: ---
@@ -338,7 +339,9 @@
 
   // --- Node click: ---
 
-  function nodeClick(node: Node) {}
+  function nodeClick(node: Node) {
+    emit('node-click', node, keys);
+  }
 
   // --- Movement: ---
 
