@@ -446,7 +446,7 @@
   <div
     v-if="hasLoaded"
     ref="explorer"
-    class="explorer relative h-screen"
+    class="explorer relative h-full"
     @click.right="(e) => showContextMenu('root', null, e)"
     @click="() => (contextState.visible = false)"
     @mouseenter="containerMouseEnter"
