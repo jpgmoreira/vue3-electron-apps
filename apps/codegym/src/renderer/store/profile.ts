@@ -73,7 +73,7 @@ export const useProfileStore = defineStore('profile', {
           break;
         }
       }
-      return window.api.invoke<GenericResponseDTO>(InvokeChannels.deleteProfile);
+      return window.api.invoke<GenericResponseDTO>(InvokeChannels.deleteProfile, profileId);
     },
     async requestNewProblem() {
       const oj = this.currProfile!.currOj;
