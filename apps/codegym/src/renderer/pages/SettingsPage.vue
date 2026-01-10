@@ -90,7 +90,10 @@
     <h1 class="text-2xl">Profile</h1>
     <div class="flex">
       <div>
-        <div>Profile: {{ currProfileName }}</div>
+        <div>
+          Profile:
+          <b>{{ currProfileName }}</b>
+        </div>
       </div>
       <button type="button" class="btn-warning" @click="handleLogout">Logout</button>
     </div>

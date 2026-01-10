@@ -20,8 +20,8 @@
     // - Not required to be sorted though.
     allXValues: number[];
     allXLabels: string[];
-    // Show all Y tick values, or only those that appear in the data.
-    yTickMode: 'all' | 'data-only';
+    // Draw horizontal lines for all Y values or only those that appear in the data.
+    hLinesMode: 'all' | 'data-only';
     data: {
       // Series come here.
       id: string;
@@ -50,7 +50,7 @@
     y: number;
   };
   const props = withDefaults(defineProps<LineChartProps>(), {
-    yTickMode: 'all',
+    hLinesMode: 'all',
   });
 
   // --- Canvas: ---
@@ -299,7 +299,7 @@
     // Horizontal lines:
     const x0 = _toCanvasCoordX(0, scaleX, offsetX);
     let lastY = 0;
-    if (props.yTickMode === 'all') {
+    if (props.hLinesMode === 'all') {
       for (let yVal = 1; yVal <= maxYvalue; yVal++) {
         const y = toCanvasCoordY(yVal, scaleY, offsetY);
         if (y < 0) break;
