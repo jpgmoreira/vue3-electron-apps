@@ -1,5 +1,9 @@
 /* Customizable explorer common styles */
 
+.theme-dark .explorer .node-input {
+  padding: 0 4px;
+}
+
 .theme-dark .explorer .node-input.selected {
   outline: none;
 }
