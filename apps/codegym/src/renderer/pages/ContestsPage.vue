@@ -55,8 +55,11 @@
     if (type === 'dir') {
       callback(randomId(), 'New folder');
     } else {
-      const contest = await window.api.invoke<Contest>(InvokeChannels.createContest, 'New contest');
-      callback(contest.id, contest.name);
+      const newContest = await window.api.invoke<Contest>(
+        InvokeChannels.createContest,
+        'New contest'
+      );
+      callback(newContest.id, newContest.name);
     }
   }
 
@@ -80,9 +83,11 @@
     contest.value = await profileStore.getCurrContest();
   }
 
-  function renameContest(newName: string) {
-    if (!contest.value) return;
-    contest.value.name = newName;
+  function renameContest(contestId: string, newName: string) {
+    if (currContestId.value === contestId) {
+      contest.value!.name = newName;
+    }
+    window.api.invoke(InvokeChannels.renameContest, contestId, newName);
   }
 
   function deleteSingleContest(contestId: string) {
@@ -182,7 +187,7 @@
           search
           file-icon
           file-name-prefix="Contest"
-          @rename="renameContest"
+          @rename-file="renameContest"
           @before-create-node="createNode"
         />
       </div>

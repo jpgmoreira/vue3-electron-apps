@@ -55,7 +55,7 @@
   );
 
   const emit = defineEmits<{
-    (e: 'rename', nodeId: string, newName: string): void;
+    (e: 'rename-file', nodeId: string, newName: string): void;
     (e: 'before-create-node', type: NodeType, callback: CreateNodeCallback): void;
   }>();
 
@@ -242,7 +242,7 @@
         node.text = originalName.value;
       } else {
         if (node.type === 'file') {
-          emit('rename', node.id, newName);
+          emit('rename-file', node.id, newName);
         }
       }
     }

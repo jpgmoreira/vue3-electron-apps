@@ -146,3 +146,7 @@ ipcMain.handle(InvokeChannels.updateCurrContestProblem, (_, problem: ContestProb
 ipcMain.handle(InvokeChannels.createContest, (_, name: string) =>
   ContestsManager.instance.createContest(name)
 );
+
+ipcMain.handle(InvokeChannels.renameContest, (_, contestId: string, newName: string) =>
+  ContestsManager.instance.renameContest(contestId, newName)
+);
