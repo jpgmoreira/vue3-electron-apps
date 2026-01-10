@@ -142,3 +142,7 @@ ipcMain.handle(InvokeChannels.updateCurrContestNotes, (_, notes: string) =>
 ipcMain.handle(InvokeChannels.updateCurrContestProblem, (_, problem: ContestProblem) =>
   ContestsManager.instance.updateCurrContestProblem(problem)
 );
+
+ipcMain.handle(InvokeChannels.createContest, (_, name: string) =>
+  ContestsManager.instance.createContest(name)
+);

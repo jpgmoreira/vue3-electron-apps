@@ -13,6 +13,8 @@
   import todo from '@renderer/assets/images/to-do-list.png';
   import trash from '@renderer/assets/images/trash.png';
   import star from '@renderer/assets/images/star.png';
+  import { NodeType } from '@interapp/components/Explorer/common/tree';
+  import { randomId } from '@interapp/utils/utils';
 
   const profileStore = useProfileStore();
   const graphStore = useGraphStore();
@@ -49,8 +51,13 @@
     contest.value?.problems.push(problem);
   }
 
-  async function createContest(callback: CreateNodeCallback) {
-    const contestId = await window.api.invoke<string>(InvokeChannels.createContest);
+  async function createNode(type: NodeType, callback: CreateNodeCallback) {
+    if (type === 'dir') {
+      callback(randomId(), 'New folder');
+    } else {
+      const contest = await window.api.invoke<Contest>(InvokeChannels.createContest, 'New contest');
+      callback(contest.id, contest.name);
+    }
   }
 
   function updateContestNotes() {
@@ -176,7 +183,7 @@
           file-icon
           file-name-prefix="Contest"
           @rename="renameContest"
-          @before-create-node="createContest"
+          @before-create-node="createNode"
         />
       </div>
       <div

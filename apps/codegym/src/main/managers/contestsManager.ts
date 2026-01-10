@@ -62,8 +62,7 @@ export class ContestsManager {
     return this.proxy.target;
   }
 
-  public createContest(name: string): string {
-    name = name.trim();
+  public createContest(name: string): Contest {
     const now = Date.now();
     const id = buildId(name, now);
     const contest = getEmptyContest(id, name, now);
@@ -76,7 +75,7 @@ export class ContestsManager {
     );
     // We do not set a contest as active upon creation.
     new FileProxy(contestPath, contest);
-    return id;
+    return contest;
   }
 
   public renameContest(contestId: string, newName: string) {
