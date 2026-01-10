@@ -8,10 +8,10 @@
     "name": "The CodeGym Team",
     "email": "jpgmoreira19@gmail.com"
   },
-  "homepage": "https://github.com/jpgmoreira/TODO",
+  "homepage": "https://github.com/jpgmoreira/vue3-electron-apps",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/jpgmoreira/TODO.git"
+    "url": "git+https://github.com/jpgmoreira/vue3-electron-apps.git"
   },
   "scripts": {
     "format": "prettier --write .",
