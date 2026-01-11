@@ -420,21 +420,6 @@ export class ExplorerManager {
       };
     }
     const node = this.proxy.idToNode[nodeId];
-    const control = this.getParent(node, false) || this.target.root;
-    const dirHead = this.getHead(control.dirs, false);
-    const fileHead = this.getHead(control.files, false);
-    for (const head of [dirHead, fileHead]) {
-      let curr = head;
-      while (curr) {
-        if (curr.text === newName) {
-          return {
-            status: 'error',
-            errorMsg: 'Name already exists in this folder.',
-          };
-        }
-        curr = this.getNext(curr, false);
-      }
-    }
     node.text = newName;
     return { status: 'success' };
   }
