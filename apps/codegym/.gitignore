@@ -1,5 +1,3 @@
-notes
 codegym-data
 src/scripts/*
 !src/scripts/*.py
-

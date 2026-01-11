@@ -4,6 +4,9 @@ node_modules/
 # pnpm
 .pnpm-store/
 
+# notes
+my_notes
+
 # build outputs
 dist/
 out/
