@@ -1,7 +1,6 @@
 import { app, BrowserWindow, globalShortcut } from 'electron';
 import type { Event, WebContents, WebPreferences } from 'electron';
 import { electronApp, optimizer } from '@electron-toolkit/utils';
-import { WindowManager } from './managers/windowManager';
 
 app.whenReady().then(() => {
   // Set app user model id for windows
@@ -18,12 +17,12 @@ app.whenReady().then(() => {
       }
     });
   });
-  WindowManager.instance.createMainWindow();
+  // TODO: WINDOW MANAGER CREATE MAIN WINDOW
   app.on('activate', function () {
     // On macOS it's common to re-create a window in the app when the
     // dock icon is clicked and there are no other windows open.
     if (BrowserWindow.getAllWindows().length === 0) {
-      WindowManager.instance.createMainWindow();
+      // TODO: WINDOW MANAGER CREATE MAIN WINDOW
     }
   });
 });
