@@ -2,7 +2,7 @@ import { Oj } from '@common/types/oj';
 import { OjProblem } from '@common/schemas/problems';
 import { useToastStore } from '@interapp/store/toast';
 
-export function buildOjProblemUrl(oj: Oj, path: string): string {
+function buildOjProblemUrl(oj: Oj, path: string): string {
   let result = '';
   switch (oj) {
     case 'cf':

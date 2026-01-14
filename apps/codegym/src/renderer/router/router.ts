@@ -1,47 +1,7 @@
 import { createMemoryHistory, createRouter } from 'vue-router';
-import { useProfileStore } from '@renderer/store/profile';
-import { isAuthPage } from '@common/types/authPage';
-import LoginPage from '@renderer/pages/LoginPage/LoginPage.vue';
-import ProblemsPage from '@renderer/pages/ProblemsPage/ProblemsPage.vue';
-import HistoryPage from '@renderer/pages/HistoryPage.vue';
-import GraphPage from '@renderer/pages/GraphPage.vue';
-import SettingsPage from '@renderer/pages/SettingsPage.vue';
-import ContestsPage from '@renderer/pages/ContestsPage/ContestsPage.vue';
-
-const routes = [
-  {
-    path: '/login',
-    component: LoginPage,
-  },
-  {
-    path: '/problems',
-    component: ProblemsPage,
-  },
-  {
-    path: '/history',
-    component: HistoryPage,
-  },
-  {
-    path: '/graph',
-    component: GraphPage,
-  },
-  {
-    path: '/settings',
-    component: SettingsPage,
-  },
-  {
-    path: '/contests',
-    component: ContestsPage,
-  },
-];
+const routes = [];
 
 export const router = createRouter({
   history: createMemoryHistory(),
   routes,
-});
-
-router.afterEach((to) => {
-  if (isAuthPage(to.path)) {
-    useProfileStore().updateCurrPage(to.path);
-  }
 });
