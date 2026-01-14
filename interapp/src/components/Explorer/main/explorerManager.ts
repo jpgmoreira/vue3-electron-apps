@@ -164,11 +164,11 @@ export class ExplorerManager {
       return this.buildResult(fakeScrollTop);
     }
     return {
-      selectedNodes: this.nSelectedNodes,
-      selectedFiles: this.nSelectedFiles,
-      totalNodes: this.expandedFlat.length,
-      openDirs: this.nOpenDirs,
-      surfaceNodes: nSurfaceNodes,
+      nSelectedNodes: this.nSelectedNodes,
+      nSelectedFiles: this.nSelectedFiles,
+      nTotalNodes: this.expandedFlat.length,
+      nOpenDirs: this.nOpenDirs,
+      nSurfaceNodes: nSurfaceNodes,
       page,
     };
   }

@@ -6,7 +6,7 @@ export enum TreeChannels {
   createNode = 'create-node',
   createNodeAbove = 'create-node-above',
   createNodeBelow = 'create-node-below',
-  getState = 'get-state',
+  getPage = 'get-page',
   toggleDirOpen = 'toggle-dir-open',
   renameNode = 'rename-node',
   handleSelection = 'handle-selection',

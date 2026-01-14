@@ -51,7 +51,7 @@ ipcMain.handle(
   }
 );
 
-ipcMain.handle(TreeChannels.getState, (_: IpcMainInvokeEvent, scrollTop: number): TreeSnapshot => {
+ipcMain.handle(TreeChannels.getPage, (_: IpcMainInvokeEvent, scrollTop: number): TreeSnapshot => {
   return ExplorerManager.instance.buildResult(scrollTop);
 });
 

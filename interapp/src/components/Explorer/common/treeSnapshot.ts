@@ -1,10 +1,10 @@
 import { Node } from './tree';
 
 export type TreeSnapshot = {
-  totalNodes: number;
-  surfaceNodes: number;
-  selectedNodes: number;
-  selectedFiles: number;
-  openDirs: number;
+  nTotalNodes: number;
+  nSurfaceNodes: number;
+  nSelectedNodes: number;
+  nSelectedFiles: number;
+  nOpenDirs: number;
   page: Node[];
 };
