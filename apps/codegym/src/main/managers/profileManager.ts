@@ -78,4 +78,26 @@ export class ProfileManager {
     this.loadProfile(id);
     return { status: 'success' };
   }
+
+  public renameProfile(profileId: string, newName: string): GenericResponseDTO {
+    newName = newName.trim();
+    const validationResult = this.validateProfileName(newName);
+    if (validationResult.status === 'error') {
+      return validationResult;
+    }
+    const record = this.findProfileRecord(profileId);
+    if (!record) {
+      return {
+        status: 'error',
+        message: 'Profile not found!',
+      };
+    }
+    record.name = newName;
+    const fPath = path.join(DATA_DIR, 'profileData', profileId, 'profile.json');
+    const profileProxy = new FileProxy(fPath, getEmptyProfile(profileId, newName));
+    profileProxy.proxy.name = newName;
+    return {
+      status: 'success',
+    };
+  }
 }

@@ -45,7 +45,17 @@
       router.replace('/problems');
     }
   }
-  function rename() {}
+  async function rename() {
+    if (!record.value) throw new Error('No record selected!');
+    const profileId = record.value.id;
+    const newName = text.value.trim();
+    const result = await profileStore.renameProfile(profileId, newName);
+    if (result.status === 'error') {
+      toastStore.showToast(result.message!, 'error');
+    } else {
+      visible.value = null;
+    }
+  }
   function _delete() {}
 </script>
 

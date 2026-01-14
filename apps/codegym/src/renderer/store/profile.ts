@@ -5,6 +5,7 @@ import { AuthResponseDTO } from '@common/dto/authResponseDTO';
 import { InvokeChannels } from '@preload/channels/invoke';
 import { eventEmitter } from '@renderer/events/emitter';
 import { CommonEvents } from '@interapp/events/commonEvents';
+import { GenericResponseDTO } from '@interapp/dto/genericResponseDTO';
 
 export const useProfileStore = defineStore('profile', {
   state: () => ({
@@ -20,6 +21,18 @@ export const useProfileStore = defineStore('profile', {
       const result = await window.api.invoke<AuthResponseDTO>(InvokeChannels.createProfile, name);
       if (result.status === 'success') {
         eventEmitter.emit(CommonEvents.loadInitialData, result.data);
+      }
+      return result;
+    },
+    async renameProfile(profileId: string, newName: string) {
+      const result = await window.api.invoke<GenericResponseDTO>(
+        InvokeChannels.renameProfile,
+        profileId,
+        newName
+      );
+      if (result.status === 'success') {
+        const record = this.registry.profileRecords.find((p) => p.id === profileId);
+        record!.name = newName;
       }
       return result;
     },

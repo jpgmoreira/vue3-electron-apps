@@ -3,6 +3,7 @@ import { InvokeChannels } from '@preload/channels/invoke';
 import { AuthResponseDTO } from '@common/dto/authResponseDTO';
 import { profileManager } from '@main/startup/instances';
 import { loadStartupData } from '@main/startup/startup';
+import { GenericResponseDTO } from '@interapp/dto/genericResponseDTO';
 
 ipcMain.handle(
   InvokeChannels.createProfile,
@@ -17,4 +18,10 @@ ipcMain.handle(
       data,
     };
   }
+);
+
+ipcMain.handle(
+  InvokeChannels.renameProfile,
+  async (_: IpcMainInvokeEvent, profileId: string, newName: string): Promise<GenericResponseDTO> =>
+    profileManager.renameProfile(profileId, newName)
 );
