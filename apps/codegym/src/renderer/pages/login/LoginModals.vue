@@ -56,7 +56,18 @@
       visible.value = null;
     }
   }
-  function _delete() {}
+  async function _delete() {
+    if (!record.value) throw new Error('No record selected!');
+    const profileId = record.value.id;
+    isDeleting.value = true;
+    const result = await profileStore.deleteProfile(profileId);
+    if (result.status === 'error') {
+      toastStore.showToast(result.message!, 'error');
+    }
+    isDeleting.value = false;
+    visible.value = null;
+    record.value = null;
+  }
 </script>
 
 <template>

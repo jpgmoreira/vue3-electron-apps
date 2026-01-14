@@ -22,6 +22,18 @@ ipcMain.handle(
 
 ipcMain.handle(
   InvokeChannels.renameProfile,
-  async (_: IpcMainInvokeEvent, profileId: string, newName: string): Promise<GenericResponseDTO> =>
-    profileManager.renameProfile(profileId, newName)
+  async (
+    _: IpcMainInvokeEvent,
+    profileId: string,
+    newName: string
+  ): Promise<GenericResponseDTO> => {
+    return profileManager.renameProfile(profileId, newName);
+  }
+);
+
+ipcMain.handle(
+  InvokeChannels.deleteProfile,
+  (_: IpcMainInvokeEvent, profileId: string): GenericResponseDTO => {
+    return profileManager.deleteProfile(profileId);
+  }
 );

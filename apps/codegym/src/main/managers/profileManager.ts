@@ -10,6 +10,7 @@ import { FileProxy } from '@interapp/utils/fileProxy';
 import { buildId } from '@interapp/utils/utils';
 import { DATA_DIR } from '@main/constants';
 import path from 'path';
+import fs from 'fs';
 
 export class ProfileManager {
   private currProfileProxy: FileProxy<Profile> | null = null;
@@ -99,5 +100,25 @@ export class ProfileManager {
     return {
       status: 'success',
     };
+  }
+
+  public deleteProfile(profileId: string): GenericResponseDTO {
+    try {
+      const { profileRecords } = this.registryProxy!.proxy;
+      for (let i = 0; i < profileRecords.length; i++) {
+        if (profileRecords[i].id === profileId) {
+          profileRecords.splice(i, 1);
+          break;
+        }
+      }
+      const dirPath = path.join(DATA_DIR, 'profileData', profileId);
+      fs.rmSync(dirPath, { recursive: true, force: true });
+      return { status: 'success' };
+    } catch (err: unknown) {
+      return {
+        status: 'error',
+        message: `${err}`,
+      };
+    }
   }
 }

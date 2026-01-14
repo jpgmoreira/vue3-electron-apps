@@ -36,5 +36,15 @@ export const useProfileStore = defineStore('profile', {
       }
       return result;
     },
+    async deleteProfile(profileId: string) {
+      const { profileRecords } = this.registry;
+      for (let i = 0; i < profileRecords.length; i++) {
+        if (profileRecords[i].id === profileId) {
+          profileRecords.splice(i, 1);
+          break;
+        }
+      }
+      return window.api.invoke<GenericResponseDTO>(InvokeChannels.deleteProfile, profileId);
+    },
   },
 });
