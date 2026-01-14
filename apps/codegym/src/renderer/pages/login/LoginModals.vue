@@ -2,8 +2,15 @@
   import { ref, useTemplateRef, nextTick } from 'vue';
   import Modal from '@interapp/components/Modal.vue';
   import { ProfileRecord } from '@common/schemas/profile';
+  import { useProfileStore } from '@renderer/store/profile';
+  import { useToastStore } from '@interapp/store/toast';
+  import { APP_NAME } from '@common/constants';
+  import { useRouter } from 'vue-router';
   export type ModalType = 'create' | 'rename' | 'delete' | null;
   defineExpose({ show });
+  const profileStore = useProfileStore();
+  const toastStore = useToastStore();
+  const router = useRouter();
   const visible = ref<ModalType>(null);
   const text = ref('');
   const record = ref<ProfileRecord | null>(null);
@@ -27,7 +34,17 @@
   function close() {
     visible.value = null;
   }
-  function create() {}
+  async function create() {
+    const name = text.value.trim();
+    const result = await profileStore.createProfile(name);
+    if (result.status === 'error') {
+      toastStore.showToast(result.message, 'error');
+    } else if (result.status === 'success') {
+      visible.value = null;
+      document.title = `${name}@${APP_NAME}`;
+      router.replace('/problems');
+    }
+  }
   function rename() {}
   function _delete() {}
 </script>
@@ -40,6 +57,7 @@
       <div class="mb-1">Create a new profile:</div>
       <input
         type="text"
+        spellcheck="false"
         ref="create-input"
         v-model.trim="text"
         placeholder="Profile Name..."
@@ -61,6 +79,7 @@
       <div class="mb-1">Rename the "{{ record?.name }}" profile:</div>
       <input
         type="text"
+        spellcheck="false"
         ref="rename-input"
         v-model.trim="text"
         :placeholder="record?.name"

@@ -1,1 +1,3 @@
-export enum InvokeChannels {}
+export enum InvokeChannels {
+  createProfile = 'create-profile',
+}

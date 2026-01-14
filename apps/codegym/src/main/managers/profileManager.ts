@@ -5,7 +5,9 @@ import {
   ProfileRecord,
   ProfileRegistry,
 } from '@common/schemas/profile';
+import { GenericResponseDTO } from '@interapp/dto/genericResponseDTO';
 import { FileProxy } from '@interapp/utils/fileProxy';
+import { buildId } from '@interapp/utils/utils';
 import { DATA_DIR } from '@main/constants';
 import path from 'path';
 
@@ -41,5 +43,39 @@ export class ProfileManager {
 
   public getProfileRegistry() {
     return this.registryProxy!.target;
+  }
+
+  private validateProfileName(name: string): GenericResponseDTO {
+    if (!name) {
+      return {
+        status: 'error',
+        message: 'Profile name cannot be empty!',
+      } as const;
+    }
+    if (this.registryProxy!.proxy.profileRecords.some((p) => p.name === name)) {
+      return {
+        status: 'error',
+        message: 'Profile name already in use!',
+      } as const;
+    }
+    return { status: 'success' } as const;
+  }
+
+  public createProfile(name: string): GenericResponseDTO {
+    name = name.trim();
+    const validationResult = this.validateProfileName(name);
+    if (validationResult.status === 'error') {
+      return validationResult;
+    }
+    const now = Date.now();
+    const id = buildId(name, now);
+    this.registryProxy!.proxy.profileRecords.push({
+      id,
+      name,
+      createdAt: now,
+      lastAccess: now,
+    });
+    this.loadProfile(id);
+    return { status: 'success' };
   }
 }
