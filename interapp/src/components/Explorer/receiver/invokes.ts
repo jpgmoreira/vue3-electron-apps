@@ -1,10 +1,10 @@
 import { ipcMain, IpcMainInvokeEvent } from 'electron';
 import { TreeChannels } from '../preload/channels';
-import { ExplorerManager } from '../main/explorerManager';
 import { NodeType } from '../common/tree';
 import { ModifierKeys } from '@interapp/types/modifierKeys';
 import { TreeSnapshot } from '../common/treeSnapshot';
 import { GenericResponseDTO } from '@interapp/dto/genericResponseDTO';
+import { explorerManager } from '../main/instances/instances';
 
 ipcMain.handle(
   TreeChannels.createNode,
@@ -16,8 +16,8 @@ ipcMain.handle(
     parentId: string | null,
     name: string
   ): TreeSnapshot => {
-    ExplorerManager.instance.createNode(type, nodeId, parentId, name);
-    return ExplorerManager.instance.buildResult(scrollTop);
+    explorerManager.createNode(type, nodeId, parentId, name);
+    return explorerManager.buildResult(scrollTop);
   }
 );
 
@@ -31,8 +31,8 @@ ipcMain.handle(
     baseNodeId: string,
     name: string
   ): TreeSnapshot => {
-    ExplorerManager.instance.createNodeAbove(type, nodeId, baseNodeId, name);
-    return ExplorerManager.instance.buildResult(scrollTop);
+    explorerManager.createNodeAbove(type, nodeId, baseNodeId, name);
+    return explorerManager.buildResult(scrollTop);
   }
 );
 
@@ -46,111 +46,111 @@ ipcMain.handle(
     baseNodeId: string,
     name: string
   ): TreeSnapshot => {
-    ExplorerManager.instance.createNodeBelow(type, nodeId, baseNodeId, name);
-    return ExplorerManager.instance.buildResult(scrollTop);
+    explorerManager.createNodeBelow(type, nodeId, baseNodeId, name);
+    return explorerManager.buildResult(scrollTop);
   }
 );
 
 ipcMain.handle(TreeChannels.getPage, (_: IpcMainInvokeEvent, scrollTop: number): TreeSnapshot => {
-  return ExplorerManager.instance.buildResult(scrollTop);
+  return explorerManager.buildResult(scrollTop);
 });
 
 ipcMain.handle(
   TreeChannels.toggleDirOpen,
   (_: IpcMainInvokeEvent, scrollTop: number, nodeId: string): TreeSnapshot => {
-    ExplorerManager.instance.toggleDirOpen(nodeId);
-    return ExplorerManager.instance.buildResult(scrollTop);
+    explorerManager.toggleDirOpen(nodeId);
+    return explorerManager.buildResult(scrollTop);
   }
 );
 
 ipcMain.handle(
   TreeChannels.renameNode,
   (_: IpcMainInvokeEvent, nodeId: string, newName: string): GenericResponseDTO => {
-    return ExplorerManager.instance.renameNode(nodeId, newName);
+    return explorerManager.renameNode(nodeId, newName);
   }
 );
 
 ipcMain.handle(
   TreeChannels.handleSelection,
   (_: IpcMainInvokeEvent, scrollTop: number, nodeId: string, keys: ModifierKeys): TreeSnapshot => {
-    ExplorerManager.instance.handleSelection(nodeId, keys);
-    return ExplorerManager.instance.buildResult(scrollTop);
+    explorerManager.handleSelection(nodeId, keys);
+    return explorerManager.buildResult(scrollTop);
   }
 );
 
 ipcMain.handle(
   TreeChannels.deleteNode,
   async (_: IpcMainInvokeEvent, scrollTop: number, nodeId: string): Promise<TreeSnapshot> => {
-    await ExplorerManager.instance.deleteNode(nodeId);
-    return ExplorerManager.instance.buildResult(scrollTop);
+    await explorerManager.deleteNode(nodeId);
+    return explorerManager.buildResult(scrollTop);
   }
 );
 
 ipcMain.handle(
   TreeChannels.deleteSelectedNodes,
   async (_: IpcMainInvokeEvent, scrollTop: number): Promise<TreeSnapshot> => {
-    await ExplorerManager.instance.deleteSelectedNodes();
-    return ExplorerManager.instance.buildResult(scrollTop);
+    await explorerManager.deleteSelectedNodes();
+    return explorerManager.buildResult(scrollTop);
   }
 );
 
 ipcMain.handle(
   TreeChannels.collapseAll,
   (_: IpcMainInvokeEvent, scrollTop: number): TreeSnapshot => {
-    ExplorerManager.instance.collapseAll();
-    return ExplorerManager.instance.buildResult(scrollTop);
+    explorerManager.collapseAll();
+    return explorerManager.buildResult(scrollTop);
   }
 );
 
 ipcMain.handle(
   TreeChannels.clearSelection,
   (_: IpcMainInvokeEvent, scrollTop: number): TreeSnapshot => {
-    ExplorerManager.instance.clearSelection();
-    return ExplorerManager.instance.buildResult(scrollTop);
+    explorerManager.clearSelection();
+    return explorerManager.buildResult(scrollTop);
   }
 );
 
 ipcMain.handle(TreeChannels.selectAll, (_: IpcMainInvokeEvent, scrollTop: number): TreeSnapshot => {
-  ExplorerManager.instance.selectAll();
-  return ExplorerManager.instance.buildResult(scrollTop);
+  explorerManager.selectAll();
+  return explorerManager.buildResult(scrollTop);
 });
 
 ipcMain.handle(
   TreeChannels.moveSelectedFilesAbove,
   (_: IpcMainInvokeEvent, scrollTop: number, baseNodeId: string): TreeSnapshot => {
-    ExplorerManager.instance.moveSelectedFilesAbove(baseNodeId);
-    return ExplorerManager.instance.buildResult(scrollTop);
+    explorerManager.moveSelectedFilesAbove(baseNodeId);
+    return explorerManager.buildResult(scrollTop);
   }
 );
 
 ipcMain.handle(
   TreeChannels.moveSelectedFilesBelow,
   (_: IpcMainInvokeEvent, scrollTop: number, baseNodeId: string): TreeSnapshot => {
-    ExplorerManager.instance.moveSelectedFilesBelow(baseNodeId);
-    return ExplorerManager.instance.buildResult(scrollTop);
+    explorerManager.moveSelectedFilesBelow(baseNodeId);
+    return explorerManager.buildResult(scrollTop);
   }
 );
 
 ipcMain.handle(
   TreeChannels.moveSelectedFoldersAbove,
   (_: IpcMainInvokeEvent, scrollTop: number, baseNodeId: string): TreeSnapshot => {
-    ExplorerManager.instance.moveSelectedFoldersAbove(baseNodeId);
-    return ExplorerManager.instance.buildResult(scrollTop);
+    explorerManager.moveSelectedFoldersAbove(baseNodeId);
+    return explorerManager.buildResult(scrollTop);
   }
 );
 
 ipcMain.handle(
   TreeChannels.moveSelectedFoldersBelow,
   (_: IpcMainInvokeEvent, scrollTop: number, nodeId: string): TreeSnapshot => {
-    ExplorerManager.instance.moveSelectedFoldersBelow(nodeId);
-    return ExplorerManager.instance.buildResult(scrollTop);
+    explorerManager.moveSelectedFoldersBelow(nodeId);
+    return explorerManager.buildResult(scrollTop);
   }
 );
 
 ipcMain.handle(
   TreeChannels.moveSelectedNodesInto,
   (_: IpcMainInvokeEvent, scrollTop: number, destinationId: string | null): TreeSnapshot => {
-    ExplorerManager.instance.moveSelectedNodesInto(destinationId);
-    return ExplorerManager.instance.buildResult(scrollTop);
+    explorerManager.moveSelectedNodesInto(destinationId);
+    return explorerManager.buildResult(scrollTop);
   }
 );

@@ -17,8 +17,6 @@ export class ExplorerManager {
 
   private _proxy: FileProxy<TreeData> | null = null;
 
-  private constructor() {}
-
   private get proxy() {
     return this._proxy!.proxy;
   }
