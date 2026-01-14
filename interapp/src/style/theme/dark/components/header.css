@@ -1,0 +1,13 @@
+.theme-dark .nav-header {
+  background-color: #41464b;
+}
+
+.theme-dark .nav-btn {
+  padding: 5px 10px;
+  transition: background 0.2s ease;
+}
+
+.theme-dark .nav-btn:hover,
+.theme-dark .nav-btn.router-link-exact-active {
+  background-color: #5f646d;
+}

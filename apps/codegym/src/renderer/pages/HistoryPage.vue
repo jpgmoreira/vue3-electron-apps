@@ -4,5 +4,5 @@
 
 <template>
   <ProblemsPageHeader />
-  Problems Page
+  History Page
 </template>

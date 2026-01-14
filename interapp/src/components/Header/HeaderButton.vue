@@ -7,11 +7,3 @@
     <slot></slot>
   </RouterLink>
 </template>
-
-<style scoped>
-  .nav-btn {
-    cursor: pointer;
-    padding: 8px;
-    transition: background-color 0.2s ease;
-  }
-</style>
