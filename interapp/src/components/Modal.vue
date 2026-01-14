@@ -27,21 +27,25 @@
 <template>
   <teleport to="body">
     <div class="modal-container">
-      <div v-if="props.visible" class="modal-backdrop" @click="close"></div>
-      <div v-if="props.visible" class="modal">
-        <div class="modal-header">
-          <div>
-            <slot name="header"></slot>
+      <Transition name="backdrop-transition">
+        <div v-if="props.visible" class="modal-backdrop" @click="close"></div>
+      </Transition>
+      <Transition name="modal-transition">
+        <div v-if="props.visible" class="modal">
+          <div class="modal-header">
+            <div>
+              <slot name="header"></slot>
+            </div>
+            <div class="modal-close" @click="close"></div>
           </div>
-          <div class="modal-close" @click="close"></div>
+          <div class="modal-body">
+            <slot name="body"></slot>
+          </div>
+          <div class="modal-footer">
+            <slot name="footer"></slot>
+          </div>
         </div>
-        <div class="modal-body">
-          <slot name="body"></slot>
-        </div>
-        <div class="modal-footer">
-          <slot name="footer"></slot>
-        </div>
-      </div>
+      </Transition>
     </div>
   </teleport>
 </template>
@@ -85,5 +89,34 @@
   }
   .modal-close:hover {
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='lightgray' viewBox='0 0 16 16'%3E%3Cpath fill-rule='evenodd' d='M13.854 2.146a.5.5 0 0 1 0 .708l-11 11a.5.5 0 0 1-.708-.708l11-11a.5.5 0 0 1 .708 0Z'/%3E%3Cpath fill-rule='evenodd' d='M2.146 2.146a.5.5 0 0 0 0 .708l11 11a.5.5 0 0 0 .708-.708l-11-11a.5.5 0 0 0-.708 0Z'/%3E%3C/svg%3E");
+  }
+
+  /* Transitions */
+  .modal-transition-enter-active,
+  .modal-transition-leave-active {
+    transition: all 0.2s ease;
+  }
+  .modal-transition-enter-from,
+  .modal-transition-leave-to {
+    opacity: 0;
+    transform: translate(-50%, calc(-50% - 30px));
+  }
+  .modal-transition-enter-to,
+  .modal-transition-leave-from {
+    opacity: 1;
+    transform: translate(-50%, -50%);
+  }
+
+  .backdrop-transition-enter-active,
+  .backdrop-transition-leave-active {
+    transition: opacity 0.2s ease;
+  }
+  .backdrop-transition-enter-from,
+  .backdrop-transition-leave-to {
+    opacity: 0;
+  }
+  .backdrop-transition-enter-to,
+  .backdrop-transition-leave-from {
+    opacity: 1;
   }
 </style>
