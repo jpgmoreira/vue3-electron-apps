@@ -589,6 +589,8 @@
   </div>
 </template>
 
+<!-- TODO: Remove colors from here and put in the theme styles. -->
+
 <style scoped>
   .legend-container {
     display: flex;

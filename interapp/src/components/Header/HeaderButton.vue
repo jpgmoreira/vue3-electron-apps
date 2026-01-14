@@ -3,13 +3,13 @@
 </script>
 
 <template>
-  <RouterLink :to="props.to">
+  <RouterLink class="nav-btn" :to="props.to">
     <slot></slot>
   </RouterLink>
 </template>
 
 <style scoped>
-  a {
+  .nav-btn {
     cursor: pointer;
     padding: 8px;
     transition: background-color 0.2s ease;
