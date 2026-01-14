@@ -1,21 +1,9 @@
 type Listener = (...args: any[]) => void;
 
-/**
- * Singleton for emitting and listening to events.
- */
 export class EventEmitter {
-  static #instance: EventEmitter;
-
   private listeners = new Map<string, Listener[]>();
 
   private constructor() {}
-
-  public static get instance(): EventEmitter {
-    if (!this.#instance) {
-      this.#instance = new EventEmitter();
-    }
-    return this.#instance;
-  }
 
   on(event: string, listener: Listener) {
     const arr = this.listeners.get(event) ?? [];
