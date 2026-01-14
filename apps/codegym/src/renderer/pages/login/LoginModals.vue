@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-  import { ref } from 'vue';
+  import { ref, useTemplateRef, nextTick } from 'vue';
   import Modal from '@interapp/components/Modal.vue';
   import { ProfileRecord } from '@common/schemas/profile';
   export type ModalType = 'create' | 'rename' | 'delete' | null;
@@ -8,11 +8,21 @@
   const text = ref('');
   const record = ref<ProfileRecord | null>(null);
   const isDeleting = ref(false);
+  const createInput = useTemplateRef('create-input');
+  const renameInput = useTemplateRef('rename-input');
   function show(which: ModalType, selected: ProfileRecord | null) {
     text.value = selected ? selected.name : '';
     if (which === 'create') text.value = '';
     record.value = selected;
     visible.value = which;
+    nextTick(() => {
+      if (which === 'create') {
+        createInput.value?.focus();
+      } else if (which === 'rename') {
+        renameInput.value?.focus();
+        renameInput.value?.select();
+      }
+    });
   }
   function close() {
     visible.value = null;
@@ -30,6 +40,7 @@
       <div class="mb-1">Create a new profile:</div>
       <input
         type="text"
+        ref="create-input"
         v-model.trim="text"
         placeholder="Profile Name..."
         @keydown.enter="create"
@@ -48,7 +59,13 @@
     <template #header>Rename</template>
     <template #body>
       <div class="mb-1">Rename the "{{ record?.name }}" profile:</div>
-      <input type="text" v-model.trim="text" :placeholder="record?.name" @keydown.enter="rename" />
+      <input
+        type="text"
+        ref="rename-input"
+        v-model.trim="text"
+        :placeholder="record?.name"
+        @keydown.enter="rename"
+      />
     </template>
     <template #footer>
       <div class="flex justify-between">
