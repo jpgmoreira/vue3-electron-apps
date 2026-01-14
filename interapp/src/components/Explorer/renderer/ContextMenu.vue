@@ -36,11 +36,11 @@
   const props = defineProps<ContextProps>();
   const style = ref<Record<string, string>>({});
 
-  const nSelectedNodes = computed(() => props.tree?.selectedNodes || 0);
-  const nSelectedFiles = computed(() => props.tree?.selectedFiles || 0);
+  const nSelectedNodes = computed(() => props.tree?.nSelectedNodes || 0);
+  const nSelectedFiles = computed(() => props.tree?.nSelectedFiles || 0);
 
   const showSelectAll = computed(() =>
-    Boolean(props.tree && props.tree.totalNodes > props.tree.selectedNodes)
+    Boolean(props.tree && props.tree.nTotalNodes > props.tree.nSelectedNodes)
   );
 
   // Selection and collapse all:

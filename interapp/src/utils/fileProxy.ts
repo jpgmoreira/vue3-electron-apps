@@ -44,8 +44,6 @@ export class FileProxy<T extends JSONObject> {
     this._proxy = new Proxy(this._target, this.handler) as T;
   }
 
-  /** -- PUBLIC: -- */
-
   public get proxy() {
     return this._proxy;
   }
@@ -71,8 +69,6 @@ export class FileProxy<T extends JSONObject> {
       }
     }, this.debounce);
   }
-
-  /** -- PRIVATE: -- */
 
   private handler = {
     get: this.proxyGetHandler.bind(this),

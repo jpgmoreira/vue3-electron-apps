@@ -15,17 +15,9 @@ type DeleteCallback = (node: Node) => Promise<void>;
 export class ExplorerManager {
   // -- Class configuration: ---
 
-  static #instance: ExplorerManager;
   private _proxy: FileProxy<TreeData> | null = null;
 
   private constructor() {}
-
-  public static get instance(): ExplorerManager {
-    if (!this.#instance) {
-      this.#instance = new ExplorerManager();
-    }
-    return this.#instance;
-  }
 
   private get proxy() {
     return this._proxy!.proxy;
@@ -69,7 +61,7 @@ export class ExplorerManager {
 
   public loadTree(filePath: string) {
     this._proxy = new FileProxy(filePath, this.getEmptyTreeData());
-    this.refresh(false);
+    this.refresh(false); // "false" avoids writing the tree to the disk again just after loading it.
   }
 
   // --- Result and flattening: ---
@@ -416,7 +408,7 @@ export class ExplorerManager {
     if (!newName) {
       return {
         status: 'error',
-        errorMsg: 'Name cannot be empty!',
+        message: 'Name cannot be empty!',
       };
     }
     const node = this.proxy.idToNode[nodeId];

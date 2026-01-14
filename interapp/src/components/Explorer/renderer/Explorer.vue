@@ -105,18 +105,18 @@
   const explorer = useTemplateRef('explorer');
 
   const ghostStyle = computed(() => ({
-    height: `${rowHeight * (tree.value?.surfaceNodes || 0) + paddingBottom}px`,
+    height: `${rowHeight * (tree.value?.nSurfaceNodes || 0) + paddingBottom}px`,
   }));
 
   const selectedFilesText = computed(() => {
     if (!tree.value) return '0 files';
-    const val = toLocaleNumber(tree.value.selectedFiles);
+    const val = toLocaleNumber(tree.value.nSelectedFiles);
     return val === '1' ? '1 file' : `${val} files`;
   });
 
   const nSelectedFolders = computed(() => {
     if (!tree.value) return 0;
-    return tree.value.selectedNodes - tree.value.selectedFiles;
+    return tree.value.nSelectedNodes - tree.value.nSelectedFiles;
   });
 
   const selectedFoldersText = computed(() => {
@@ -313,8 +313,8 @@
 
   function beforeDeleteSelected() {
     const callback = () => deleteSelectedNodes();
-    const files = tree.value?.selectedFiles || 0;
-    const folders = (tree.value?.selectedNodes || 0) - files;
+    const files = tree.value?.nSelectedFiles || 0;
+    const folders = (tree.value?.nSelectedNodes || 0) - files;
     emit('before-delete-selected', files, folders, callback);
   }
 
@@ -419,7 +419,7 @@
       const container = scrollContainer.value;
       if (!container) return;
       const newTree = await window.explorer.invoke<TreeSnapshot>(
-        TreeChannels.getState,
+        TreeChannels.getPage,
         lastScrollTop.value
       );
       updateTree(newTree);
@@ -428,7 +428,7 @@
   }
 
   function containerMouseEnter() {
-    if (tree.value?.totalNodes) {
+    if (tree.value?.nTotalNodes) {
       showFilesSelectedBadge.value = true;
     }
   }
@@ -461,14 +461,14 @@
       return;
     }
     const newTree = await window.explorer.invoke<TreeSnapshot>(
-      TreeChannels.getState,
+      TreeChannels.getPage,
       lastScrollTop.value
     );
     updateTree(newTree);
     scrollContainer.value!.scrollTop = lastScrollTop.value;
   });
   onMounted(async () => {
-    const firstTree = await window.explorer.invoke<TreeSnapshot>(TreeChannels.getState, 0);
+    const firstTree = await window.explorer.invoke<TreeSnapshot>(TreeChannels.getPage, 0);
     updateTree(firstTree);
     hasLoaded.value = true;
     await nextTick();
@@ -501,7 +501,7 @@
       class="z-[3]"
       :tree="tree"
       :n-selected-folders="nSelectedFolders"
-      :n-open-dirs="tree?.openDirs || 0"
+      :n-open-dirs="tree?.nOpenDirs || 0"
       :selection-only="props.selectionOnly"
       v-bind="contextState"
       @create-node="beforeCreateNode"
