@@ -46,5 +46,12 @@ export const useProfileStore = defineStore('profile', {
       }
       return window.api.invoke<GenericResponseDTO>(InvokeChannels.deleteProfile, profileId);
     },
+    async login(profileId: string) {
+      const result = await window.api.invoke<AuthResponseDTO>(InvokeChannels.login, profileId);
+      if (result.status === 'success') {
+        eventEmitter.emit(CommonEvents.loadInitialData, result.data);
+      }
+      return result;
+    },
   },
 });

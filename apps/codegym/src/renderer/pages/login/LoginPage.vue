@@ -3,8 +3,13 @@
   import { useProfileStore } from '@renderer/store/profile';
   import { parseTimestamp } from '@interapp/utils/dateUtils';
   import { ProfileRecord } from '@common/schemas/profile';
+  import { useToastStore } from '@interapp/store/toast';
+  import { useRouter } from 'vue-router';
   import LoginModals, { type ModalType } from './LoginModals.vue';
+  import { APP_NAME } from '@common/constants';
   const profileStore = useProfileStore();
+  const toastStore = useToastStore();
+  const router = useRouter();
   const selected = ref<ProfileRecord | null>(null);
   const modals = useTemplateRef('modals');
   const records = computed(() => profileStore.registry.profileRecords);
@@ -14,6 +19,18 @@
   function open(which: ModalType) {
     if (!modals.value) throw new Error('Invalid modals!');
     modals.value.show(which, selected.value);
+  }
+  async function select() {
+    if (!selected.value) throw new Error('Error selecting profile!');
+    const profileId = selected.value.id;
+    const name = selected.value.name;
+    const result = await profileStore.login(profileId);
+    if (result.status === 'error') {
+      toastStore.showToast(result.message, 'error');
+    } else if (result.status === 'success') {
+      document.title = `${name}@${APP_NAME}`;
+      router.replace('/problems');
+    }
   }
 </script>
 
@@ -49,7 +66,9 @@
     </div>
     <footer class="flex justify-center gap-1.5 p-2">
       <button type="button" class="btn-primary" @click="open('create')">Create</button>
-      <button type="button" class="btn-primary" :disabled="!selected">Select</button>
+      <button type="button" class="btn-primary" :disabled="!selected" @click="select">
+        Select
+      </button>
       <button type="button" class="btn-primary" @click="open('rename')" :disabled="!selected">
         Rename
       </button>

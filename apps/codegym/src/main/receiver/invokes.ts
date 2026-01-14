@@ -39,3 +39,18 @@ ipcMain.handle(
     return profileManager.deleteProfile(profileId);
   }
 );
+
+ipcMain.handle(InvokeChannels.login, async (_, profileId: string): Promise<AuthResponseDTO> => {
+  try {
+    profileManager.loadProfile(profileId);
+    return {
+      status: 'success',
+      data: await loadStartupData(),
+    };
+  } catch (err: unknown) {
+    return {
+      status: 'error',
+      message: `${err}`,
+    };
+  }
+});
