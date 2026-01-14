@@ -12,9 +12,9 @@ export const useToastStore = defineStore('toast', {
   }),
   actions: {
     showToast(message: string, type: ToastType, duration: number = 3000) {
-      if (this.toast.visible) return;
       this.toast.message = message;
       this.toast.type = type;
+      if (this.toast.visible) return;
       this.toast.visible = true;
       setTimeout(() => {
         this.toast.visible = false;
