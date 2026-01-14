@@ -1,4 +1,4 @@
-const monthNames = [
+const monthNames = Object.freeze([
   'Jan',
   'Feb',
   'Mar',
@@ -11,7 +11,7 @@ const monthNames = [
   'Oct',
   'Nov',
   'Dec',
-];
+] as const);
 
 function padZero(n: number): string {
   return n.toString().padStart(2, '0');
