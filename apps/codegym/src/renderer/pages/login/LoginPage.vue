@@ -1,9 +1,14 @@
 <script lang="ts" setup>
-  import { computed } from 'vue';
+  import { computed, ref } from 'vue';
   import { useProfileStore } from '@renderer/store/profile';
   import { parseTimestamp } from '@interapp/utils/dateUtils';
+  import { ProfileRecord } from '@common/schemas/profile';
   const profileStore = useProfileStore();
+  const selected = ref<ProfileRecord | null>(null);
   const records = computed(() => profileStore.registry.profileRecords);
+  function selectRow(record: ProfileRecord) {
+    selected.value = record;
+  }
 </script>
 
 <template>
@@ -21,10 +26,15 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="profile in records" class="cursor-pointer">
-              <td>{{ profile.name }}</td>
-              <td>{{ parseTimestamp(profile.createdAt) }}</td>
-              <td>{{ parseTimestamp(profile.lastAccess) }}</td>
+            <tr
+              v-for="record in records"
+              class="cursor-pointer"
+              @click="selectRow(record)"
+              :class="{ selected: selected === record }"
+            >
+              <td>{{ record.name }}</td>
+              <td>{{ parseTimestamp(record.createdAt) }}</td>
+              <td>{{ parseTimestamp(record.lastAccess) }}</td>
             </tr>
           </tbody>
         </table>
@@ -32,9 +42,9 @@
     </div>
     <footer class="flex justify-center gap-1.5 p-2">
       <button type="button" class="btn-primary">Create</button>
-      <button type="button" class="btn-primary">Select</button>
-      <button type="button" class="btn-primary">Rename</button>
-      <button type="button" class="btn-primary">Delete</button>
+      <button type="button" class="btn-primary" :disabled="!selected">Select</button>
+      <button type="button" class="btn-primary" :disabled="!selected">Rename</button>
+      <button type="button" class="btn-primary" :disabled="!selected">Delete</button>
     </footer>
   </div>
 </template>
