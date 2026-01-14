@@ -1,0 +1,14 @@
+.theme-dark .modal-container .modal {
+  background-color: #2d373f;
+  border: 1px solid #1b2125;
+}
+.theme-dark .modal-container .modal-header {
+  border-bottom: 1px solid #1b2125;
+}
+.theme-dark .modal-container .modal-footer {
+  border-top: 1px solid #1b2125;
+}
+.theme-dark .modal-container .modal-backdrop {
+  background-color: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(4px);
+}

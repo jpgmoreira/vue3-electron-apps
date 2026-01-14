@@ -1,0 +1,21 @@
+.theme-dark input,
+.theme-dark select,
+.theme-dark textarea {
+  background-color: #3f444b;
+  border: 1px solid #30343a;
+}
+
+.theme-dark input {
+  width: 100%;
+  padding: 4px 5px;
+  border-radius: 5px;
+}
+
+.theme-dark input[type='number']::-webkit-inner-spin-button,
+.theme-dark input[type='number']::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+.theme-dark input[type='number'] {
+  -moz-appearance: textfield;
+}

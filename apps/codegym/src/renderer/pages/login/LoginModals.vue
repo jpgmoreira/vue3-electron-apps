@@ -10,6 +10,7 @@
   const isDeleting = ref(false);
   function show(which: ModalType, selected: ProfileRecord | null) {
     text.value = selected ? selected.name : '';
+    if (which === 'create') text.value = '';
     record.value = selected;
     visible.value = which;
   }
@@ -67,10 +68,7 @@
         ?
       </div>
       <div class="text-danger flex justify-center">This action cannot be undone!</div>
-      <div v-if="isDeleting" class="text-danger flex items-center">
-        <span class="loader mr-1"></span>
-        Deleting...
-      </div>
+      <div v-if="isDeleting" class="text-danger flex items-center">Deleting...</div>
     </template>
     <template #footer>
       <div class="flex justify-between">
