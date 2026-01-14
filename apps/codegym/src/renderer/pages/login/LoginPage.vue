@@ -6,12 +6,12 @@
 </script>
 
 <template>
-  <div class="flex flex-col h-screen overflow-hidden">
-    <div class="text-center">Select or create a profile</div>
-    <div class="grow relative">
+  <div class="login-page flex flex-col h-screen overflow-hidden">
+    <div class="text-center p-2">Select or create a profile</div>
+    <div class="grow relative records-container">
       <div v-if="!records.length" class="absolute-center message-xl">No profile yet!</div>
     </div>
-    <footer class="flex justify-center">
+    <footer class="flex justify-center gap-1.5 p-2">
       <button type="button" class="btn-primary">Create</button>
       <button type="button" class="btn-primary">Select</button>
       <button type="button" class="btn-primary">Rename</button>
