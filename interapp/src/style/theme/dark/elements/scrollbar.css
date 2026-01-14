@@ -1,0 +1,19 @@
+.theme-dark ::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+.theme-dark ::-webkit-scrollbar-thumb {
+  border-radius: 5px;
+}
+.theme-dark ::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+.theme-dark ::-webkit-scrollbar-corner {
+  background-color: transparent;
+}
+.theme-dark ::-webkit-scrollbar-thumb {
+  background-color: #8f8f8f;
+}
+.theme-dark ::-webkit-scrollbar-thumb:hover {
+  background-color: rgb(94, 94, 94);
+}

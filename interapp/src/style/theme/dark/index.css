@@ -1,4 +1,6 @@
 @import './elements/body.css';
 @import './elements/button.css';
+@import './elements/table.css';
+@import './elements/scrollbar.css';
 
 @import './pages/login.css';
