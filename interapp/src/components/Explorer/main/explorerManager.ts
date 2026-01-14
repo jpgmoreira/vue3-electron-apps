@@ -12,6 +12,9 @@ type TreeData = {
 
 type DeleteCallback = (node: Node) => Promise<void>;
 
+/**
+ * Maybe break this class and make it more testable?
+ */
 export class ExplorerManager {
   // -- Class configuration: ---
 
