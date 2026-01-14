@@ -1,4 +1,4 @@
-import { BrowserWindow, Menu } from 'electron';
+import { app, BrowserWindow, Menu } from 'electron';
 import { installExtension, VUEJS_DEVTOOLS } from 'electron-devtools-installer';
 import { is } from '@electron-toolkit/utils';
 import { OnChannels } from '@preload/channels/on';
@@ -25,10 +25,16 @@ export class WindowManager {
 
   constructor() {
     Menu.setApplicationMenu(null);
+  }
+
+  private async installDevTools() {
     if (is.dev) {
-      installExtension(VUEJS_DEVTOOLS)
-        .then((ext) => console.log(`Added Extension:  ${ext.name}`))
-        .catch((err) => console.log('An error occurred: ', err));
+      try {
+        const ext = await installExtension(VUEJS_DEVTOOLS);
+        console.log(`Added Extension: ${ext.name}`);
+      } catch (err) {
+        console.log('An error occurred: ', err);
+      }
     }
   }
 
@@ -43,8 +49,10 @@ export class WindowManager {
     }
   }
 
-  public createMainWindow(): void {
+  public async createMainWindow(): Promise<void> {
     if (BrowserWindow.getAllWindows().length !== 0) return;
+    await app.whenReady();
+    await this.installDevTools();
     this.mainWindow = new BrowserWindow(this.windowConfig);
     this.mainWindow.once('ready-to-show', async () => {
       const startupData = await loadStartupData();
