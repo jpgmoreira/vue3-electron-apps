@@ -3,21 +3,18 @@ import { defineStore } from 'pinia';
 
 export const useToastStore = defineStore('toast', {
   state: () => ({
-    toast: {
-      visible: false,
-      message: '',
-      type: 'success' as Status,
-    },
+    visible: false,
+    message: '',
+    type: 'success' as Status,
+    timer: undefined as ReturnType<typeof setTimeout> | undefined,
   }),
   actions: {
     showToast(message: string, type: Status, duration: number = 3000) {
-      this.toast.message = message;
-      this.toast.type = type;
-      if (this.toast.visible) return;
-      this.toast.visible = true;
-      setTimeout(() => {
-        this.toast.visible = false;
-      }, duration);
+      this.message = message;
+      this.type = type;
+      this.visible = true;
+      clearTimeout(this.timer);
+      this.timer = setTimeout(() => (this.visible = false), duration);
     },
   },
 });
