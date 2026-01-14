@@ -3,8 +3,6 @@ type Listener = (...args: any[]) => void;
 export class EventEmitter {
   private listeners = new Map<string, Listener[]>();
 
-  private constructor() {}
-
   on(event: string, listener: Listener) {
     const arr = this.listeners.get(event) ?? [];
     arr.push(listener);
