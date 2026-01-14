@@ -1,17 +1,16 @@
+import { Status } from '@interapp/types/status';
 import { defineStore } from 'pinia';
-
-export type ToastType = 'success' | 'warning' | 'error' | 'info';
 
 export const useToastStore = defineStore('toast', {
   state: () => ({
     toast: {
       visible: false,
       message: '',
-      type: 'success' as ToastType,
+      type: 'success' as Status,
     },
   }),
   actions: {
-    showToast(message: string, type: ToastType, duration: number = 3000) {
+    showToast(message: string, type: Status, duration: number = 3000) {
       this.toast.message = message;
       this.toast.type = type;
       if (this.toast.visible) return;
