@@ -6,7 +6,7 @@
 </script>
 
 <template>
-  <div class="flex flex-col h-screen">
+  <div class="flex flex-col h-screen overflow-hidden">
     <div class="text-center">Select or create a profile</div>
     <div class="grow relative">
       <div v-if="!records.length" class="absolute-center message-xl">No profile yet!</div>

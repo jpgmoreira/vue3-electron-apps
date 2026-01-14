@@ -1,0 +1,102 @@
+.theme-dark button {
+  transition: background 0.2s ease;
+}
+
+/* Primary */
+.theme-dark button.btn-primary {
+  background-color: #0072f8;
+  padding: 6px 10px;
+}
+.theme-dark button.btn-primary:hover {
+  background-color: #025dc5;
+}
+.theme-dark button.btn-primary:active {
+  background-color: #014c9e;
+  transform: translateY(1px);
+}
+.theme-dark button.btn-primary:focus {
+  outline: 2px solid #3b82f6;
+  outline-offset: 1px;
+}
+.theme-dark button.btn-primary:disabled {
+  background-color: #4b5563;
+  color: #a1a1aa;
+  cursor: not-allowed;
+  transform: none;
+  outline: none;
+}
+
+/* Secondary */
+.theme-dark button.btn-secondary {
+  background-color: #4b5563;
+  color: #e5e7eb;
+  padding: 6px 10px;
+}
+.theme-dark button.btn-secondary:hover {
+  background-color: #41454d;
+}
+.theme-dark button.btn-secondary:active {
+  background-color: #374151;
+  transform: translateY(1px);
+}
+.theme-dark button.btn-secondary:focus {
+  outline: 2px solid #9ca3af;
+  outline-offset: 1px;
+}
+.theme-dark button.btn-secondary:disabled {
+  background-color: #3f3f46;
+  color: #a1a1aa;
+  cursor: not-allowed;
+  transform: none;
+  outline: none;
+}
+
+/* Warning */
+.theme-dark button.btn-warning {
+  background-color: #f59e0b;
+  color: black;
+  padding: 6px 10px;
+}
+.theme-dark button.btn-warning:hover {
+  background-color: #d97706;
+}
+.theme-dark button.btn-warning:active {
+  background-color: #b45309;
+  transform: translateY(1px);
+}
+.theme-dark button.btn-warning:focus {
+  outline: 2px solid #fbbf24;
+  outline-offset: 1px;
+}
+.theme-dark button.btn-warning:disabled {
+  background-color: #a16207;
+  color: #e5e5e5;
+  cursor: not-allowed;
+  transform: none;
+  outline: none;
+}
+
+/* Danger */
+.theme-dark button.btn-danger {
+  background-color: #dc2626;
+  color: white;
+  padding: 6px 10px;
+}
+.theme-dark button.btn-danger:hover {
+  background-color: #b91c1c;
+}
+.theme-dark button.btn-danger:active {
+  background-color: #991b1b;
+  transform: translateY(1px);
+}
+.theme-dark button.btn-danger:focus {
+  outline: 2px solid #f87171;
+  outline-offset: 1px;
+}
+.theme-dark button.btn-danger:disabled {
+  background-color: #7f1d1d;
+  color: #f3f3f3;
+  cursor: not-allowed;
+  transform: none;
+  outline: none;
+}
