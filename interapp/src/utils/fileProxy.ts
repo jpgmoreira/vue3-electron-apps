@@ -44,6 +44,8 @@ export class FileProxy<T extends JSONObject> {
     this._proxy = new Proxy(this._target, this.handler) as T;
   }
 
+  /** -- PUBLIC: -- */
+
   public get proxy() {
     return this._proxy;
   }
@@ -51,6 +53,26 @@ export class FileProxy<T extends JSONObject> {
   public get target() {
     return this._target;
   }
+
+  /**
+   * Queues a write operation with debounce and serialization.
+   * - Debounce prevents too many writes in quick succession.
+   * - Promise chaining ensures writes never overlap (each waits for the previous to finish).
+   */
+  public queueWrite() {
+    clearTimeout(this.timer);
+    this.timer = setTimeout(() => {
+      if (this.writingPromise) {
+        // Use an arrow function to preserve the class context (`this`).
+        // Passing `this.writeFileAsync` directly would lose its binding when called by `finally`.
+        this.writingPromise = this.writingPromise.finally(() => this.writeFileAsync());
+      } else {
+        this.writingPromise = this.writeFileAsync();
+      }
+    }, this.debounce);
+  }
+
+  /** -- PRIVATE: -- */
 
   private handler = {
     get: this.proxyGetHandler.bind(this),
@@ -77,24 +99,6 @@ export class FileProxy<T extends JSONObject> {
     obj[prop] = value;
     this.queueWrite();
     return true;
-  }
-
-  /**
-   * Queues a write operation with debounce and serialization.
-   * - Debounce prevents too many writes in quick succession.
-   * - Promise chaining ensures writes never overlap (each waits for the previous to finish).
-   */
-  public queueWrite() {
-    clearTimeout(this.timer);
-    this.timer = setTimeout(() => {
-      if (this.writingPromise) {
-        // Use an arrow function to preserve the class context (`this`).
-        // Passing `this.writeFileAsync` directly would lose its binding when called by `finally`.
-        this.writingPromise = this.writingPromise.finally(() => this.writeFileAsync());
-      } else {
-        this.writingPromise = this.writeFileAsync();
-      }
-    }, this.debounce);
   }
 
   private async writeFileAsync() {
