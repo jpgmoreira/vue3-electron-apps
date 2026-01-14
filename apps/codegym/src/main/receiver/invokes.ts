@@ -4,6 +4,7 @@ import { AuthResponseDTO } from '@common/dto/authResponseDTO';
 import { profileManager } from '@main/startup/instances';
 import { loadStartupData } from '@main/startup/startup';
 import { GenericResponseDTO } from '@interapp/dto/genericResponseDTO';
+import { sleep } from '@interapp/utils/utils';
 
 ipcMain.handle(
   InvokeChannels.createProfile,
@@ -33,7 +34,8 @@ ipcMain.handle(
 
 ipcMain.handle(
   InvokeChannels.deleteProfile,
-  (_: IpcMainInvokeEvent, profileId: string): GenericResponseDTO => {
+  async (_: IpcMainInvokeEvent, profileId: string): Promise<GenericResponseDTO> => {
+    await sleep(1000);
     return profileManager.deleteProfile(profileId);
   }
 );

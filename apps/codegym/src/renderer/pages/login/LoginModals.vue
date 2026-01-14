@@ -32,6 +32,7 @@
     });
   }
   function close() {
+    if (isDeleting.value) return;
     visible.value = null;
   }
   async function create() {
