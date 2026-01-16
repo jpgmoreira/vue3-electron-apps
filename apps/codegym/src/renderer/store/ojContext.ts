@@ -2,7 +2,7 @@ import { defineStore } from 'pinia';
 import { InvokeChannels } from '@preload/channels/invoke';
 import { toRawDeep } from '@interapp/utils/utils';
 import { StartupData } from '@common/schemas/startup';
-import { getEmptyOjContext, OjContext } from '@common/schemas/ojContext';
+import { getEmptyOjContext } from '@common/schemas/ojContext';
 import { Oj } from '@common/schemas/oj';
 
 export const useOjContextStore = defineStore('ojContext', {
@@ -15,8 +15,9 @@ export const useOjContextStore = defineStore('ojContext', {
         this.context = data.ojContext;
       }
     },
-    updateOjContext<T extends Oj>(oj: T, context: OjContext[T]) {
-      Object.assign(this.context[oj], context);
+    flushOjContext(oj: Oj) {
+      // Should be used after you manually mutated the context somewhere else.
+      const context = this.context[oj];
       window.api.invoke(InvokeChannels.updateOjContext, oj, toRawDeep(context));
     },
     clear() {

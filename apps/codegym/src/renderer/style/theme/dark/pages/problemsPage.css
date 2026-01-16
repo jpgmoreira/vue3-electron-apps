@@ -1,0 +1,23 @@
+.theme-dark .problems-page footer {
+  background-color: #282828;
+}
+
+.theme-dark .problems-page .filters {
+  background-color: #2c353f;
+}
+.theme-dark .problems-page .snapshot {
+  background-color: #2c353f;
+}
+.theme-dark .problems-page .tags-container {
+  background: #3f444b;
+  border-color: #37393b;
+}
+.theme-dark .problems-page .tag-badge {
+  background-color: #0072c7;
+}
+
+.theme-dark .problems-page .popularity-info-icon .icon {
+  font-size: 14px;
+  margin-left: 1px;
+  font-weight: bold;
+}

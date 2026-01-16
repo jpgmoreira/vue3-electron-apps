@@ -5,6 +5,7 @@
 @import './elements/text.css';
 @import './elements/controls.css';
 @import './elements/links.css';
+@import './elements/tooltip.css';
 
 @import './components/modal.css';
 @import './components/toast.css';
