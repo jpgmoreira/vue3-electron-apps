@@ -13,6 +13,6 @@ window.api.on(OnChannels.loadStartupData, (data: StartupData) => {
     return router.replace('/login');
   }
   document.title = `${data.currProfile.name}@${APP_NAME}`;
-  // TODO: replace with current page.
-  return router.replace('/problems');
+  if (!data.ui) throw new Error('UI settings not set!');
+  return router.replace(data.ui.page);
 });

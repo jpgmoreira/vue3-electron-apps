@@ -16,9 +16,9 @@ export const useUIStore = defineStore('ui', {
       }
     },
     updateSettings(settings: Partial<UISettings>) {
+      Object.assign(this.settings, settings);
       clearTimeout(this.timer);
       this.timer = setTimeout(() => {
-        Object.assign(this.settings, settings);
         window.api.invoke(InvokeChannels.updateUISettings, toRawDeep(this.settings));
       }, 500);
     },
