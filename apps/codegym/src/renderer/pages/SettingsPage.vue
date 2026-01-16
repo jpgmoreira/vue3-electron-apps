@@ -29,8 +29,8 @@
   function updateCache(oj: Oj) {
     ojStatusStore.updateOjCache(oj);
   }
-  function logout() {
-    profileStore.logout();
+  async function logout() {
+    await profileStore.logout();
     document.title = APP_NAME;
     router.replace('/login');
   }

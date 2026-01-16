@@ -53,10 +53,10 @@ export const useProfileStore = defineStore('profile', {
       }
       return result;
     },
-    logout() {
+    async logout() {
       eventEmitter.emit(CommonEvents.clearProfileData);
       this.currProfile = null;
-      window.api.invoke(InvokeChannels.logout);
+      await window.api.invoke(InvokeChannels.logout);
     },
   },
 });

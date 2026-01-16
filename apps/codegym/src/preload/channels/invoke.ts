@@ -4,4 +4,5 @@ export enum InvokeChannels {
   deleteProfile = 'delete-profile',
   login = 'login',
   logout = 'logout',
+  updateUISettings = 'update-ui-settings',
 }

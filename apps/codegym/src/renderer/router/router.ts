@@ -5,6 +5,7 @@ import ContestsPage from '@renderer/pages/contests/ContestsPage.vue';
 import GraphPage from '@renderer/pages/GraphPage.vue';
 import HistoryPage from '@renderer/pages/HistoryPage.vue';
 import SettingsPage from '@renderer/pages/SettingsPage.vue';
+import { useUIStore } from '@renderer/store/ui';
 
 const routes = [
   {
@@ -36,4 +37,8 @@ const routes = [
 export const router = createRouter({
   history: createMemoryHistory(),
   routes,
+});
+
+router.afterEach((to) => {
+  useUIStore().updateSettings({ page: to.path });
 });
