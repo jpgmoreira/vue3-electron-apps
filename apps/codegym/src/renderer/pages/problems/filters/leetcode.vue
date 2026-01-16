@@ -1,11 +1,11 @@
 <script lang="ts" setup>
   import { computed } from 'vue';
-  import { useProfileStore } from '@renderer/store/profile';
-  const store = useProfileStore();
-  function onChange() {
-    store.updateOjFilters();
+  import { useOjContextStore } from '@renderer/store/ojContext';
+  const store = useOjContextStore();
+  function onInput() {
+    store.flushOjContext('leetcode');
   }
-  const filters = computed(() => store.currProfile!.ojContext['leetcode'].filters);
+  const filters = computed(() => store.context['leetcode'].filters);
 </script>
 
 <template>
@@ -14,11 +14,13 @@
       <div class="flex items-center">
         <div class="flex items-center pr-1.5">
           <label>Popularity</label>
-          <span class="popularity-info-icon mx-0.5 cursor-help relative">
-            <span class="icon">&#9432;</span>
-            <span class="tooltip absolute left-full top-0">
-              All problems sorted from most solved to least solved, divided in groups of 20.
-            </span>
+          <span
+            class="popularity-info-icon mx-0.5 cursor-help"
+            v-tooltip="
+              'All problems sorted from most solved to least solved, divided in groups of 20.'
+            "
+          >
+            &#9432;
           </span>
           <span>:</span>
         </div>
@@ -27,20 +29,20 @@
             v-model="filters.popularity.min"
             type="number"
             placeholder="min"
-            @change="onChange"
+            @input="onInput"
           />
           <input
             v-model="filters.popularity.max"
             type="number"
             placeholder="max"
-            @change="onChange"
+            @input="onInput"
           />
         </div>
       </div>
     </div>
     <div class="flex items-center mt-2">
       <label class="pr-1.5">Premium:</label>
-      <select v-model="filters.premium.value" @change="onChange">
+      <select v-model="filters.premium.value" @change="onInput">
         <option value="both">Both</option>
         <option value="yes">Yes</option>
         <option value="no">No</option>
@@ -54,7 +56,7 @@
         type="checkbox"
         name="easy"
         value="easy"
-        @change="onChange"
+        @input="onInput"
       />
       <label class="mr-2 ml-0.5" for="easy">Easy</label>
       <input
@@ -63,7 +65,7 @@
         type="checkbox"
         name="medium"
         value="medium"
-        @change="onChange"
+        @input="onInput"
       />
       <label class="mr-2 ml-0.5" for="medium">Medium</label>
       <input
@@ -72,7 +74,7 @@
         type="checkbox"
         name="hard"
         value="hard"
-        @change="onChange"
+        @input="onInput"
       />
       <label class="ml-0.5" for="hard">Hard</label>
     </div>

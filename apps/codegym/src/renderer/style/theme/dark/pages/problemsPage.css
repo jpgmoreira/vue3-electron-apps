@@ -16,8 +16,7 @@
   background-color: #0072c7;
 }
 
-.theme-dark .problems-page .popularity-info-icon .icon {
+.theme-dark .problems-page .popularity-info-icon {
   font-size: 14px;
-  margin-left: 1px;
   font-weight: bold;
 }

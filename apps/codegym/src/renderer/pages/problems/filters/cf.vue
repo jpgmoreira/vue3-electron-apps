@@ -5,8 +5,7 @@
   import Multiselect, { MultiselectOption } from '@interapp/components/Multiselect.vue';
   const ojMetaStore = useOjMetaStore();
   const ojContextStore = useOjContextStore();
-  const context = computed(() => ojContextStore.context['cf']);
-  const filters = computed(() => context.value.filters);
+  const filters = computed(() => ojContextStore.context['cf'].filters);
   const tagsOptions = computed<MultiselectOption[]>(() => {
     const result: MultiselectOption[] = [];
     ojMetaStore.ojMeta['cf']?.tags.forEach((tag) => {
@@ -44,15 +43,13 @@
     <div class="flex items-center mt-2">
       <div class="flex items-center pr-1.5">
         <label>Popularity</label>
-        <span class="popularity-info-icon mx-0.5 cursor-help relative">
-          <span
-            class="icon"
-            v-tooltip="
-              'All problems sorted from most solved to least solved, divided in groups of 20.'
-            "
-          >
-            &#9432;
-          </span>
+        <span
+          class="popularity-info-icon mx-0.5 cursor-help"
+          v-tooltip="
+            'All problems sorted from most solved to least solved, divided in groups of 20.'
+          "
+        >
+          &#9432;
         </span>
         <span>:</span>
       </div>
