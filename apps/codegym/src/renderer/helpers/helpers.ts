@@ -1,4 +1,4 @@
-import { Oj } from '@common/types/oj';
+import { Oj } from '@common/schemas/oj';
 import { OjProblem } from '@common/schemas/problems';
 import { useToastStore } from '@interapp/store/toast';
 
@@ -27,9 +27,8 @@ function buildOjProblemUrl(oj: Oj, path: string): string {
   return result;
 }
 
-export function handleProblemClick(problem: OjProblem[Oj]) {
+export function copyUrlToClipboard(url: string) {
   const store = useToastStore();
-  const url = buildOjProblemUrl(problem.oj, problem.path);
   navigator.clipboard
     .writeText(url)
     .then(() => {
@@ -38,4 +37,9 @@ export function handleProblemClick(problem: OjProblem[Oj]) {
     .catch(() => {
       store.showToast('Error on copying URL!', 'error');
     });
+}
+
+export function handleProblemClick(problem: OjProblem[Oj]) {
+  const url = buildOjProblemUrl(problem.oj, problem.path);
+  copyUrlToClipboard(url);
 }
