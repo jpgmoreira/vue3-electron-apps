@@ -2,7 +2,7 @@
   import { computed } from 'vue';
   import { useOjContextStore } from '@renderer/store/ojContext';
   const store = useOjContextStore();
-  function onInput() {
+  function onChange() {
     store.flushOjContext('uva');
   }
   const filters = computed(() => store.context['uva'].filters);
@@ -24,8 +24,8 @@
         <span>:</span>
       </div>
       <div>
-        <input v-model="filters.popularity.min" type="number" placeholder="min" @input="onInput" />
-        <input v-model="filters.popularity.max" type="number" placeholder="max" @input="onInput" />
+        <input v-model="filters.popularity.min" type="number" placeholder="min" @input="onChange" />
+        <input v-model="filters.popularity.max" type="number" placeholder="max" @input="onChange" />
       </div>
     </div>
     <div class="flex items-center mt-2">
@@ -35,7 +35,7 @@
         v-model="filters.starred.value"
         type="checkbox"
         name="starred"
-        @input="onInput"
+        @change="onChange"
       />
     </div>
   </div>

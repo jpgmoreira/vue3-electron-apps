@@ -2,7 +2,7 @@
   import { computed } from 'vue';
   import { useOjContextStore } from '@renderer/store/ojContext';
   const store = useOjContextStore();
-  function onInput() {
+  function onChange() {
     store.flushOjContext('leetcode');
   }
   const filters = computed(() => store.context['leetcode'].filters);
@@ -29,20 +29,20 @@
             v-model="filters.popularity.min"
             type="number"
             placeholder="min"
-            @input="onInput"
+            @input="onChange"
           />
           <input
             v-model="filters.popularity.max"
             type="number"
             placeholder="max"
-            @input="onInput"
+            @input="onChange"
           />
         </div>
       </div>
     </div>
     <div class="flex items-center mt-2">
       <label class="pr-1.5">Premium:</label>
-      <select v-model="filters.premium.value" @change="onInput">
+      <select v-model="filters.premium.value" @change="onChange">
         <option value="both">Both</option>
         <option value="yes">Yes</option>
         <option value="no">No</option>
@@ -56,7 +56,7 @@
         type="checkbox"
         name="easy"
         value="easy"
-        @input="onInput"
+        @change="onChange"
       />
       <label class="mr-2 ml-0.5" for="easy">Easy</label>
       <input
@@ -65,7 +65,7 @@
         type="checkbox"
         name="medium"
         value="medium"
-        @input="onInput"
+        @change="onChange"
       />
       <label class="mr-2 ml-0.5" for="medium">Medium</label>
       <input
@@ -74,7 +74,7 @@
         type="checkbox"
         name="hard"
         value="hard"
-        @input="onInput"
+        @change="onChange"
       />
       <label class="ml-0.5" for="hard">Hard</label>
     </div>

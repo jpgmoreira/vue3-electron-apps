@@ -5,8 +5,14 @@
   border: 1px solid #30343a;
 }
 
-.theme-dark input {
+.theme-dark input[type='number'],
+.theme-dark input[type='text'] {
   width: 100%;
+  padding: 4px 5px;
+  border-radius: 5px;
+}
+
+.theme-dark select {
   padding: 4px 5px;
   border-radius: 5px;
 }

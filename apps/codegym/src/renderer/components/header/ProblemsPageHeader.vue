@@ -24,3 +24,9 @@
     </div>
   </Header>
 </template>
+
+<style scoped>
+  select {
+    border-radius: 0;
+  }
+</style>

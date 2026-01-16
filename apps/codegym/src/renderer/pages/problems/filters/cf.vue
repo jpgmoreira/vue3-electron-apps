@@ -17,7 +17,7 @@
     return result;
   });
   const selectedTags = computed(() => filters.value.tags.values);
-  function onInput() {
+  function onChange() {
     ojContextStore.flushOjContext('cf');
   }
   function handleSelectTag(value: string) {
@@ -36,8 +36,8 @@
     <div class="flex items-center">
       <label class="pr-1.5">Rating:</label>
       <div>
-        <input v-model="filters.rating.min" type="number" placeholder="min" @input="onInput" />
-        <input v-model="filters.rating.max" type="number" placeholder="max" @input="onInput" />
+        <input v-model="filters.rating.min" type="number" placeholder="min" @input="onChange" />
+        <input v-model="filters.rating.max" type="number" placeholder="max" @input="onChange" />
       </div>
     </div>
     <div class="flex items-center mt-2">
@@ -54,8 +54,8 @@
         <span>:</span>
       </div>
       <div>
-        <input v-model="filters.popularity.min" type="number" placeholder="min" @input="onInput" />
-        <input v-model="filters.popularity.max" type="number" placeholder="max" @input="onInput" />
+        <input v-model="filters.popularity.min" type="number" placeholder="min" @input="onChange" />
+        <input v-model="filters.popularity.max" type="number" placeholder="max" @input="onChange" />
       </div>
     </div>
     <Multiselect

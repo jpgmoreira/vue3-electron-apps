@@ -2,7 +2,7 @@
   import { computed } from 'vue';
   import { useOjContextStore } from '@renderer/store/ojContext';
   const store = useOjContextStore();
-  function onInput() {
+  function onChange() {
     store.flushOjContext('kattis');
   }
   const filters = computed(() => store.context['kattis'].filters);
@@ -13,8 +13,8 @@
     <div class="flex items-center">
       <label class="pr-1.5">Difficulty:</label>
       <div>
-        <input v-model="filters.difficulty.min" type="number" placeholder="min" @input="onInput" />
-        <input v-model="filters.difficulty.max" type="number" placeholder="max" @input="onInput" />
+        <input v-model="filters.difficulty.min" type="number" placeholder="min" @input="onChange" />
+        <input v-model="filters.difficulty.max" type="number" placeholder="max" @input="onChange" />
       </div>
     </div>
     <div class="flex items-center mt-2">
@@ -31,8 +31,8 @@
         <span>:</span>
       </div>
       <div>
-        <input v-model="filters.popularity.min" type="number" placeholder="min" @input="onInput" />
-        <input v-model="filters.popularity.max" type="number" placeholder="max" @input="onInput" />
+        <input v-model="filters.popularity.min" type="number" placeholder="min" @input="onChange" />
+        <input v-model="filters.popularity.max" type="number" placeholder="max" @input="onChange" />
       </div>
     </div>
     <div class="flex items-center mt-2">
@@ -42,7 +42,7 @@
         v-model="filters.starred.value"
         type="checkbox"
         name="starred"
-        @input="onInput"
+        @change="onChange"
       />
     </div>
   </div>

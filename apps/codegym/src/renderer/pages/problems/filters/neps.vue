@@ -2,7 +2,7 @@
   import { computed } from 'vue';
   import { useOjContextStore } from '@renderer/store/ojContext';
   const store = useOjContextStore();
-  function onInput() {
+  function onChange() {
     store.flushOjContext('neps');
   }
   const filters = computed(() => store.context['neps'].filters);
@@ -13,8 +13,8 @@
     <div class="flex items-center">
       <label class="pr-1.5">Score:</label>
       <div>
-        <input v-model="filters.score.min" type="number" placeholder="min" @input="onInput" />
-        <input v-model="filters.score.max" type="number" placeholder="max" @input="onInput" />
+        <input v-model="filters.score.min" type="number" placeholder="min" @input="onChange" />
+        <input v-model="filters.score.max" type="number" placeholder="max" @input="onChange" />
       </div>
     </div>
     <div class="flex items-center mt-2">
@@ -31,8 +31,8 @@
         <span>:</span>
       </div>
       <div>
-        <input v-model="filters.popularity.min" type="number" placeholder="min" @input="onInput" />
-        <input v-model="filters.popularity.max" type="number" placeholder="max" @input="onInput" />
+        <input v-model="filters.popularity.min" type="number" placeholder="min" @input="onChange" />
+        <input v-model="filters.popularity.max" type="number" placeholder="max" @input="onChange" />
       </div>
     </div>
   </div>
