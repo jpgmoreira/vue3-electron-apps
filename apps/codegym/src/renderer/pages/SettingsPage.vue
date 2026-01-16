@@ -85,4 +85,23 @@
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+  /* Sections as cards */
+  .settings-page section {
+    background: #1f2223;
+    border-radius: 12px;
+    padding: 24px;
+    margin: 15px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+  }
+
+  /* Titles */
+  .settings-page h1 {
+    font-size: 17px;
+    font-weight: 600;
+    margin-bottom: 16px;
+    color: #e5e7eb;
+    letter-spacing: 0.3px;
+  }
+</style>

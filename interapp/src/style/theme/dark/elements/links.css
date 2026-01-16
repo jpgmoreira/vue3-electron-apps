@@ -1,0 +1,7 @@
+.theme-dark a:not(.nav-btn) {
+  color: #60a5fa;
+  text-decoration: none;
+}
+.theme-dark a:not(.nav-btn):hover {
+  text-decoration: underline;
+}
