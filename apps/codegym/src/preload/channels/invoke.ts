@@ -5,4 +5,5 @@ export enum InvokeChannels {
   login = 'login',
   logout = 'logout',
   updateUISettings = 'update-ui-settings',
+  updateOjContext = 'update-oj-context',
 }
