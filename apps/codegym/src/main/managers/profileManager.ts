@@ -11,12 +11,16 @@ import { buildId } from '@interapp/utils/utils';
 import { DATA_DIR } from '@main/constants';
 import path from 'path';
 import fs from 'fs';
+import { EventEmitter } from '@interapp/events/eventEmitter';
+import { CommonEvents } from '@interapp/events/commonEvents';
 
 export class ProfileManager {
   private currProfileProxy: FileProxy<Profile> | null = null;
   private registryProxy: FileProxy<ProfileRegistry> | null = null;
+  private emitter: EventEmitter;
 
-  constructor() {
+  constructor(emitter: EventEmitter) {
+    this.emitter = emitter;
     const registryPath = path.join(DATA_DIR, 'profiles.json');
     this.registryProxy = new FileProxy(registryPath, getEmptyProfileRegistry());
     const profileId = this.registryProxy!.proxy.currProfileId;
@@ -120,5 +124,11 @@ export class ProfileManager {
         message: `${err}`,
       };
     }
+  }
+
+  public logout() {
+    this.emitter.emit(CommonEvents.clearProfileData);
+    this.currProfileProxy = null;
+    this.registryProxy!.proxy.currProfileId = null;
   }
 }

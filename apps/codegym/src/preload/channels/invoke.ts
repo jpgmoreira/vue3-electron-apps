@@ -3,4 +3,5 @@ export enum InvokeChannels {
   renameProfile = 'rename-profile',
   deleteProfile = 'delete-profile',
   login = 'login',
+  logout = 'logout',
 }

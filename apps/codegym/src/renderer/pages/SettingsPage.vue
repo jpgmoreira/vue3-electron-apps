@@ -6,8 +6,10 @@
   import { parseTimestamp } from '@interapp/utils/dateUtils';
   import { useOjStatusStore } from '@renderer/store/ojStatus';
   import { useProfileStore } from '@renderer/store/profile';
-  import { APP_HOMEPAGE, APP_PRODUCT_NAME, APP_VERSION } from '@common/constants';
+  import { APP_HOMEPAGE, APP_NAME, APP_PRODUCT_NAME, APP_VERSION } from '@common/constants';
   import { copyUrlToClipboard } from '@renderer/helpers/helpers';
+  import { useRouter } from 'vue-router';
+  const router = useRouter();
   const ojMetaStore = useOjMetaStore();
   const ojStatusStore = useOjStatusStore();
   const profileStore = useProfileStore();
@@ -27,6 +29,11 @@
   function updateCache(oj: Oj) {
     ojStatusStore.updateOjCache(oj);
   }
+  function logout() {
+    profileStore.logout();
+    document.title = APP_NAME;
+    router.replace('/login');
+  }
 </script>
 
 <template>
@@ -35,7 +42,7 @@
 
     <div class="overflow-y-auto grow">
       <!-- Cache -->
-      <section class="cache-settings">
+      <section>
         <h1>Cache</h1>
         <table class="table-fixed w-full">
           <thead>
@@ -68,16 +75,16 @@
       </section>
 
       <!-- Profile -->
-      <section class="profile-settings">
+      <section>
         <h1>Profile</h1>
         <div class="flex justify-between items-center">
           <div>{{ profileName }}</div>
-          <button type="button" class="btn btn-warning">Logout</button>
+          <button type="button" class="btn btn-warning" @click="logout">Logout</button>
         </div>
       </section>
 
       <!-- Version -->
-      <section class="version-settings">
+      <section>
         <h1>Version</h1>
         <div>{{ APP_PRODUCT_NAME }} version {{ APP_VERSION }}</div>
         <div>
@@ -88,24 +95,3 @@
     </div>
   </div>
 </template>
-
-<style scoped>
-  /* Sections as cards */
-  .settings-page section {
-    background: #1f2223;
-    border-radius: 12px;
-    padding: 24px;
-    margin: 15px;
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
-  }
-
-  /* Titles */
-  .settings-page h1 {
-    font-size: 17px;
-    font-weight: 600;
-    margin-bottom: 16px;
-    color: #e5e7eb;
-    letter-spacing: 0.3px;
-  }
-</style>

@@ -54,3 +54,7 @@ ipcMain.handle(InvokeChannels.login, async (_, profileId: string): Promise<AuthR
     };
   }
 });
+
+ipcMain.handle(InvokeChannels.logout, () => {
+  profileManager.logout();
+});
