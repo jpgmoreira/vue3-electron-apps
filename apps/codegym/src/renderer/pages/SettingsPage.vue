@@ -30,58 +30,60 @@
 </script>
 
 <template>
-  <div class="settings-page">
+  <div class="settings-page flex flex-col h-screen overflow-hidden">
     <SettingsPageHeader />
 
-    <!-- Cache -->
-    <section class="cache-settings">
-      <h1>Cache</h1>
-      <table class="table-fixed w-full">
-        <thead>
-          <tr>
-            <th class="w-1/3">OJ</th>
-            <th class="w-1/3">Last Updated</th>
-            <th class="w-1/3"></th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="oj in OjList" :key="oj">
-            <td>{{ OjNames[oj] }}</td>
-            <td>{{ lastCacheUpdate(oj) || 'Never' }}</td>
-            <td>
-              <!-- Interesting: we don't need an arrow function here at @click: -->
-              <button
-                type="button"
-                class="btn-primary"
-                :disabled="isUpdatingCache[oj]"
-                @click="updateCache(oj)"
-              >
-                <span>{{ isUpdatingCache[oj] ? 'Updating...' : 'Update' }}</span>
-              </button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </section>
+    <div class="overflow-y-auto grow">
+      <!-- Cache -->
+      <section class="cache-settings">
+        <h1>Cache</h1>
+        <table class="table-fixed w-full">
+          <thead>
+            <tr>
+              <th class="w-1/3">OJ</th>
+              <th class="w-1/3">Last Updated</th>
+              <th class="w-1/3"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="oj in OjList" :key="oj">
+              <td>{{ OjNames[oj] }}</td>
+              <td>{{ lastCacheUpdate(oj) || 'Never' }}</td>
+              <td class="flex justify-center">
+                <!-- Interesting: we don't need an arrow function here at @click: -->
+                <button
+                  type="button"
+                  class="btn-primary"
+                  :disabled="isUpdatingCache[oj]"
+                  @click="updateCache(oj)"
+                >
+                  <span>{{ isUpdatingCache[oj] ? 'Updating...' : 'Update' }}</span>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
 
-    <!-- Profile -->
-    <section class="profile-settings">
-      <h1>Profile</h1>
-      <div class="flex justify-between items-center">
-        <div>{{ profileName }}</div>
-        <button type="button" class="btn btn-warning">Logout</button>
-      </div>
-    </section>
+      <!-- Profile -->
+      <section class="profile-settings">
+        <h1>Profile</h1>
+        <div class="flex justify-between items-center">
+          <div>{{ profileName }}</div>
+          <button type="button" class="btn btn-warning">Logout</button>
+        </div>
+      </section>
 
-    <!-- Version -->
-    <section class="version-settings">
-      <h1>Version</h1>
-      <div>{{ APP_PRODUCT_NAME }} version {{ APP_VERSION }}</div>
-      <div>
-        Homepage:
-        <a href="#" @click="copyUrlToClipboard(APP_HOMEPAGE)">{{ APP_HOMEPAGE }}</a>
-      </div>
-    </section>
+      <!-- Version -->
+      <section class="version-settings">
+        <h1>Version</h1>
+        <div>{{ APP_PRODUCT_NAME }} version {{ APP_VERSION }}</div>
+        <div>
+          Homepage:
+          <a href="#" @click="copyUrlToClipboard(APP_HOMEPAGE)">{{ APP_HOMEPAGE }}</a>
+        </div>
+      </section>
+    </div>
   </div>
 </template>
 
