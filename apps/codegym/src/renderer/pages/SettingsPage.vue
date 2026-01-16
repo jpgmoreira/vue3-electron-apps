@@ -49,16 +49,18 @@
             <tr v-for="oj in OjList" :key="oj">
               <td>{{ OjNames[oj] }}</td>
               <td>{{ lastCacheUpdate(oj) || 'Never' }}</td>
-              <td class="flex justify-center">
+              <td>
                 <!-- Interesting: we don't need an arrow function here at @click: -->
-                <button
-                  type="button"
-                  class="btn-primary"
-                  :disabled="isUpdatingCache[oj]"
-                  @click="updateCache(oj)"
-                >
-                  <span>{{ isUpdatingCache[oj] ? 'Updating...' : 'Update' }}</span>
-                </button>
+                <div class="flex justify-center">
+                  <button
+                    type="button"
+                    class="btn-primary"
+                    :disabled="isUpdatingCache[oj]"
+                    @click="updateCache(oj)"
+                  >
+                    <span>{{ isUpdatingCache[oj] ? 'Updating...' : 'Update' }}</span>
+                  </button>
+                </div>
               </td>
             </tr>
           </tbody>

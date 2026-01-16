@@ -32,11 +32,6 @@
   background-color: #383838;
 }
 
-.theme-dark tr:focus-within {
-  outline: 2px solid #3b82f6;
-  outline-offset: -2px;
-}
-
 .theme-dark tbody tr:last-child td {
   border-bottom: 1px solid #444;
 }
