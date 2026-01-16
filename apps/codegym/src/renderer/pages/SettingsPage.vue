@@ -3,6 +3,10 @@
 </script>
 
 <template>
-  <SettingsPageHeader />
-  Settings Page
+  <div class="settings-page">
+    <SettingsPageHeader />
+    <section class="cache-settings"></section>
+  </div>
 </template>
+
+<style scoped></style>
