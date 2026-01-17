@@ -9,12 +9,11 @@
 /* Caret Icon */
 .theme-dark .explorer .node-caret {
   background-image: url('@renderer/assets/images/arrow-down.png');
-  background-size: contain;
   background-repeat: no-repeat;
+  background-position: center;
   width: 12px;
   height: 12px;
-  margin-left: 4px;
-  margin-right: 4px;
+  background-size: 17px;
 }
 
 /* Base Node */

@@ -624,9 +624,6 @@
   .dir-icon,
   .file-icon {
     cursor: pointer;
-    background-position: center;
-    background-size: contain;
-    background-repeat: no-repeat;
   }
 
   .nodes-container {
