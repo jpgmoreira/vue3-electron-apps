@@ -1,0 +1,152 @@
+/* ========================
+   Explorer - Dark Theme 
+   ======================== */
+
+.theme-dark .explorer {
+  background-color: #282828;
+}
+
+/* Caret Icon */
+.theme-dark .explorer .node-caret {
+  background-image: url('@renderer/assets/images/arrow-down.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  width: 12px;
+  height: 12px;
+  margin-left: 4px;
+  margin-right: 4px;
+}
+
+/* Base Node */
+.theme-dark .explorer .node-input {
+  color: #dedede;
+  border-radius: 4px;
+  border: none;
+  transition:
+    background 0.2s ease,
+    box-shadow 0.2s ease,
+    color 0.2s ease;
+}
+
+/* Hover (default state) */
+.theme-dark .explorer .node-input:not(.active):hover {
+  background-color: #454d57;
+}
+
+/* ========================
+     SELECTED NODE
+     ======================== */
+.theme-dark .explorer .node-input.selected {
+  background: #2f4261;
+  box-shadow: inset 0 0 0 2px #4da3ffcc;
+  color: #e7f1ff;
+  font-weight: 500;
+}
+
+/* Hover for selected */
+.theme-dark .explorer .node-input.selected:hover {
+  background: #2f4261;
+  box-shadow: inset 0 0 0 2px #69b8ffdd;
+  color: #ffffff;
+}
+
+/* ========================
+     ACTIVE NODE
+     ======================== */
+.theme-dark .explorer .node-input.active {
+  position: relative;
+  z-index: 1;
+  box-shadow:
+    0 0 0 3px #ffc660aa,
+    0 0 6px 2px #ffc66033;
+}
+
+/* Active + Selected */
+.theme-dark .explorer .node-input.active.selected {
+  z-index: 2;
+  box-shadow:
+    inset 0 0 0 2px #4da3ffcc,
+    /* selected */ 0 0 0 3px #ffc660aa,
+    /* active outline */ 0 0 8px 3px #ffc66033; /* glow */
+}
+
+/* ========================
+     STRUCTURE & MISC
+     ======================== */
+
+/* Icons */
+.theme-dark .explorer .file-icon {
+  background-image: url('@renderer/assets/images/file.png');
+  margin-left: 3px;
+  min-width: 23px;
+  min-height: 23px;
+}
+
+/* Hint text */
+.theme-dark .explorer .files-hint {
+  color: #8e8e8e;
+}
+
+/* ========================
+     Selected Badge (contextual)
+     ======================== */
+.theme-dark .explorer .files-selected-badge {
+  background-color: #1e1e1e;
+  color: #e2e2e2;
+  border: 1px solid #2e2e2e;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.45);
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease;
+}
+
+/* Hover effect for badge */
+.theme-dark .explorer .files-selected-badge:hover {
+  background-color: #2a2d2f;
+  color: #fff;
+  border-color: #3a3d3f;
+}
+
+/* ========================
+     Generic styles for Explorer
+     ======================== */
+
+.theme-dark .explorer .node-input.selected {
+  outline: none;
+}
+
+/* Files selected badge - same style as context menu */
+.theme-dark .explorer .files-selected-badge {
+  border-radius: 8px;
+  padding: 8px 12px; /* um pouco maior que antes */
+  font-size: 14px; /* slightly larger text */
+  font-weight: 600;
+  line-height: 1.4;
+  letter-spacing: 0.3px;
+  user-select: none;
+  pointer-events: none;
+  transition:
+    opacity 0.25s ease,
+    transform 0.2s ease;
+  transform: translateY(0);
+}
+
+/* Fade + slight move animation */
+.theme-dark .explorer .fade-enter-active,
+.theme-dark .explorer .fade-leave-active {
+  transition:
+    opacity 0.25s ease,
+    transform 0.25s ease;
+}
+
+.theme-dark .explorer .fade-enter-from,
+.theme-dark .explorer .fade-leave-to {
+  opacity: 0;
+  transform: translateY(5px);
+}
+
+.theme-dark .explorer .fade-enter-to,
+.theme-dark .explorer .fade-leave-from {
+  opacity: 1;
+  transform: translateY(0);
+}

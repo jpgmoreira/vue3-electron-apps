@@ -1,10 +1,14 @@
 <script lang="ts" setup>
   import { ref, computed, onMounted, onBeforeUnmount } from 'vue';
   import SettingsPageHeader from '@renderer/components/header/SettingsPageHeader.vue';
-  import Explorer from '@interapp/components/Explorer/renderer/Explorer.vue';
+  import Explorer, {
+    CreateNodeCallback,
+  } from '@interapp/components/Explorer/renderer/Explorer.vue';
+  import { NodeType } from '@interapp/components/Explorer/common/tree';
   const resizing = ref(false);
   const explorerWidth = ref(200);
   const mainWidth = computed(() => window.innerWidth - explorerWidth.value);
+  function beforeCreateNode(type: NodeType, callback: CreateNodeCallback) {}
   function windowMouseMove(e: MouseEvent) {
     if (!resizing.value) return;
     const { clientX } = e;
@@ -31,7 +35,7 @@
     <SettingsPageHeader />
     <div class="flex grow">
       <div style="border: 1px solid red" :style="{ width: `${explorerWidth}px` }">
-        <Explorer />
+        <Explorer @before-create-node="beforeCreateNode" />
       </div>
       <div class="custom-resizer" @mousedown="resizing = true"></div>
       <div :style="{ width: `${mainWidth}px` }"></div>

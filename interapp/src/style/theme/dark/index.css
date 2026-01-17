@@ -15,6 +15,8 @@
 @import './components/header.css';
 @import './components/multiselect.css';
 @import './components/linechart.css';
+@import './components/explorer/contextmenu.css';
+@import './components/explorer/explorer.css';
 
 @import './pages/login.css';
 @import './pages/settings.css';
