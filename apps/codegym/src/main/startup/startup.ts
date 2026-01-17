@@ -1,9 +1,16 @@
 import { StartupData } from '@common/schemas/startup';
-import { profileManager, ojMetaManager, uiManager, ojContexManager } from './instances';
+import {
+  profileManager,
+  ojMetaManager,
+  uiManager,
+  ojContexManager,
+  cacheManager,
+} from './instances';
 import { UISettings } from '@common/schemas/ui';
 import { OjContext } from '@common/schemas/ojContext';
 
 export async function loadStartupData(): Promise<StartupData> {
+  await cacheManager.loadCache();
   const ojMeta = ojMetaManager.getOjMeta();
   const currProfile = profileManager.getCurrProfile();
   const profileRegistry = profileManager.getProfileRegistry();

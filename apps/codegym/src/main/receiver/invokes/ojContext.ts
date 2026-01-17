@@ -6,7 +6,7 @@ import { ojContexManager } from '@main/startup/instances';
 
 ipcMain.handle(
   InvokeChannels.updateOjContext,
-  async <T extends Oj>(_: IpcMainInvokeEvent, oj: T, context: OjContext[T]) => {
+  <T extends Oj>(_: IpcMainInvokeEvent, oj: T, context: OjContext[T]) => {
     ojContexManager.updateOjContext(oj, context);
   }
 );
