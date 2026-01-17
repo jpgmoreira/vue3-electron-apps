@@ -25,7 +25,9 @@ export class ExplorerManager {
   }
 
   private readonly TREE_PAGE_SIZE = 300; // items.
-  private readonly TREE_ITEM_HEIGHT = 28; // px.
+
+  // Must be the same as set in Explorer.vue:
+  private readonly TREE_ITEM_HEIGHT = 24; // px.
 
   // --- Variables and structures: ---
 

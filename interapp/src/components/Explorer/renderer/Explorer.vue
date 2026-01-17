@@ -70,7 +70,9 @@
 
   // --- Variables: ---
 
-  const rowHeight = 28;
+  // Set the same in the <style scoped> of this file, under .node-input
+  const rowHeight = 24;
+
   const paddingBottom = 250;
   const indentSpanWidth = 20;
 
@@ -605,9 +607,10 @@
   }
 
   .node-input {
-    height: 28px;
+    height: 24px;
     cursor: pointer;
     background-color: transparent;
+    font-size: 15px;
     field-sizing: content; /** CSS experimental. On recent electron versions it should work fine. */
   }
 
