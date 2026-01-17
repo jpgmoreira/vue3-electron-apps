@@ -5,10 +5,23 @@
     CreateNodeCallback,
   } from '@interapp/components/Explorer/renderer/Explorer.vue';
   import { NodeType } from '@interapp/components/Explorer/common/tree';
+  import { InvokeChannels } from '@preload/channels/invoke';
+  import { randomId } from '@interapp/utils/utils';
+  import { Contest } from '@common/schemas/contests';
   const resizing = ref(false);
   const explorerWidth = ref(200);
   const mainWidth = computed(() => window.innerWidth - explorerWidth.value);
-  function beforeCreateNode(type: NodeType, callback: CreateNodeCallback) {}
+  async function beforeCreateNode(type: NodeType, callback: CreateNodeCallback) {
+    if (type === 'dir') {
+      const number = await window.api.invoke<number>(InvokeChannels.createFolder);
+      const name = `Folder ${number}`;
+      const id = randomId();
+      callback(id, name);
+    } else {
+      const contest = await window.api.invoke<Contest>(InvokeChannels.createContest);
+      callback(contest.id, contest.name);
+    }
+  }
   function windowMouseMove(e: MouseEvent) {
     if (!resizing.value) return;
     const { clientX } = e;

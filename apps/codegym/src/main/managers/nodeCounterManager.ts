@@ -34,7 +34,7 @@ export class NodeCounterManager {
   public increment(type: NodeType) {
     if (!this.proxy) throw new Error('UI settings not initialized!');
     if (type === 'file') this.proxy.nextFile++;
-    else this.proxy.nextFolder++;
+    else this.proxy.nextDir++;
   }
 
   public clear() {

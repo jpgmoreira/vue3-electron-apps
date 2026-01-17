@@ -11,4 +11,6 @@ export enum InvokeChannels {
   fetchHistoryPage = 'fetch-history-page',
   updateSnapshot = 'update-snapshot',
   updateGraph = 'update-graph',
+  createFolder = 'create-folder',
+  createContest = 'create-contest',
 }
