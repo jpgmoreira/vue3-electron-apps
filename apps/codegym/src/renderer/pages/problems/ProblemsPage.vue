@@ -23,10 +23,8 @@
   function newProblem() {
     ojContextStore.requestNewProblem(currOj.value);
   }
-  function toggleSolved(event: Event) {
-    if (!event.target) return;
-    const newValue = (event.target as HTMLInputElement).checked;
-    ojContextStore.setSnapshotSolved(currOj.value, newValue);
+  function toggleSolved() {
+    ojContextStore.toggleSnapshotSolved(currOj.value);
   }
   watch(snapshot, (newSnapshot) => {
     isSolved.value = Boolean(newSnapshot?.solvedDate);
