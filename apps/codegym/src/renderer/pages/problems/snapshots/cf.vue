@@ -6,6 +6,7 @@
   const ojContextStore = useOjContextStore();
   const ojMetaStore = useOjMetaStore();
   const snapshot = computed(() => ojContextStore.context['cf'].snapshot!);
+  const tags = computed(() => JSON.parse(snapshot.value.tags));
   const meta = computed(() => ojMetaStore.ojMeta['cf']);
   const showTags = ref(false);
 </script>
@@ -33,7 +34,7 @@
           {{ toLocaleNumber(meta.stats.popularity.max!) }}.
         </span>
       </li>
-      <li v-if="snapshot.tags && snapshot.tags.length">
+      <li v-if="tags && tags.length">
         <div class="inline-flex items-center">
           Tags:
           <span
@@ -45,7 +46,7 @@
           </span>
         </div>
         <div v-if="showTags" class="tags-container flex flex-wrap gap-1 border rounded-md p-1">
-          <span v-for="tag in snapshot.tags" :key="tag" class="tag-badge">{{ tag }}</span>
+          <span v-for="tag in tags" :key="tag" class="tag-badge">{{ tag }}</span>
         </div>
       </li>
     </ul>

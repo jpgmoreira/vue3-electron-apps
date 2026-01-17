@@ -33,7 +33,7 @@ async function downloadCfProblems() {
       name: problemset[i].name,
       path,
       rating: problemset[i].rating || null,
-      tags: problemset[i].tags,
+      tags: JSON.stringify(problemset[i].tags),
       solved: problemStatistics[i].solvedCount,
       popularity: -1,
     };
@@ -41,7 +41,7 @@ async function downloadCfProblems() {
       stats.rating.min = Math.min(stats.rating.min!, newProblem.rating);
       stats.rating.max = Math.max(stats.rating.max!, newProblem.rating);
     }
-    newProblem.tags.forEach((t) => tagsSet.add(t.toLowerCase()));
+    problemset[i].tags.forEach((t) => tagsSet.add(t.toLowerCase()));
     problems.push(newProblem);
   }
   problems.sort((a, b) => {
@@ -109,11 +109,6 @@ export async function filterCfProblems(db: Database): Promise<CfProblem[]> {
     }
   }
   const rows = await db.all<CfProblem[]>(sql, params);
-  for (const row of rows) {
-    if (row.tags) {
-      row.tags = JSON.parse(row.tags as unknown as string);
-    }
-  }
   return rows;
 }
 

@@ -28,7 +28,7 @@ export type CfProblem = BaseProblem & {
   solved: number;
   rating: number | null;
   popularity: number;
-  tags: string[];
+  tags: string;
 };
 
 export type KattisProblem = BaseProblem & {
