@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-  import { computed } from 'vue';
+  import { ref, computed, watch } from 'vue';
   import { useUIStore } from '@renderer/store/ui';
   import { useOjContextStore } from '@renderer/store/ojContext';
   import { useOjStatusStore } from '@renderer/store/ojStatus';
@@ -19,9 +19,18 @@
     if (isUpdatingCache.value) return 'Updating cache';
     return 'New problem';
   });
+  const isSolved = ref(Boolean(snapshot.value?.solvedDate));
   function newProblem() {
     ojContextStore.requestNewProblem(currOj.value);
   }
+  function toggleSolved(event: Event) {
+    if (!event.target) return;
+    const newValue = (event.target as HTMLInputElement).checked;
+    ojContextStore.setSnapshotSolved(currOj.value, newValue);
+  }
+  watch(snapshot, (newSnapshot) => {
+    isSolved.value = Boolean(newSnapshot?.solvedDate);
+  });
 </script>
 
 <template>
@@ -40,7 +49,7 @@
     <button class="flex items-center btn-primary" @click="newProblem" :disabled="isBusy">
       {{ btnText }}
     </button>
-    <!-- <div class="my-auto flex items-center">
+    <div class="my-auto flex items-center">
       <label for="solved-checkbox" class="pr-2">Solved?</label>
       <input
         id="solved-checkbox"
@@ -48,9 +57,9 @@
         type="checkbox"
         name="solved-checkbox"
         :disabled="!snapshot"
-        @change="handleSolvedChange"
+        @change="toggleSolved"
       />
-    </div> -->
+    </div>
   </footer>
 </template>
 

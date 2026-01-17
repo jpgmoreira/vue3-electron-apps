@@ -6,6 +6,7 @@ import { OjContext, getEmptyOjContext } from '@common/schemas/ojContext';
 import { EventEmitter } from '@interapp/events/eventEmitter';
 import { CommonEvents } from '@interapp/events/commonEvents';
 import { cloneDeep } from '@interapp/utils/utils';
+import { OjProblem } from '@common/schemas/problems';
 
 export class OjContextManager {
   private _proxy: FileProxy<OjContext> | null = null;
@@ -35,6 +36,11 @@ export class OjContextManager {
   public updateOjContext<T extends Oj>(oj: T, context: OjContext[T]) {
     if (!this.proxy) throw new Error('Oj context not initialized!');
     Object.assign(this.proxy[oj], context);
+  }
+
+  public updateSnapshot(snapshot: OjProblem[Oj]) {
+    if (!this.proxy) throw new Error('Oj context not initialized!');
+    this.proxy[snapshot.oj].snapshot = snapshot;
   }
 
   public clear() {

@@ -3,11 +3,12 @@ import { InvokeChannels } from '@preload/channels/invoke';
 import { toRawDeep } from '@interapp/utils/utils';
 import { StartupData } from '@common/schemas/startup';
 import { getEmptyOjContext } from '@common/schemas/ojContext';
-import { Oj } from '@common/schemas/oj';
+import { Oj, OjList } from '@common/schemas/oj';
 import { useOjStatusStore } from './ojStatus';
 import { useOjMetaStore } from './ojMeta';
 import { GetOjProblemResponseDTO } from '@common/dto/getOjProblemResponseDTO';
 import { useToastStore } from '@interapp/store/toast';
+import { OjProblem } from '@common/schemas/problems';
 
 export const useOjContextStore = defineStore('ojContext', {
   state: () => ({
@@ -23,6 +24,13 @@ export const useOjContextStore = defineStore('ojContext', {
       // Should be used after you mutated the context somewhere else.
       const context = this.context[oj];
       window.api.invoke(InvokeChannels.updateOjContext, oj, toRawDeep(context));
+    },
+    setSnapshotSolved(oj: Oj, value: boolean) {
+      const snapshot = this.context[oj].snapshot;
+      if (!snapshot) throw new Error('Invalid snapshot!');
+      const now = Date.now();
+      snapshot.solvedDate = value ? now : null;
+      window.api.invoke(InvokeChannels.updateSnapshot, toRawDeep(snapshot));
     },
     async requestNewProblem(oj: Oj) {
       const ojStatusStore = useOjStatusStore();

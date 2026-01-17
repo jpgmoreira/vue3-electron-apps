@@ -7,6 +7,7 @@
 @import './elements/links.css';
 @import './elements/tooltip.css';
 @import './elements/checkbox.css';
+@import './elements/alert.css';
 
 @import './components/modal.css';
 @import './components/toast.css';
