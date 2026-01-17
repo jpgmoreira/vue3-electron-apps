@@ -2,7 +2,7 @@ import { POPULARITY_GROUP_SIZE } from '@common/constants';
 import { TimusProblem } from '@common/schemas/problems';
 import { OjMeta } from '@common/schemas/ojMeta';
 import { type Database } from 'sqlite';
-import { ojMetaManager } from '@main/startup/instances';
+import { ojContexManager, ojMetaManager } from '@main/startup/instances';
 import * as cheerio from 'cheerio';
 import { UpdateCacheResponseDTO } from '@common/dto/updateCacheResponseDTO';
 
@@ -83,6 +83,34 @@ async function replaceTimusProblems(db: Database, problems: TimusProblem[]) {
     await db.run('ROLLBACK');
     throw e;
   }
+}
+
+export async function filterTimusProblems(db: Database): Promise<TimusProblem[]> {
+  const { filters } = ojContexManager.getContext()['timus'];
+  const mind = filters.difficulty.min;
+  const maxd = filters.difficulty.max;
+  const minp = filters.popularity.min;
+  const maxp = filters.popularity.max;
+  let sql = 'SELECT * FROM timus WHERE TRUE';
+  const params: (string | number)[] = [];
+  if (mind !== '') {
+    sql += ' AND difficulty >= ?';
+    params.push(mind);
+  }
+  if (maxd !== '') {
+    sql += ' AND difficulty <= ?';
+    params.push(maxd);
+  }
+  if (minp !== '') {
+    sql += ' AND popularity >= ?';
+    params.push(minp);
+  }
+  if (maxp !== '') {
+    sql += ' AND popularity <= ?';
+    params.push(maxp);
+  }
+  const rows = await db.all<TimusProblem[]>(sql, params);
+  return rows;
 }
 
 export async function updateTimusCache(db: Database): Promise<UpdateCacheResponseDTO<'timus'>> {

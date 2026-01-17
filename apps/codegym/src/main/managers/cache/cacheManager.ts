@@ -7,12 +7,13 @@ import { setDbPragmas } from '@interapp/utils/sql';
 import { ensureDirExists } from '@interapp/utils/fileUtils';
 import { createCacheTables } from './helpers/tables';
 import { UpdateCacheResponseDTO } from '@common/dto/updateCacheResponseDTO';
-import { updateCfCache } from './ojs/cf';
-import { updateKattisCache } from './ojs/kattis';
-import { updateLeetcodeCache } from './ojs/leetcode';
-import { updateNepsCache } from './ojs/neps';
-import { updateTimusCache } from './ojs/timus';
-import { updateUvaCache } from './ojs/uva';
+import { filterCfProblems, updateCfCache } from './ojs/cf';
+import { filterKattisProblems, updateKattisCache } from './ojs/kattis';
+import { filterLeetcodeProblems, updateLeetcodeCache } from './ojs/leetcode';
+import { filterNepsProblems, updateNepsCache } from './ojs/neps';
+import { filterTimusProblems, updateTimusCache } from './ojs/timus';
+import { filterUvaProblems, updateUvaCache } from './ojs/uva';
+import { OjProblem } from '@common/schemas/problems';
 
 export class CacheManager {
   private db: Database | null = null;
@@ -26,6 +27,17 @@ export class CacheManager {
     uva: updateUvaCache,
   }) satisfies {
     [T in Oj]: (db: Database) => Promise<UpdateCacheResponseDTO<T>>;
+  };
+
+  private filterHandlers = Object.freeze({
+    cf: filterCfProblems,
+    kattis: filterKattisProblems,
+    leetcode: filterLeetcodeProblems,
+    neps: filterNepsProblems,
+    timus: filterTimusProblems,
+    uva: filterUvaProblems,
+  }) satisfies {
+    [T in Oj]: (db: Database) => Promise<OjProblem[T][]>;
   };
 
   public async loadCache() {
@@ -45,8 +57,8 @@ export class CacheManager {
     return this.updateHandlers[oj](this.db) as Promise<UpdateCacheResponseDTO<T>>;
   }
 
-  // public filterOjProblems<T extends Oj>(oj: T): Promise<OjProblem[T][]> {
-  //   if (!this.db) throw new Error('Cache DB not initialized!');
-  //   return filterOjProblems(oj, this.db);
-  // }
+  public filterOjProblems<T extends Oj>(oj: T): Promise<OjProblem[T][]> {
+    if (!this.db) throw new Error('Cache DB not initialized!');
+    return this.filterHandlers[oj](this.db) as Promise<OjProblem[T][]>;
+  }
 }

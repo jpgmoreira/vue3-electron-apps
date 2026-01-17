@@ -2,7 +2,7 @@ import { NepsProblem } from '@common/schemas/problems';
 import { NepsResponseDTO } from '../dto/nepsResponseDTO';
 import { OjMeta } from '@common/schemas/ojMeta';
 import { POPULARITY_GROUP_SIZE } from '@common/constants';
-import { ojMetaManager } from '@main/startup/instances';
+import { ojContexManager, ojMetaManager } from '@main/startup/instances';
 import { type Database } from 'sqlite';
 import { UpdateCacheResponseDTO } from '@common/dto/updateCacheResponseDTO';
 
@@ -76,6 +76,34 @@ async function replaceNepsProblems(db: Database, problems: NepsProblem[]) {
     await db.run('ROLLBACK');
     throw e;
   }
+}
+
+export async function filterNepsProblems(db: Database): Promise<NepsProblem[]> {
+  const { filters } = ojContexManager.getContext()['neps'];
+  const mins = filters.score.min;
+  const maxs = filters.score.max;
+  const minp = filters.popularity.min;
+  const maxp = filters.popularity.max;
+  let sql = 'SELECT * FROM neps WHERE TRUE';
+  const params: (string | number)[] = [];
+  if (mins !== '') {
+    sql += ' AND score >= ?';
+    params.push(mins);
+  }
+  if (maxs !== '') {
+    sql += ' AND score <= ?';
+    params.push(maxs);
+  }
+  if (minp !== '') {
+    sql += ' AND popularity >= ?';
+    params.push(minp);
+  }
+  if (maxp !== '') {
+    sql += ' AND popularity <= ?';
+    params.push(maxp);
+  }
+  const rows = await db.all<NepsProblem[]>(sql, params);
+  return rows;
 }
 
 export async function updateNepsCache(db: Database): Promise<UpdateCacheResponseDTO<'neps'>> {

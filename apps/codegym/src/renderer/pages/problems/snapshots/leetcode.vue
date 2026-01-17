@@ -5,7 +5,7 @@
   import { toLocaleNumber } from '@interapp/utils/utils';
   const ojContextStore = useOjContextStore();
   const ojMetaStore = useOjMetaStore();
-  const snapshot = computed(() => ojContextStore['leetcode'].snapshot);
+  const snapshot = computed(() => ojContextStore.context['leetcode'].snapshot!);
   const meta = computed(() => ojMetaStore.ojMeta['leetcode']);
   const difficultyList = ['Easy', 'Medium', 'Hard'];
 </script>

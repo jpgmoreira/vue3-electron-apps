@@ -2,7 +2,7 @@ import { LeetcodeProblem } from '@common/schemas/problems';
 import { LeetcodeResponseDTO } from '../dto/leetcodeResponseDTO';
 import { OjMeta } from '@common/schemas/ojMeta';
 import { POPULARITY_GROUP_SIZE } from '@common/constants';
-import { ojMetaManager } from '@main/startup/instances';
+import { ojContexManager, ojMetaManager } from '@main/startup/instances';
 import { type Database } from 'sqlite';
 import { UpdateCacheResponseDTO } from '@common/dto/updateCacheResponseDTO';
 
@@ -74,6 +74,43 @@ async function replaceLeetCodeProblems(db: Database, problems: LeetcodeProblem[]
     await db.run('ROLLBACK');
     throw e;
   }
+}
+
+export async function filterLeetcodeProblems(db: Database): Promise<LeetcodeProblem[]> {
+  const { filters } = ojContexManager.getContext()['leetcode'];
+  const minp = filters.popularity.min;
+  const maxp = filters.popularity.max;
+  const premium = filters.premium.value;
+  const difficulties = filters.difficulty.values
+    .map((d: string) => {
+      if (d === 'easy') return 1;
+      if (d === 'medium') return 2;
+      return 3;
+    })
+    .filter((x?: number) => x !== undefined);
+  let sql = 'SELECT * FROM leetcode WHERE TRUE';
+  const params: (string | number | boolean)[] = [];
+  if (minp !== '') {
+    sql += ' AND popularity >= ?';
+    params.push(minp);
+  }
+  if (maxp !== '') {
+    sql += ' AND popularity <= ?';
+    params.push(maxp);
+  }
+  if (premium === 'yes') {
+    sql += ' AND premium = ?';
+    params.push(true);
+  }
+  if (premium === 'no') {
+    sql += ' AND premium = ?';
+    params.push(false);
+  }
+  if (difficulties.length) {
+    sql += ` AND difficulty IN (${difficulties.join(',')})`;
+  }
+  const rows = await db.all<LeetcodeProblem[]>(sql, params);
+  return rows;
 }
 
 export async function updateLeetcodeCache(

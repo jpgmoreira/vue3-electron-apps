@@ -5,7 +5,7 @@
   import { toLocaleNumber } from '@interapp/utils/utils';
   const ojContextStore = useOjContextStore();
   const ojMetaStore = useOjMetaStore();
-  const snapshot = computed(() => ojContextStore['neps'].snapshot);
+  const snapshot = computed(() => ojContextStore.context['neps'].snapshot!);
   const meta = computed(() => ojMetaStore.ojMeta['neps']);
 </script>
 

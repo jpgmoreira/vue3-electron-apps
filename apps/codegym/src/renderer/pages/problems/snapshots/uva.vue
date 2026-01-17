@@ -6,7 +6,7 @@
   import star from '@renderer/assets/images/star.png';
   const ojContextStore = useOjContextStore();
   const ojMetaStore = useOjMetaStore();
-  const snapshot = computed(() => ojContextStore['uva'].snapshot);
+  const snapshot = computed(() => ojContextStore.context['uva'].snapshot!);
   const meta = computed(() => ojMetaStore.ojMeta['uva']);
 </script>
 

@@ -20,7 +20,7 @@ export async function loadStartupData(): Promise<StartupData> {
     uiManager.loadProfile(currProfile.id);
     ojContexManager.loadProfile(currProfile.id);
     ui = uiManager.getUISettings();
-    ojContext = ojContexManager.getOjContext();
+    ojContext = ojContexManager.getContext();
   }
   return {
     currProfile,

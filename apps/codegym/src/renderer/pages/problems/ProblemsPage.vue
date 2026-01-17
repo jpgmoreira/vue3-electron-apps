@@ -15,6 +15,10 @@
   const isRequestingProblem = computed(() => ojStatusStore[currOj.value].isRequestingProblem);
   const isUpdatingCache = computed(() => ojStatusStore[currOj.value].isUpdatingCache);
   const isBusy = computed(() => isRequestingProblem.value || isUpdatingCache.value);
+  const btnText = computed(() => {
+    if (isUpdatingCache.value) return 'Updating cache';
+    return 'New problem';
+  });
   function newProblem() {
     ojContextStore.requestNewProblem(currOj.value);
   }
@@ -34,7 +38,7 @@
 
   <footer class="mt-auto w-full flex justify-around py-1.5">
     <button class="flex items-center btn-primary" @click="newProblem" :disabled="isBusy">
-      New problem
+      {{ btnText }}
     </button>
     <!-- <div class="my-auto flex items-center">
       <label for="solved-checkbox" class="pr-2">Solved?</label>

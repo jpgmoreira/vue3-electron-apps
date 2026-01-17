@@ -5,7 +5,7 @@
   import { toLocaleNumber } from '@interapp/utils/utils';
   const ojContextStore = useOjContextStore();
   const ojMetaStore = useOjMetaStore();
-  const snapshot = computed(() => ojContextStore['cf'].snapshot);
+  const snapshot = computed(() => ojContextStore.context['cf'].snapshot!);
   const meta = computed(() => ojMetaStore.ojMeta['cf']);
   const showTags = ref(false);
 </script>

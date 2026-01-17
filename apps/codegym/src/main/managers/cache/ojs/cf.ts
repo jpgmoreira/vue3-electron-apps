@@ -3,7 +3,7 @@ import { CfResponseDTO } from '../dto/cfResponseDTO';
 import { OjMeta } from '@common/schemas/ojMeta';
 import { POPULARITY_GROUP_SIZE } from '@common/constants';
 import type { Database } from 'sqlite';
-import { ojMetaManager } from '@main/startup/instances';
+import { ojContexManager, ojMetaManager } from '@main/startup/instances';
 import { UpdateCacheResponseDTO } from '@common/dto/updateCacheResponseDTO';
 
 async function downloadCfProblems() {
@@ -74,6 +74,47 @@ async function replaceCfProblems(db: Database, problems: CfProblem[]) {
     await db.run('ROLLBACK');
     throw e;
   }
+}
+
+export async function filterCfProblems(db: Database): Promise<CfProblem[]> {
+  const { filters } = ojContexManager.getContext()['cf'];
+  const tags = filters.tags.values;
+  const minr = filters.rating.min;
+  const maxr = filters.rating.max;
+  const minp = filters.popularity.min;
+  const maxp = filters.popularity.max;
+  let sql = 'SELECT * FROM cf WHERE TRUE';
+  const params: (string | number)[] = [];
+  if (minr !== '') {
+    sql += ' AND rating >= ?';
+    params.push(minr);
+  }
+  if (maxr !== '') {
+    sql += ' AND rating <= ?';
+    params.push(maxr);
+  }
+  if (minp !== '') {
+    sql += ' AND popularity >= ?';
+    params.push(minp);
+  }
+  if (maxp !== '') {
+    sql += ' AND popularity <= ?';
+    params.push(maxp);
+  }
+  if (tags.length > 0) {
+    for (let i = 0; i < tags.length; i++) {
+      const tag = tags[i].toLowerCase();
+      sql += ' AND tags LIKE ?';
+      params.push(`%\"${tag}\"%`);
+    }
+  }
+  const rows = await db.all<CfProblem[]>(sql, params);
+  for (const row of rows) {
+    if (row.tags) {
+      row.tags = JSON.parse(row.tags as unknown as string);
+    }
+  }
+  return rows;
 }
 
 export async function updateCfCache(db: Database): Promise<UpdateCacheResponseDTO<'cf'>> {

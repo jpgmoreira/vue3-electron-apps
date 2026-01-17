@@ -1,7 +1,7 @@
 import { POPULARITY_GROUP_SIZE } from '@common/constants';
 import { KattisProblem } from '@common/schemas/problems';
 import { OjMeta } from '@common/schemas/ojMeta';
-import { ojMetaManager } from '@main/startup/instances';
+import { ojContexManager, ojMetaManager } from '@main/startup/instances';
 import { type Database } from 'sqlite';
 import * as cheerio from 'cheerio';
 import { Status } from '@interapp/types/status';
@@ -128,6 +128,38 @@ async function replaceKattisProblems(db: Database, problems: KattisProblem[]) {
     await db.run('ROLLBACK');
     throw e;
   }
+}
+
+export async function filterKattisProblems(db: Database): Promise<KattisProblem[]> {
+  const { filters } = ojContexManager.getContext()['kattis'];
+  const mind = filters.difficulty.min;
+  const maxd = filters.difficulty.max;
+  const minp = filters.popularity.min;
+  const maxp = filters.popularity.max;
+  const starred = filters.starred.value;
+  let sql = 'SELECT * FROM kattis WHERE TRUE';
+  const params: (string | number)[] = [];
+  if (mind !== '') {
+    sql += ' AND difficulty >= ?';
+    params.push(mind);
+  }
+  if (maxd !== '') {
+    sql += ' AND difficulty <= ?';
+    params.push(maxd);
+  }
+  if (minp !== '') {
+    sql += ' AND popularity >= ?';
+    params.push(minp);
+  }
+  if (maxp !== '') {
+    sql += ' AND popularity <= ?';
+    params.push(maxp);
+  }
+  if (starred) {
+    sql += ' AND starred = TRUE';
+  }
+  const rows = await db.all<KattisProblem[]>(sql, params);
+  return rows;
 }
 
 export async function updateKattisCache(db: Database): Promise<UpdateCacheResponseDTO<'kattis'>> {

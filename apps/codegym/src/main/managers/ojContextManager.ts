@@ -27,14 +27,14 @@ export class OjContextManager {
     this._proxy = new FileProxy(fPath, getEmptyOjContext());
   }
 
-  public getOjContext(): OjContext {
+  public getContext(): OjContext {
     if (!this.target) throw new Error('Oj context not initialized!');
     return cloneDeep(this.target);
   }
 
   public updateOjContext<T extends Oj>(oj: T, context: OjContext[T]) {
     if (!this.proxy) throw new Error('Oj context not initialized!');
-    this.proxy[oj] = context;
+    Object.assign(this.proxy[oj], context);
   }
 
   public clear() {

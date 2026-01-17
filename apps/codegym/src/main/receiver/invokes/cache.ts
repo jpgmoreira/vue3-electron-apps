@@ -6,7 +6,7 @@ import { UpdateCacheResponseDTO } from '@common/dto/updateCacheResponseDTO';
 
 ipcMain.handle(
   InvokeChannels.updateOjCache,
-  async (_: IpcMainInvokeEvent, oj: Oj): Promise<UpdateCacheResponseDTO> => {
+  async <T extends Oj>(_: IpcMainInvokeEvent, oj: T): Promise<UpdateCacheResponseDTO<T>> => {
     return cacheManager.updateOjCache(oj);
   }
 );
