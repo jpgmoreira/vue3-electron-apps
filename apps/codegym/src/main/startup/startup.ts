@@ -7,6 +7,8 @@ import {
   cacheManager,
   historyManager,
   graphManager,
+  nodeCounterManager,
+  contestsManager,
 } from './instances';
 import { UISettings } from '@common/schemas/ui';
 import { OjContext } from '@common/schemas/ojContext';
@@ -23,6 +25,8 @@ export async function loadStartupData(): Promise<StartupData> {
   if (currProfile) {
     uiManager.loadProfile(currProfile.id);
     ojContexManager.loadProfile(currProfile.id);
+    nodeCounterManager.loadProfile(currProfile.id);
+    contestsManager.loadProfile(currProfile.id);
     await historyManager.loadHistory(currProfile.id);
     await graphManager.loadGraph(currProfile.id);
     ui = uiManager.getUISettings();

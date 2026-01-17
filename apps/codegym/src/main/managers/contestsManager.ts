@@ -6,12 +6,15 @@ import { ensureDirExists } from '@interapp/utils/fileUtils';
 import { buildId } from '@interapp/utils/utils';
 import { Contest, getEmptyContest } from '@common/schemas/contests';
 import { FileProxy } from '@interapp/utils/fileProxy';
+import { NodeCounterManager } from './nodeCounterManager';
 
 export class ContestsManager {
   private profileId: string | null = null;
+  private counter: NodeCounterManager;
 
-  constructor(emitter: EventEmitter) {
+  constructor(emitter: EventEmitter, counter: NodeCounterManager) {
     emitter.on(CommonEvents.clearProfileData, () => this.clear);
+    this.counter = counter;
   }
 
   public loadProfile(profileId: string) {
@@ -20,8 +23,11 @@ export class ContestsManager {
     ensureDirExists(contestsDir);
   }
 
-  public createContest(name: string): Contest {
+  public createContest(): Contest {
     const now = Date.now();
+    const number = this.counter.getCounter().nextFile;
+    this.counter.increment('file');
+    const name = `Contest ${number}`;
     const id = buildId(name, now);
     const contest = getEmptyContest(id, name, now);
     const contestPath = path.join(
