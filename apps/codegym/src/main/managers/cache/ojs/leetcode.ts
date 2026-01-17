@@ -2,9 +2,9 @@ import { LeetcodeProblem } from '@common/schemas/problems';
 import { LeetcodeResponseDTO } from '../dto/leetcodeResponseDTO';
 import { OjMeta } from '@common/schemas/ojMeta';
 import { POPULARITY_GROUP_SIZE } from '@common/constants';
-import { OjMetaManager } from '@main/data/managers/ojMetaManager';
+import { ojMetaManager } from '@main/startup/instances';
 import { type Database } from 'sqlite';
-import { replaceCacheProblems } from '@main/data/sql/cache/cache';
+import { UpdateCacheResponseDTO } from '@common/dto/updateCacheResponseDTO';
 
 async function downloadLeetcodeProblems() {
   const response = await fetch('https://leetcode.com/api/problems/all/');
@@ -41,13 +41,53 @@ async function downloadLeetcodeProblems() {
   };
 }
 
-export async function updateLeetcodeCache(db: Database): Promise<OjMeta['leetcode']> {
+async function replaceLeetCodeProblems(db: Database, problems: LeetcodeProblem[]) {
+  await db.run('BEGIN TRANSACTION');
+  try {
+    await db.run('DELETE FROM leetcode');
+    const stmt = await db.prepare(`
+      INSERT INTO leetcode (
+        name,
+        path,
+        accepted,
+        difficulty,
+        premium,
+        popularity,
+        submissions
+      )
+      VALUES (?, ?, ?, ?, ?, ?, ?)
+    `);
+    for (const p of problems) {
+      await stmt.run(
+        p.name,
+        p.path,
+        p.accepted,
+        p.difficulty,
+        p.premium,
+        p.popularity,
+        p.submissions
+      );
+    }
+    await stmt.finalize();
+    await db.run('COMMIT');
+  } catch (e) {
+    await db.run('ROLLBACK');
+    throw e;
+  }
+}
+
+export async function updateLeetcodeCache(
+  db: Database
+): Promise<UpdateCacheResponseDTO<'leetcode'>> {
   const { problems, stats } = await downloadLeetcodeProblems();
+  await replaceLeetCodeProblems(db, problems);
   const meta: OjMeta['leetcode'] = {
     lastCacheUpdate: Date.now(),
     stats,
   };
-  OjMetaManager.instance.updateOjMeta('leetcode', meta);
-  await replaceCacheProblems(db, 'leetcode', problems);
-  return meta;
+  ojMetaManager.updateOjMeta('leetcode', meta);
+  return {
+    status: 'success',
+    meta,
+  };
 }

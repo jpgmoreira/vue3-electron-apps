@@ -2,15 +2,31 @@ import { DATA_DIR } from '@main/constants';
 import sqlite3 from 'sqlite3';
 import { open, type Database } from 'sqlite';
 import path from 'path';
-import { OjProblem } from '@common/schemas/problems';
 import { Oj } from '@common/schemas/oj';
 import { setDbPragmas } from '@interapp/utils/sql';
 import { ensureDirExists } from '@interapp/utils/fileUtils';
-import { createCacheTables } from './sql/tables';
+import { createCacheTables } from './helpers/tables';
 import { UpdateCacheResponseDTO } from '@common/dto/updateCacheResponseDTO';
+import { updateCfCache } from './ojs/cf';
+import { updateKattisCache } from './ojs/kattis';
+import { updateLeetcodeCache } from './ojs/leetcode';
+import { updateNepsCache } from './ojs/neps';
+import { updateTimusCache } from './ojs/timus';
+import { updateUvaCache } from './ojs/uva';
 
 export class CacheManager {
   private db: Database | null = null;
+
+  private updateHandlers = Object.freeze({
+    cf: updateCfCache,
+    kattis: updateKattisCache,
+    leetcode: updateLeetcodeCache,
+    neps: updateNepsCache,
+    timus: updateTimusCache,
+    uva: updateUvaCache,
+  }) satisfies {
+    [T in Oj]: (db: Database) => Promise<UpdateCacheResponseDTO<T>>;
+  };
 
   public async loadCache() {
     if (this.db) return;
@@ -26,7 +42,7 @@ export class CacheManager {
 
   public updateOjCache<T extends Oj>(oj: T): Promise<UpdateCacheResponseDTO<T>> {
     if (!this.db) throw new Error('Cache DB not initialized!');
-    return updateOjCache(oj, this.db);
+    return this.updateHandlers[oj](this.db) as Promise<UpdateCacheResponseDTO<T>>;
   }
 
   // public filterOjProblems<T extends Oj>(oj: T): Promise<OjProblem[T][]> {

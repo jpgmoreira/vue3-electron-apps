@@ -1,10 +1,10 @@
 import { POPULARITY_GROUP_SIZE } from '@common/constants';
 import { TimusProblem } from '@common/schemas/problems';
 import { OjMeta } from '@common/schemas/ojMeta';
-import { OjMetaManager } from '@main/data/managers/ojMetaManager';
 import { type Database } from 'sqlite';
+import { ojMetaManager } from '@main/startup/instances';
 import * as cheerio from 'cheerio';
-import { replaceCacheProblems } from '@main/data/sql/cache/cache';
+import { UpdateCacheResponseDTO } from '@common/dto/updateCacheResponseDTO';
 
 async function downloadTimusProblems() {
   const result = await fetch(
@@ -52,13 +52,49 @@ async function downloadTimusProblems() {
   };
 }
 
-export async function updateTimusCache(db: Database): Promise<OjMeta['timus']> {
+async function replaceTimusProblems(db: Database, problems: TimusProblem[]) {
+  await db.run('BEGIN TRANSACTION');
+  try {
+    await db.run('DELETE FROM timus');
+    const stmt = await db.prepare(`
+      INSERT INTO timus (
+        name,
+        path,
+        solved,
+        source,
+        difficulty,
+        popularity
+      )
+      VALUES (?, ?, ?, ?, ?, ?)
+    `);
+    for (const p of problems) {
+      await stmt.run(
+        p.name,
+        p.path,
+        p.solved,
+        p.source, // Can be null.
+        p.difficulty,
+        p.popularity
+      );
+    }
+    await stmt.finalize();
+    await db.run('COMMIT');
+  } catch (e) {
+    await db.run('ROLLBACK');
+    throw e;
+  }
+}
+
+export async function updateTimusCache(db: Database): Promise<UpdateCacheResponseDTO<'timus'>> {
   const { problems, stats } = await downloadTimusProblems();
+  await replaceTimusProblems(db, problems);
   const meta: OjMeta['timus'] = {
     lastCacheUpdate: Date.now(),
     stats,
   };
-  OjMetaManager.instance.updateOjMeta('timus', meta);
-  await replaceCacheProblems(db, 'timus', problems);
-  return meta;
+  ojMetaManager.updateOjMeta('timus', meta);
+  return {
+    meta,
+    status: 'success',
+  };
 }

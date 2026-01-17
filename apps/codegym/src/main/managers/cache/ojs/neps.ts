@@ -2,9 +2,9 @@ import { NepsProblem } from '@common/schemas/problems';
 import { NepsResponseDTO } from '../dto/nepsResponseDTO';
 import { OjMeta } from '@common/schemas/ojMeta';
 import { POPULARITY_GROUP_SIZE } from '@common/constants';
-import { OjMetaManager } from '@main/data/managers/ojMetaManager';
+import { ojMetaManager } from '@main/startup/instances';
 import { type Database } from 'sqlite';
-import { replaceCacheProblems } from '@main/data/sql/cache/cache';
+import { UpdateCacheResponseDTO } from '@common/dto/updateCacheResponseDTO';
 
 async function downloadNepsProblems() {
   const response = await fetch('https://api.neps.academy/tables/exercises?query');
@@ -47,13 +47,47 @@ async function downloadNepsProblems() {
   };
 }
 
-export async function updateNepsCache(db: Database): Promise<OjMeta['neps']> {
+async function replaceNepsProblems(db: Database, problems: NepsProblem[]) {
+  await db.run('BEGIN TRANSACTION');
+  try {
+    await db.run('DELETE FROM neps');
+    const stmt = await db.prepare(`
+      INSERT INTO neps (
+        name,
+        path,
+        score,
+        solved,
+        popularity
+      )
+      VALUES (?, ?, ?, ?, ?)
+    `);
+    for (const p of problems) {
+      await stmt.run(
+        p.name, // Can be null.
+        p.path,
+        p.score,
+        p.solved,
+        p.popularity
+      );
+    }
+    await stmt.finalize();
+    await db.run('COMMIT');
+  } catch (e) {
+    await db.run('ROLLBACK');
+    throw e;
+  }
+}
+
+export async function updateNepsCache(db: Database): Promise<UpdateCacheResponseDTO<'neps'>> {
   const { problems, stats } = await downloadNepsProblems();
+  await replaceNepsProblems(db, problems);
   const meta: OjMeta['neps'] = {
     lastCacheUpdate: Date.now(),
     stats,
   };
-  OjMetaManager.instance.updateOjMeta('neps', meta);
-  await replaceCacheProblems(db, 'neps', problems);
-  return meta;
+  ojMetaManager.updateOjMeta('neps', meta);
+  return {
+    status: 'success',
+    meta,
+  };
 }

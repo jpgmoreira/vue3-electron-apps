@@ -2,9 +2,9 @@ import { CfProblem } from '@common/schemas/problems';
 import { CfResponseDTO } from '../dto/cfResponseDTO';
 import { OjMeta } from '@common/schemas/ojMeta';
 import { POPULARITY_GROUP_SIZE } from '@common/constants';
-import { OjMetaManager } from '@main/data/managers/ojMetaManager';
 import type { Database } from 'sqlite';
-import { replaceCacheProblems } from '@main/data/sql/cache/cache';
+import { ojMetaManager } from '@main/startup/instances';
+import { UpdateCacheResponseDTO } from '@common/dto/updateCacheResponseDTO';
 
 async function downloadCfProblems() {
   const response = await fetch('https://codeforces.com/api/problemset.problems');
@@ -57,14 +57,36 @@ async function downloadCfProblems() {
   };
 }
 
-export async function updateCfCache(db: Database): Promise<OjMeta['cf']> {
+async function replaceCfProblems(db: Database, problems: CfProblem[]) {
+  await db.run('BEGIN TRANSACTION');
+  try {
+    await db.run('DELETE FROM cf');
+    const stmt = await db.prepare(`
+      INSERT INTO cf (name, path, solved, rating, popularity, tags)
+      VALUES (?, ?, ?, ?, ?, ?)
+    `);
+    for (const p of problems) {
+      await stmt.run(p.name, p.path, p.solved, p.rating, p.popularity, JSON.stringify(p.tags));
+    }
+    await stmt.finalize();
+    await db.run('COMMIT');
+  } catch (e) {
+    await db.run('ROLLBACK');
+    throw e;
+  }
+}
+
+export async function updateCfCache(db: Database): Promise<UpdateCacheResponseDTO<'cf'>> {
   const { problems, stats, tags } = await downloadCfProblems();
+  await replaceCfProblems(db, problems);
   const meta: OjMeta['cf'] = {
     lastCacheUpdate: Date.now(),
     stats,
     tags,
   };
-  OjMetaManager.instance.updateOjMeta('cf', meta);
-  await replaceCacheProblems(db, 'cf', problems);
-  return meta;
+  ojMetaManager.updateOjMeta('cf', meta);
+  return {
+    status: 'success',
+    meta,
+  };
 }

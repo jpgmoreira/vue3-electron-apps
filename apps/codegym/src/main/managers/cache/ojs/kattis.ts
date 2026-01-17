@@ -1,10 +1,11 @@
 import { POPULARITY_GROUP_SIZE } from '@common/constants';
 import { KattisProblem } from '@common/schemas/problems';
 import { OjMeta } from '@common/schemas/ojMeta';
-import { OjMetaManager } from '@main/data/managers/ojMetaManager';
+import { ojMetaManager } from '@main/startup/instances';
 import { type Database } from 'sqlite';
 import * as cheerio from 'cheerio';
-import { replaceCacheProblems } from '@main/data/sql/cache/cache';
+import { Status } from '@interapp/types/status';
+import { UpdateCacheResponseDTO } from '@common/dto/updateCacheResponseDTO';
 
 function parseTextDifficulty(text: string): number | null {
   /**
@@ -19,15 +20,22 @@ function parseTextDifficulty(text: string): number | null {
 
 async function downloadKattisProblems() {
   // 1. Download all Kattis starred problems from Methods to Solve:
-  let response = await fetch(
-    'https://cpbook.net/methodstosolve?oj=kattis&topic=all&quality=starred'
-  );
-  let html = await response.text();
-  let $ = cheerio.load(html);
   const starredProblems = new Set<string>();
-  $('.Kattis.starred').each((_, e) => {
-    starredProblems.add($(e).children('td').first().text().trim());
-  });
+  let status: Status = 'success';
+  let message = undefined as undefined | string;
+  try {
+    const response = await fetch(
+      'https://cpbook.net/methodstosolve?oj=kattis&topic=all&quality=starred'
+    );
+    const html = await response.text();
+    const $ = cheerio.load(html);
+    $('.Kattis.starred').each((_, e) => {
+      starredProblems.add($(e).children('td').first().text().trim());
+    });
+  } catch (e) {
+    status = 'info';
+    message = 'Could not get starred problems from cpbook.net';
+  }
   // 2. Download Kattis problemset:
   const problems: KattisProblem[] = [];
   const stats: OjMeta['kattis']['stats'] = {
@@ -40,9 +48,9 @@ async function downloadKattisProblems() {
     },
   };
   for (let i = 0; ; i++) {
-    response = await fetch(`https://open.kattis.com/problems?page=${i}`);
-    html = await response.text();
-    $ = cheerio.load(html);
+    const response = await fetch(`https://open.kattis.com/problems?page=${i}`);
+    const html = await response.text();
+    const $ = cheerio.load(html);
     const trs = $('section[data-cy="problems-table"] tbody tr');
     if (trs.length === 0) break;
     trs.each((_, tr) => {
@@ -78,18 +86,61 @@ async function downloadKattisProblems() {
     max: Math.floor((problems.length - 1) / POPULARITY_GROUP_SIZE) + 1,
   };
   return {
+    status,
+    message,
     problems,
     stats,
   };
 }
 
-export async function updateKattisCache(db: Database): Promise<OjMeta['kattis']> {
-  const { problems, stats } = await downloadKattisProblems();
+async function replaceKattisProblems(db: Database, problems: KattisProblem[]) {
+  await db.run('BEGIN TRANSACTION');
+  try {
+    await db.run('DELETE FROM kattis');
+    const stmt = await db.prepare(`
+      INSERT INTO kattis (
+        name,
+        path,
+        solved,
+        submissions,
+        textDifficulty,
+        difficulty,
+        popularity,
+        starred
+      )
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+    `);
+    for (const p of problems) {
+      await stmt.run(
+        p.name,
+        p.path,
+        p.solved,
+        p.submissions,
+        p.textDifficulty,
+        p.difficulty,
+        p.popularity,
+        p.starred
+      );
+    }
+    await stmt.finalize();
+    await db.run('COMMIT');
+  } catch (e) {
+    await db.run('ROLLBACK');
+    throw e;
+  }
+}
+
+export async function updateKattisCache(db: Database): Promise<UpdateCacheResponseDTO<'kattis'>> {
+  const { problems, stats, status, message } = await downloadKattisProblems();
+  await replaceKattisProblems(db, problems);
   const meta: OjMeta['kattis'] = {
     lastCacheUpdate: Date.now(),
     stats,
   };
-  OjMetaManager.instance.updateOjMeta('kattis', meta);
-  await replaceCacheProblems(db, 'kattis', problems);
-  return meta;
+  ojMetaManager.updateOjMeta('kattis', meta);
+  return {
+    status,
+    message,
+    meta,
+  };
 }

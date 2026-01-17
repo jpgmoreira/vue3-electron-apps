@@ -3,22 +3,32 @@ import * as cheerio from 'cheerio';
 import { UvaResponseDTO } from '../dto/uvaResponseDTO';
 import { POPULARITY_GROUP_SIZE } from '@common/constants';
 import { OjMeta } from '@common/schemas/ojMeta';
-import { OjMetaManager } from '@main/data/managers/ojMetaManager';
+import { ojMetaManager } from '@main/startup/instances';
 import { type Database } from 'sqlite';
-import { replaceCacheProblems } from '@main/data/sql/cache/cache';
+import { Status } from '@interapp/types/status';
+import { UpdateCacheResponseDTO } from '@common/dto/updateCacheResponseDTO';
 
 async function downloadUvaProblems() {
   // 1. Download all UVA starred problems from Methods to Solve:
-  let response = await fetch('https://cpbook.net/methodstosolve?oj=uva&topic=all&quality=starred');
-  const html = await response.text();
-  const $ = cheerio.load(html);
   const starredProblems = new Set<number>();
-  $('.UVa.starred').each((_, e) => {
-    starredProblems.add(parseInt($(e).children('td').first().text().trim()));
-  });
+  let status: Status = 'success';
+  let message = undefined as undefined | string;
+  try {
+    const response = await fetch(
+      'https://cpbook.net/methodstosolve?oj=uva&topic=all&quality=starred'
+    );
+    const html = await response.text();
+    const $ = cheerio.load(html);
+    $('.UVa.starred').each((_, e) => {
+      starredProblems.add(parseInt($(e).children('td').first().text().trim()));
+    });
+  } catch (e) {
+    status = 'info';
+    message = 'Could not get starred problems from cpbook.net';
+  }
   // 2. Download all UVA problems from the uHunt API:
   const problems: UvaProblem[] = [];
-  response = await fetch('https://uhunt.onlinejudge.org/api/p');
+  const response = await fetch('https://uhunt.onlinejudge.org/api/p');
   const json = (await response.json()) as UvaResponseDTO;
   json.forEach((p) => {
     const newProblem: UvaProblem = {
@@ -43,18 +53,49 @@ async function downloadUvaProblems() {
     },
   };
   return {
+    status,
+    message,
     problems,
     stats,
   };
 }
 
-export async function updateUvaCache(db: Database): Promise<OjMeta['uva']> {
-  const { problems, stats } = await downloadUvaProblems();
+async function replaceUvaProblems(db: Database, problems: UvaProblem[]) {
+  await db.run('BEGIN TRANSACTION');
+  try {
+    await db.run('DELETE FROM uva');
+    const stmt = await db.prepare(`
+      INSERT INTO uva (
+        name,
+        path,
+        dacu,
+        popularity,
+        starred
+      )
+      VALUES (?, ?, ?, ?, ?)
+    `);
+    for (const p of problems) {
+      await stmt.run(p.name, p.path, p.dacu, p.popularity, p.starred);
+    }
+    await stmt.finalize();
+    await db.run('COMMIT');
+  } catch (e) {
+    await db.run('ROLLBACK');
+    throw e;
+  }
+}
+
+export async function updateUvaCache(db: Database): Promise<UpdateCacheResponseDTO<'uva'>> {
+  const { problems, stats, message, status } = await downloadUvaProblems();
+  await replaceUvaProblems(db, problems);
   const meta: OjMeta['uva'] = {
     lastCacheUpdate: Date.now(),
     stats,
   };
-  OjMetaManager.instance.updateOjMeta('uva', meta);
-  await replaceCacheProblems(db, 'uva', problems);
-  return meta;
+  ojMetaManager.updateOjMeta('uva', meta);
+  return {
+    status,
+    message,
+    meta,
+  };
 }
