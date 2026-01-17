@@ -3,6 +3,7 @@ import { StartupData } from '@common/schemas/startup';
 import { OjWithContests } from '@common/schemas/oj';
 import { getTodayDate } from '@interapp/utils/dateUtils';
 import { defineStore } from 'pinia';
+import { InvokeChannels } from '@preload/channels/invoke';
 
 export const useGraphStore = defineStore('graph', {
   state: () => ({
@@ -36,7 +37,7 @@ export const useGraphStore = defineStore('graph', {
         this.graphData.push(record);
       }
       record[source] += value;
-      //TODO: SEND TO BACKEND
+      window.api.invoke(InvokeChannels.updateGraph, source, date, value);
     },
   },
 });
