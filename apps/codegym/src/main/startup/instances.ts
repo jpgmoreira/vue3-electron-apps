@@ -7,6 +7,7 @@ import { OjContextManager } from '@main/managers/ojContextManager';
 import { CacheManager } from '@main/managers/cache/cacheManager';
 import { OjPoolManager } from '@main/managers/ojPoolManager';
 import { HistoryManager } from '@main/managers/history/historyManager';
+import { GraphManager } from '@main/managers/graph/graphManager';
 
 const emitter = new EventEmitter();
 export const windowManager = new WindowManager();
@@ -16,6 +17,7 @@ export const profileManager = new ProfileManager(emitter);
 export const uiManager = new UIManager(emitter);
 export const ojContexManager = new OjContextManager(emitter);
 export const historyManager = new HistoryManager(emitter);
+export const graphManager = new GraphManager(emitter);
 export const ojPoolManager = new OjPoolManager(
   emitter,
   cacheManager,

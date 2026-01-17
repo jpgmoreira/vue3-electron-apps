@@ -6,9 +6,11 @@ import {
   ojContexManager,
   cacheManager,
   historyManager,
+  graphManager,
 } from './instances';
 import { UISettings } from '@common/schemas/ui';
 import { OjContext } from '@common/schemas/ojContext';
+import { GraphRecord } from '@common/schemas/graph';
 
 export async function loadStartupData(): Promise<StartupData> {
   await cacheManager.loadCache();
@@ -17,12 +19,15 @@ export async function loadStartupData(): Promise<StartupData> {
   const profileRegistry = profileManager.getProfileRegistry();
   let ui: UISettings | null = null;
   let ojContext: OjContext | null = null;
+  let graphData: GraphRecord[] = [];
   if (currProfile) {
     uiManager.loadProfile(currProfile.id);
     ojContexManager.loadProfile(currProfile.id);
     await historyManager.loadHistory(currProfile.id);
+    await graphManager.loadGraph(currProfile.id);
     ui = uiManager.getUISettings();
     ojContext = ojContexManager.getContext();
+    graphData = await graphManager.getGraphData();
   }
   return {
     currProfile,
@@ -30,5 +35,6 @@ export async function loadStartupData(): Promise<StartupData> {
     ojMeta,
     ojContext,
     ui,
+    graphData,
   };
 }

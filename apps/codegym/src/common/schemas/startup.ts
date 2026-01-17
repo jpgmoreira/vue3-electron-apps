@@ -1,3 +1,4 @@
+import { GraphRecord } from './graph';
 import { OjContext } from './ojContext';
 import { OjMeta } from './ojMeta';
 import { Profile, ProfileRegistry } from './profile';
@@ -9,4 +10,5 @@ export type StartupData = {
   ojMeta: OjMeta;
   ojContext: OjContext | null;
   ui: UISettings | null;
+  graphData: GraphRecord[];
 };
