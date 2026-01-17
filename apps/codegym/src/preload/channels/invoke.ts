@@ -8,4 +8,5 @@ export enum InvokeChannels {
   updateOjContext = 'update-oj-context',
   updateOjCache = 'update-oj-cache',
   getOjProblem = 'get-oj-problem',
+  fetchHistoryPage = 'fetch-history-page',
 }
