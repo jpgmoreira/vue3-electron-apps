@@ -1,0 +1,100 @@
+.theme-dark .multiselect {
+  background-color: #3e444b;
+  border: 1px solid #30343a;
+}
+
+.theme-dark .multiselect .context-menu {
+  background-color: #3f444b;
+  z-index: 2;
+}
+.theme-dark .multiselect .context-menu .highlight {
+  background-color: #525a63;
+}
+.theme-dark .multiselect .context-menu .option .option-index {
+  margin-right: 10px;
+  font-weight: 500;
+  opacity: 0.5;
+}
+.theme-dark .multiselect .context-menu .option .text-part.match {
+  background-color: #fff3b0;
+  color: #2d2d2d;
+  border-radius: 4px;
+  padding: 0 2px;
+  box-shadow: 0 0 0 1px #f4c542 inset;
+  font-weight: 500;
+  transition:
+    background-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+.theme-dark .multiselect .badge {
+  background-color: #0072c7;
+}
+.theme-dark .multiselect .badge.audio {
+  background-color: #eac63a;
+  border: 1px solid #c6a62f;
+}
+.theme-dark .multiselect .badge.audio.non-closeable .close-button {
+  display: none;
+}
+.theme-dark .multiselect .badge.audio * {
+  color: #1f1f1f;
+}
+.theme-dark .multiselect .badge-index {
+  margin-right: 2px;
+  font-size: 0.85rem;
+  opacity: 0.75;
+  font-weight: 400;
+}
+.theme-dark .multiselect .badge:focus {
+  outline: 2px solid #fa9907a8;
+}
+.theme-dark .multiselect .badge .close-button {
+  border-color: #025391;
+}
+
+.theme-dark .multiselect {
+  border-radius: 5px;
+}
+.theme-dark .multiselect .context-menu {
+  border-radius: 10px;
+}
+.theme-dark .multiselect .context-menu .option {
+  padding: 5px 10px;
+}
+.theme-dark .multiselect .badge {
+  font-size: 0.92rem;
+  line-height: 1.2rem;
+  border-radius: 5px;
+  padding: 2px 4px;
+}
+.theme-dark .multiselect .badge .close-button {
+  padding-left: 3px;
+  padding-right: 1px;
+  margin-left: 4px;
+  border-left-width: 1px;
+  border-radius: 0px;
+}
+.theme-dark .multiselect .badges-container {
+  padding: 8px;
+  padding-bottom: 4px;
+  gap: 4px;
+}
+.theme-dark .multiselect .badges-container:empty {
+  padding: 0;
+}
+.theme-dark .multiselect .editor {
+  border: none;
+}
+.theme-dark .multiselect .mode-select {
+  font-size: 0.9rem;
+}
+.theme-dark .multiselect .input-parent {
+  display: flex;
+}
+.theme-dark .multiselect .input-parent select {
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
