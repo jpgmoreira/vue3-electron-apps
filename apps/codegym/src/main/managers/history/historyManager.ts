@@ -45,10 +45,10 @@ export class HistoryManager {
   public async insertIntoHistory(problem: OjProblem[Oj]) {
     if (!this.db) throw new Error('History DB not initialized!');
     await this.db.run('BEGIN TRANSACTION');
-    const columns = Object.keys(problem);
-    const placeholders = columns.map(() => '?').join(', ');
-    const values = columns.map((c) => problem[c]);
     try {
+      const columns = Object.keys(problem);
+      const placeholders = columns.map(() => '?').join(', ');
+      const values = columns.map((c) => problem[c]);
       await this.db.run(
         `INSERT INTO ${problem.oj} (${columns.join(', ')}) VALUES (${placeholders})`,
         values
@@ -81,7 +81,21 @@ export class HistoryManager {
 
   public async replaceHistorySnapshot(snapshot: OjProblem[Oj]) {
     if (!this.db) throw new Error('History DB not initialized!');
-    await replaceHistorySnapshot(this.db, snapshot);
+    await this.db.run('BEGIN TRANSACTION');
+    try {
+      const columns = Object.keys(snapshot);
+      const placeholders = columns.map(() => '?').join(', ');
+      const values = columns.map((c) => (snapshot as any)[c]);
+      await this.db.run(`DELETE FROM ${snapshot.oj} WHERE id = ?`, snapshot.id);
+      await this.db.run(
+        `INSERT INTO ${snapshot.oj} (${columns.join(', ')}) VALUES (${placeholders})`,
+        values
+      );
+      await this.db.run('COMMIT');
+    } catch (err) {
+      await this.db.run('ROLLBACK');
+      throw err;
+    }
   }
 
   public async clear() {
