@@ -16,4 +16,9 @@ export const profileManager = new ProfileManager(emitter);
 export const uiManager = new UIManager(emitter);
 export const ojContexManager = new OjContextManager(emitter);
 export const historyManager = new HistoryManager(emitter);
-export const ojPoolManager = new OjPoolManager(emitter, cacheManager, ojContexManager);
+export const ojPoolManager = new OjPoolManager(
+  emitter,
+  cacheManager,
+  ojContexManager,
+  historyManager
+);

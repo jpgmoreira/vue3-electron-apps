@@ -6,6 +6,7 @@ import { EventEmitter } from '@interapp/events/eventEmitter';
 import { CommonEvents } from '@interapp/events/commonEvents';
 import { CacheManager } from './cache/cacheManager';
 import { OjContextManager } from './ojContextManager';
+import { HistoryManager } from './history/historyManager';
 
 type OjPoolType = {
   [K in Oj]: {
@@ -22,15 +23,18 @@ export class OjPoolManager {
   private pool!: OjPoolType;
   private cacheManager: CacheManager;
   private ojContextManager: OjContextManager;
+  private historyManager: HistoryManager;
 
   constructor(
     emitter: EventEmitter,
     cacheManager: CacheManager,
-    ojContextManager: OjContextManager
+    ojContextManager: OjContextManager,
+    historyManager: HistoryManager
   ) {
     emitter.on(CommonEvents.clearProfileData, () => this.clear());
     this.cacheManager = cacheManager;
     this.ojContextManager = ojContextManager;
+    this.historyManager = historyManager;
     this.clear();
   }
 
@@ -66,8 +70,7 @@ export class OjPoolManager {
       snapshot.id = `snap-${oj}-${snapshot.path}-${toBase62(BigInt(now))}`;
       snapshot.timestamp = now;
       snapshot.solvedDate = null;
-      // TODO:
-      // HistoryManager.instance.insertIntoHistory(snapshot);
+      this.historyManager.insertIntoHistory(snapshot);
     }
     context.snapshot = snapshot;
     context.hasEverFiltered = true;

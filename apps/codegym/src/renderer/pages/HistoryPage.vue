@@ -128,3 +128,29 @@
     </div>
   </div>
 </template>
+
+<style scoped>
+  tr {
+    white-space: nowrap;
+    height: 40px;
+  }
+  .ghost {
+    z-index: 1;
+  }
+  .header-table {
+    height: 40px;
+    z-index: 3;
+  }
+  .problems-table {
+    z-index: 2;
+    top: 40px;
+    will-change: transform;
+  }
+  .first-col {
+    width: 90px;
+    padding-left: 35px;
+  }
+  .last-col {
+    width: 220px;
+  }
+</style>
