@@ -1,0 +1,12 @@
+.theme-dark .custom-resizer {
+  height: 100%;
+  padding: 2px;
+  background: rgb(66, 66, 66);
+  cursor: col-resize;
+  z-index: 10;
+}
+
+.theme-dark .custom-resizer:active,
+.theme-dark .custom-resizer:hover {
+  background: #0087e7;
+}
