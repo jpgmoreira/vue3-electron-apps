@@ -21,7 +21,7 @@
     allXValues: number[];
     allXLabels: string[];
     // Draw horizontal lines for all Y values or only those that appear in the data.
-    hLinesMode: 'all' | 'data-only';
+    yLinesMode: 'all' | 'data-only';
     data: {
       // Series come here.
       id: string;
@@ -50,7 +50,7 @@
     y: number;
   };
   const props = withDefaults(defineProps<LineChartProps>(), {
-    hLinesMode: 'all',
+    yLinesMode: 'all',
   });
 
   // --- Canvas: ---
@@ -299,7 +299,7 @@
     // Horizontal lines:
     const x0 = _toCanvasCoordX(0, scaleX, offsetX);
     let lastY = 0;
-    if (props.hLinesMode === 'all') {
+    if (props.yLinesMode === 'all') {
       for (let yVal = 1; yVal <= maxYvalue; yVal++) {
         const y = toCanvasCoordY(yVal, scaleY, offsetY);
         if (y < 0) break;

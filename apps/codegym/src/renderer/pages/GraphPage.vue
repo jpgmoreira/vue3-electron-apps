@@ -10,7 +10,7 @@
     allXValues: [],
     allXLabels: [],
     data: [],
-    hLinesMode: 'all',
+    yLinesMode: 'all',
   };
   const store = useGraphStore();
   const hasContent = ref(false);
