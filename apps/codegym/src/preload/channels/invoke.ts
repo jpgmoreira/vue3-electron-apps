@@ -7,4 +7,5 @@ export enum InvokeChannels {
   updateUISettings = 'update-ui-settings',
   updateOjContext = 'update-oj-context',
   updateOjCache = 'update-oj-cache',
+  getOjProblem = 'get-oj-problem',
 }

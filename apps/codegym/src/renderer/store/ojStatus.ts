@@ -2,12 +2,8 @@ import { InvokeChannels } from '@preload/channels/invoke';
 import { defineStore } from 'pinia';
 import { useToastStore } from '@interapp/store/toast';
 import { useOjMetaStore } from './ojMeta';
-import { useProfileStore } from './profile';
 import { Oj, OjList } from '@common/schemas/oj';
-import { OjMeta } from '@common/schemas/ojMeta';
 import { UpdateCacheResponseDTO } from '@common/dto/updateCacheResponseDTO';
-// TODO:
-// import { GetOjProblemResponseDTO } from '@common/dto/getOjProblemResponseDTO';
 
 export type OjStatusStoreState = {
   [k in Oj]: {
@@ -43,25 +39,6 @@ export const useOjStatusStore = defineStore('ojStatus', {
       } finally {
         this[oj].isUpdatingCache = false;
       }
-    },
-    async requestNewProblem(oj: Oj) {
-      // TODO:
-      // this[oj].isRequestingProblem = true;
-      // try {
-      //   const result = await window.api.invoke<GetOjProblemResponseDTO<typeof oj>>(
-      //     InvokeChannels.getOjProblem,
-      //     oj
-      //   );
-      //   const profileStore = useProfileStore();
-      //   profileStore.currProfile!.ojContext[oj].hasEverFiltered = true;
-      //   return result;
-      // } catch (e) {
-      //   const toastStore = useToastStore();
-      //   toastStore.showToast('Error while requesting a new problem.', 'error');
-      //   throw e;
-      // } finally {
-      //   this[oj].isRequestingProblem = false;
-      // }
     },
   },
 });

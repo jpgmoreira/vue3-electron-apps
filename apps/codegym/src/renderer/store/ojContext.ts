@@ -7,6 +7,7 @@ import { Oj } from '@common/schemas/oj';
 import { useOjStatusStore } from './ojStatus';
 import { useOjMetaStore } from './ojMeta';
 import { GetOjProblemResponseDTO } from '@common/dto/getOjProblemResponseDTO';
+import { useToastStore } from '@interapp/store/toast';
 
 export const useOjContextStore = defineStore('ojContext', {
   state: () => ({
@@ -26,6 +27,7 @@ export const useOjContextStore = defineStore('ojContext', {
     async requestNewProblem(oj: Oj) {
       const ojStatusStore = useOjStatusStore();
       const ojMetaStore = useOjMetaStore();
+      const toastStore = useToastStore();
       let result: GetOjProblemResponseDTO<typeof oj>;
       if (!ojMetaStore.ojMeta[oj].lastCacheUpdate) {
         try {
@@ -34,6 +36,22 @@ export const useOjContextStore = defineStore('ojContext', {
           return;
         }
       }
+      ojStatusStore[oj].isRequestingProblem = true;
+      try {
+        result = await window.api.invoke<GetOjProblemResponseDTO<typeof oj>>(
+          InvokeChannels.getOjProblem,
+          oj
+        );
+        this.context[oj].hasEverFiltered = true;
+      } catch {
+        toastStore.showToast('Error while requesting a new problem.', 'error');
+        return;
+      } finally {
+        ojStatusStore[oj].isRequestingProblem = false;
+      }
+      const { snapshot, matched } = result;
+      this.context[oj].matched = matched;
+      this.context[oj].snapshot = snapshot;
     },
     clear() {
       this.context = getEmptyOjContext();
