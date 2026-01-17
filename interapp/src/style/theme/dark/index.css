@@ -13,6 +13,7 @@
 @import './components/toast.css';
 @import './components/header.css';
 @import './components/multiselect.css';
+@import './components/linechart.css';
 
 @import './pages/login.css';
 @import './pages/settings.css';

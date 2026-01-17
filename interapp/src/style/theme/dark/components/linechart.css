@@ -1,0 +1,41 @@
+.theme-dark .line-chart .legend-container {
+  border: 1px solid #aaa;
+  background-color: rgba(239, 239, 239, 0.95);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.theme-dark .line-chart .legend-item:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.theme-dark .line-chart .legend-square {
+  border: 1px solid #222;
+}
+
+.theme-dark .line-chart .legend-item-content {
+  color: #222;
+}
+
+.theme-dark .line-chart .legend-item.disabled::after {
+  background-color: #000;
+}
+
+.theme-dark .line-chart .context-menu {
+  background-color: rgba(239, 239, 239, 0.95);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  color: #222;
+}
+
+.theme-dark .line-chart .context-menu-header {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+  color: #111;
+}
+
+.theme-dark .line-chart .context-menu-item.active {
+  background-color: rgba(0, 0, 0, 0.12);
+  outline: 1px solid rgba(0, 0, 0, 0.15);
+}
+
+.theme-dark .line-chart {
+  background-color: #efefef;
+}

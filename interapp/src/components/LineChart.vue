@@ -547,7 +547,7 @@
 </script>
 
 <template>
-  <div class="canvas-container">
+  <div class="line-chart canvas-container">
     <div class="legend-container">
       <div
         v-for="series of data"
@@ -589,18 +589,13 @@
   </div>
 </template>
 
-<!-- TODO: Remove colors from here and put in the theme styles. -->
-
 <style scoped>
   .legend-container {
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
     padding: 6px 8px;
-    border: 1px solid #aaa;
     border-radius: 10px;
-    background-color: rgba(239, 239, 239, 0.95);
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
     font-size: 0.9rem;
     position: absolute;
     top: 5px;
@@ -622,14 +617,9 @@
     border-radius: 5px;
   }
 
-  .legend-item:hover {
-    background-color: rgba(0, 0, 0, 0.05);
-  }
-
   .legend-square {
     width: 17px;
     height: 17px;
-    border: 1px solid #222;
     flex-shrink: 0;
     margin-right: 2px;
   }
@@ -638,7 +628,6 @@
     display: flex;
     align-items: center;
     line-height: 1;
-    color: #222;
   }
 
   .legend-item.disabled .legend-item-content {
@@ -652,7 +641,6 @@
     left: -3px;
     right: -3px;
     height: 2px;
-    background-color: #000;
     transform: translateY(-50%);
   }
 
@@ -661,11 +649,8 @@
     min-width: 180px;
     max-width: 250px;
     border-radius: 10px;
-    background-color: rgba(239, 239, 239, 0.95);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
     font-size: 0.9rem;
     font-weight: 500;
-    color: #222;
     line-height: 1.3rem;
     padding: 8px 10px;
     transition:
@@ -679,8 +664,6 @@
     font-weight: 700;
     padding-bottom: 4px;
     margin-bottom: 6px;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.15);
-    color: #111;
   }
 
   .context-menu-body {
@@ -698,16 +681,10 @@
     align-items: center;
   }
 
-  .context-menu-item.active {
-    background-color: rgba(0, 0, 0, 0.12);
-    outline: 1px solid rgba(0, 0, 0, 0.15);
-  }
-
   .canvas-container {
     position: relative;
     overflow: hidden;
     height: 100%;
-    background-color: #efefef;
   }
 
   canvas {
