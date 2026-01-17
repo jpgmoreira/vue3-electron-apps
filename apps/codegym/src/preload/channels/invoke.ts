@@ -6,4 +6,5 @@ export enum InvokeChannels {
   logout = 'logout',
   updateUISettings = 'update-ui-settings',
   updateOjContext = 'update-oj-context',
+  updateOjCache = 'update-oj-cache',
 }

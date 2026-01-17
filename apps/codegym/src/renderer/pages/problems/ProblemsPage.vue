@@ -15,7 +15,9 @@
   const isRequestingProblem = computed(() => ojStatusStore[currOj.value].isRequestingProblem);
   const isUpdatingCache = computed(() => ojStatusStore[currOj.value].isUpdatingCache);
   const isBusy = computed(() => isRequestingProblem.value || isUpdatingCache.value);
-  function newProblem() {}
+  function newProblem() {
+    ojContextStore.requestNewProblem(currOj.value);
+  }
 </script>
 
 <template>

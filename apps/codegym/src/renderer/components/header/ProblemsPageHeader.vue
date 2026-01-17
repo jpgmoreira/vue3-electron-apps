@@ -27,6 +27,6 @@
 
 <style scoped>
   select {
-    border-radius: 0;
+    border-radius: 0 !important;
   }
 </style>

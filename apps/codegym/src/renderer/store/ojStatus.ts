@@ -5,6 +5,7 @@ import { useOjMetaStore } from './ojMeta';
 import { useProfileStore } from './profile';
 import { Oj, OjList } from '@common/schemas/oj';
 import { OjMeta } from '@common/schemas/ojMeta';
+import { UpdateCacheResponseDTO } from '@common/dto/updateCacheResponseDTO';
 // TODO:
 // import { GetOjProblemResponseDTO } from '@common/dto/getOjProblemResponseDTO';
 
@@ -25,18 +26,23 @@ export const useOjStatusStore = defineStore('ojStatus', {
   },
   actions: {
     async updateOjCache(oj: Oj) {
-      // TODO:
-      // this[oj].isUpdatingCache = true;
-      // try {
-      //   const meta: OjMeta[typeof oj] = await window.api.invoke(InvokeChannels.updateOjCache, oj);
-      //   useOjMetaStore().updateOjMeta(oj, meta);
-      // } catch (e) {
-      //   const toastStore = useToastStore();
-      //   toastStore.showToast('Error while updating the cache.', 'error');
-      //   throw e;
-      // } finally {
-      //   this[oj].isUpdatingCache = false;
-      // }
+      this[oj].isUpdatingCache = true;
+      const toastStore = useToastStore();
+      try {
+        const result = await window.api.invoke<UpdateCacheResponseDTO<typeof oj>>(
+          InvokeChannels.updateOjCache,
+          oj
+        );
+        if (result.message) {
+          toastStore.showToast(result.message, result.status);
+        }
+        useOjMetaStore().updateOjMeta(oj, result.meta);
+      } catch (e: unknown) {
+        toastStore.showToast('Unknown error happened while updating the cache.', 'error');
+        throw e;
+      } finally {
+        this[oj].isUpdatingCache = false;
+      }
     },
     async requestNewProblem(oj: Oj) {
       // TODO:
