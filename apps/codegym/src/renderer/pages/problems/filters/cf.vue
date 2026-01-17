@@ -2,6 +2,7 @@
   import { computed } from 'vue';
   import { useOjMetaStore } from '@renderer/store/ojMeta';
   import { useOjContextStore } from '@renderer/store/ojContext';
+  import { POPULARITY_GROUP_SIZE } from '@common/constants';
   import Multiselect, { MultiselectOption } from '@interapp/components/Multiselect.vue';
   const ojMetaStore = useOjMetaStore();
   const ojContextStore = useOjContextStore();
@@ -46,7 +47,7 @@
         <span
           class="popularity-info-icon mx-0.5 cursor-help"
           v-tooltip="
-            'All problems sorted from most solved to least solved, divided in groups of 20.'
+            `All problems sorted from most solved to least solved, divided in groups of ${POPULARITY_GROUP_SIZE}.`
           "
         >
           &#9432;

@@ -1,6 +1,7 @@
 <script lang="ts" setup>
   import { computed } from 'vue';
   import { useOjContextStore } from '@renderer/store/ojContext';
+  import { POPULARITY_GROUP_SIZE } from '@common/constants';
   const store = useOjContextStore();
   function onChange() {
     store.flushOjContext('uva');
@@ -16,7 +17,7 @@
         <span
           class="popularity-info-icon mx-0.5 cursor-help"
           v-tooltip="
-            'All problems sorted from most solved to least solved, divided in groups of 20.'
+            `All problems sorted from most solved to least solved, divided in groups of ${POPULARITY_GROUP_SIZE}.`
           "
         >
           &#9432;
