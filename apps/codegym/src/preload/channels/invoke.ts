@@ -13,4 +13,5 @@ export enum InvokeChannels {
   updateGraph = 'update-graph',
   createFolder = 'create-folder',
   createContest = 'create-contest',
+  getContest = 'get-contest',
 }

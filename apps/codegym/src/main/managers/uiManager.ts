@@ -31,7 +31,7 @@ export class UIManager {
     return cloneDeep(this.target);
   }
 
-  public setUISettings(settings: UISettings) {
+  public setUISettings(settings: Partial<UISettings>) {
     if (!this.proxy) throw new Error('UI settings not initialized!');
     Object.assign(this.proxy, settings);
   }

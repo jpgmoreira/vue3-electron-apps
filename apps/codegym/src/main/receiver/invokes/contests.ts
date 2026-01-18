@@ -12,3 +12,7 @@ ipcMain.handle(InvokeChannels.createFolder, (_: IpcMainInvokeEvent): number => {
 ipcMain.handle(InvokeChannels.createContest, (_: IpcMainInvokeEvent): Contest => {
   return contestsManager.createContest();
 });
+
+ipcMain.handle(InvokeChannels.getContest, (_: IpcMainInvokeEvent, contestId: string): Contest => {
+  return contestsManager.getContest(contestId);
+});

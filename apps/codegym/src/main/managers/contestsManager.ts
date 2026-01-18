@@ -7,6 +7,7 @@ import { buildId } from '@interapp/utils/utils';
 import { Contest, getEmptyContest } from '@common/schemas/contests';
 import { FileProxy } from '@interapp/utils/fileProxy';
 import { NodeCounterManager } from './nodeCounterManager';
+import fs from 'fs';
 
 export class ContestsManager {
   private profileId: string | null = null;
@@ -39,6 +40,18 @@ export class ContestsManager {
     );
     // We do not set a contest as active upon creation.
     new FileProxy(contestPath, contest);
+    return contest;
+  }
+
+  public getContest(contestId: string): Contest {
+    const contestPath = path.join(
+      DATA_DIR,
+      'profileData',
+      this.profileId!,
+      'contests',
+      `${contestId}.json`
+    );
+    const contest = JSON.parse(fs.readFileSync(contestPath, 'utf-8')) as Contest;
     return contest;
   }
 

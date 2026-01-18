@@ -9,6 +9,9 @@
   import { randomId } from '@interapp/utils/utils';
   import { Contest } from '@common/schemas/contests';
   import { ModifierKeys } from '@interapp/types/modifierKeys';
+  import { useUIStore } from '@renderer/store/ui';
+  const uiStore = useUIStore();
+  const currContest = ref<Contest | null>(null);
   const resizing = ref(false);
   const explorerWidth = ref(200);
   const mainWidth = computed(() => window.innerWidth - explorerWidth.value);
@@ -23,10 +26,15 @@
       callback(contest.id, contest.name);
     }
   }
-  function nodeClick(node: Node, keys: ModifierKeys) {
-    if (node.type === 'dir' || keys.ctrl) return;
+  async function getContest(contestId: string) {
+    const contest = await window.api.invoke<Contest>(InvokeChannels.getContest, contestId);
+    currContest.value = contest;
   }
-
+  async function nodeClick(node: Node, keys: ModifierKeys) {
+    if (node.type === 'dir' || keys.ctrl) return;
+    await getContest(node.id);
+    uiStore.updateSettings({ currContestId: node.id });
+  }
   function windowMouseMove(e: MouseEvent) {
     if (!resizing.value) return;
     const { clientX } = e;
@@ -38,9 +46,11 @@
   function windowMouseUp() {
     resizing.value = false;
   }
-  onMounted(() => {
+  onMounted(async () => {
     window.addEventListener('mouseup', windowMouseUp);
     window.addEventListener('mousemove', windowMouseMove);
+    const currContestId = uiStore.settings.currContestId;
+    if (currContestId) getContest(currContestId);
   });
   onBeforeUnmount(() => {
     window.removeEventListener('mouseup', windowMouseUp);
@@ -52,11 +62,14 @@
   <div class="contests-page flex flex-col h-screen overflow-hidden" :class="{ resizing }">
     <SettingsPageHeader />
     <div class="flex grow">
-      <div style="border: 1px solid red" :style="{ width: `${explorerWidth}px` }">
+      <div :style="{ width: `${explorerWidth}px` }">
         <Explorer file-icon @before-create-node="beforeCreateNode" @node-click="nodeClick" />
       </div>
       <div class="custom-resizer" @mousedown="resizing = true"></div>
-      <div :style="{ width: `${mainWidth}px` }"></div>
+      <div :style="{ width: `${mainWidth}px` }">
+        <div v-if="currContest">{{ currContest.name }}</div>
+        <div v-else>No contest</div>
+      </div>
     </div>
   </div>
 </template>
