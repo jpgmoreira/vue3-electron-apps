@@ -36,7 +36,10 @@
   function updateContestProblem(problem: ContestProblem) {
     window.api.invoke(InvokeChannels.updateContestProblem, contest.value.id, toRawDeep(problem));
   }
-  function toggleProblemFlag(problem: ContestProblem, flag: ContestProblemFlag) {}
+  function toggleProblemFlag(problem: ContestProblem, flag: ContestProblemFlag) {
+    problem[flag] = !problem[flag];
+    updateContestProblem(problem);
+  }
   function deleteProblem(problem: ContestProblem) {}
   function acceptedInputKeydown(e: KeyboardEvent) {
     const allowedKeys = [
@@ -97,7 +100,11 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="problem in problemsSorted" :key="problem.id">
+        <tr
+          v-for="problem in problemsSorted"
+          :key="problem.id"
+          :class="{ todo: problem.todo, solved: problem.solved }"
+        >
           <td>
             <input
               v-model="problem.title"
@@ -113,16 +120,19 @@
               <div class="flex gap-1">
                 <img
                   class="flag flag-todo"
+                  :class="{ active: problem.todo }"
                   :src="todo"
                   @click="toggleProblemFlag(problem, 'todo')"
                 />
                 <img
                   class="flag flag-star"
+                  :class="{ active: problem.favorite }"
                   :src="star"
                   @click="toggleProblemFlag(problem, 'favorite')"
                 />
                 <img
                   class="flag flag-solved"
+                  :class="{ active: problem.solved }"
                   :src="solved"
                   @click="toggleProblemFlag(problem, 'solved')"
                 />
@@ -179,17 +189,42 @@
   }
   .flag {
     cursor: pointer;
-    width: 20px;
-    height: 20px;
+    width: 19px;
+    height: 19px;
     transform: translateY(-100%);
+    opacity: 0;
+    transition: opacity 0.15s ease;
   }
   .flags-container {
     padding: 0 3px;
     bottom: 1px;
     height: 0px;
   }
+  tr:hover .flag:not(.active) {
+    opacity: 0.5;
+  }
+  .flag.active {
+    opacity: 1;
+  }
 
   /*  */
+
+  tr.todo input,
+  tr.todo textarea {
+    background-color: rgba(255, 200, 0, 0.2);
+  }
+
+  tr.solved input,
+  tr.solved textarea {
+    background-color: rgba(0, 200, 120, 0.16);
+  }
+
+  tr.todo td:first-child {
+    box-shadow: inset 4px 0 0 rgba(255, 200, 0, 0.4);
+  }
+  tr.solved td:first-child {
+    box-shadow: inset 4px 0 0 rgba(0, 200, 120, 0.5);
+  }
 
   .contest-header {
     background-color: #282b30;
@@ -202,7 +237,7 @@
   table input {
     border: none;
     border-radius: 0 !important;
-    background-color: #26292b;
+    background-color: rgba(38, 41, 43, 0.16);
   }
   table td:focus-within::after {
     content: '';
