@@ -105,7 +105,7 @@ export async function filterCfProblems(db: Database): Promise<CfProblem[]> {
     for (let i = 0; i < tags.length; i++) {
       const tag = tags[i].toLowerCase();
       sql += ' AND tags LIKE ?';
-      params.push(`%\"${tag}\"%`);
+      params.push(`%\"${tag}\\\"%`);
     }
   }
   const rows = await db.all<CfProblem[]>(sql, params);
