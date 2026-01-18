@@ -34,7 +34,7 @@ export const useOjStatusStore = defineStore('ojStatus', {
         }
         useOjMetaStore().updateOjMeta(oj, result.meta);
       } catch (e: unknown) {
-        toastStore.showToast('Unknown error happened while updating the cache.', 'error');
+        toastStore.showToast(`Unknown error happened while updating ${oj} cache.`, 'error');
         throw e;
       } finally {
         this[oj].isUpdatingCache = false;

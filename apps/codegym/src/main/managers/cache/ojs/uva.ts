@@ -23,7 +23,7 @@ async function downloadUvaProblems() {
       starredProblems.add(parseInt($(e).children('td').first().text().trim()));
     });
   } catch (e) {
-    status = 'info';
+    status = 'warning';
     message = 'Could not get starred problems from cpbook.net';
   }
   // 2. Download all UVA problems from the uHunt API:

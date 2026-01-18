@@ -33,7 +33,7 @@ async function downloadKattisProblems() {
       starredProblems.add($(e).children('td').first().text().trim());
     });
   } catch (e) {
-    status = 'info';
+    status = 'warning';
     message = 'Could not get starred problems from cpbook.net';
   }
   // 2. Download Kattis problemset:
