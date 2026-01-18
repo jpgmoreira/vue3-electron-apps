@@ -93,7 +93,7 @@
 </script>
 
 <template>
-  <div class="contest-container flex flex-col grow" style="border: 1px solid cyan">
+  <div class="contest-container flex flex-col grow">
     <header class="contest-header whitespace-nowrap select-none p-1">
       <div>
         Contest:
@@ -116,7 +116,7 @@
     ></textarea>
     <div class="grow relative">
       <div v-if="!contest.problems.length" class="message absolute-center">Add a new problem</div>
-      <table v-else>
+      <table v-else class="mb-24">
         <thead>
           <tr>
             <th class="col-problem">Problem</th>
