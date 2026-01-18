@@ -3,8 +3,8 @@ import { EventEmitter } from '@interapp/events/eventEmitter';
 import { CommonEvents } from '@interapp/events/commonEvents';
 import path from 'path';
 import { ensureDirExists } from '@interapp/utils/fileUtils';
-import { buildId } from '@interapp/utils/utils';
-import { Contest, getEmptyContest } from '@common/schemas/contests';
+import { buildId, randomId } from '@interapp/utils/utils';
+import { Contest, getEmptyContest, getEmptyContestProblem } from '@common/schemas/contests';
 import { FileProxy } from '@interapp/utils/fileProxy';
 import { NodeCounterManager } from './nodeCounterManager';
 import fs from 'fs';
@@ -50,7 +50,7 @@ export class ContestsManager {
   public renameContest(contestId: string, newName: string) {
     newName = newName.trim();
     const contestPath = this.buildContestPath(contestId);
-    const fp = new FileProxy(contestPath, getEmptyContest(contestId, newName, 0));
+    const fp = new FileProxy(contestPath, getEmptyContest('', '', 0));
     fp.proxy.name = newName;
   }
 
@@ -62,6 +62,15 @@ export class ContestsManager {
   public contestExists(contestId: string): boolean {
     const contestPath = this.buildContestPath(contestId);
     return fs.existsSync(contestPath);
+  }
+
+  public addContestProblem(contestId: string) {
+    const id = randomId();
+    const problem = getEmptyContestProblem(id);
+    const contestPath = this.buildContestPath(contestId);
+    const contest = new FileProxy(contestPath, getEmptyContest('', '', 0));
+    contest.proxy.problems.push(problem);
+    return problem;
   }
 
   public clear() {

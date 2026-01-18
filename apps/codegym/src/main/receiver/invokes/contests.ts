@@ -1,7 +1,7 @@
 import { ipcMain, IpcMainInvokeEvent } from 'electron';
 import { InvokeChannels } from '@preload/channels/invoke';
 import { contestsManager, nodeCounterManager } from '@main/startup/instances';
-import { Contest } from '@common/schemas/contests';
+import { Contest, ContestProblem } from '@common/schemas/contests';
 
 ipcMain.handle(InvokeChannels.createFolder, (_: IpcMainInvokeEvent): number => {
   const number = nodeCounterManager.getCounter().nextDir;
@@ -27,3 +27,10 @@ ipcMain.handle(
 ipcMain.handle(InvokeChannels.contestExists, (_: IpcMainInvokeEvent, contestId: string) => {
   return contestsManager.contestExists(contestId);
 });
+
+ipcMain.handle(
+  InvokeChannels.addContestProblem,
+  (_: IpcMainInvokeEvent, contestId: string): ContestProblem => {
+    return contestsManager.addContestProblem(contestId);
+  }
+);
