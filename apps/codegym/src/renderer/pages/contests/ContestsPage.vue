@@ -102,7 +102,7 @@
         />
       </div>
       <div class="custom-resizer" @mousedown="resizing = true"></div>
-      <div class="relative" :style="{ width: `${mainWidth}px` }">
+      <div class="relative" :style="{ width: `${mainWidth}px` }" style="border: 1px solid orange">
         <div v-if="currContest">
           <ContestComponent :contest="currContest" />
         </div>
