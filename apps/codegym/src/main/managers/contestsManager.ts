@@ -24,6 +24,10 @@ export class ContestsManager {
     ensureDirExists(contestsDir);
   }
 
+  private buildContestPath(contestId: string) {
+    return path.join(DATA_DIR, 'profileData', this.profileId!, 'contests', `${contestId}.json`);
+  }
+
   public createContest(): Contest {
     const now = Date.now();
     const number = this.counter.getCounter().nextFile;
@@ -31,41 +35,33 @@ export class ContestsManager {
     const name = `Contest ${number}`;
     const id = buildId(name, now);
     const contest = getEmptyContest(id, name, now);
-    const contestPath = path.join(
-      DATA_DIR,
-      'profileData',
-      this.profileId!,
-      'contests',
-      `${id}.json`
-    );
+    const contestPath = this.buildContestPath(id);
     // We do not set a contest as active upon creation.
     new FileProxy(contestPath, contest);
     return contest;
   }
 
   public getContest(contestId: string): Contest {
-    const contestPath = path.join(
-      DATA_DIR,
-      'profileData',
-      this.profileId!,
-      'contests',
-      `${contestId}.json`
-    );
+    const contestPath = this.buildContestPath(contestId);
     const contest = JSON.parse(fs.readFileSync(contestPath, 'utf-8')) as Contest;
     return contest;
   }
 
   public renameContest(contestId: string, newName: string) {
     newName = newName.trim();
-    const contestPath = path.join(
-      DATA_DIR,
-      'profileData',
-      this.profileId!,
-      'contests',
-      `${contestId}.json`
-    );
+    const contestPath = this.buildContestPath(contestId);
     const fp = new FileProxy(contestPath, getEmptyContest(contestId, newName, 0));
     fp.proxy.name = newName;
+  }
+
+  public deleteContest(contestId: string) {
+    const contestPath = this.buildContestPath(contestId);
+    fs.unlinkSync(contestPath);
+  }
+
+  public contestExists(contestId: string): boolean {
+    const contestPath = this.buildContestPath(contestId);
+    return fs.existsSync(contestPath);
   }
 
   public clear() {

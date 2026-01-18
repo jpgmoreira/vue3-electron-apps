@@ -1,8 +1,9 @@
 <script lang="ts" setup>
-  import { ref, computed, onMounted, onBeforeUnmount } from 'vue';
+  import { ref, computed, useTemplateRef, onMounted, onBeforeUnmount } from 'vue';
   import SettingsPageHeader from '@renderer/components/header/SettingsPageHeader.vue';
   import Explorer, {
     CreateNodeCallback,
+    DeleteNodeCallback,
   } from '@interapp/components/Explorer/renderer/Explorer.vue';
   import { Node, NodeType } from '@interapp/components/Explorer/common/tree';
   import { InvokeChannels } from '@preload/channels/invoke';
@@ -10,7 +11,9 @@
   import { Contest } from '@common/schemas/contests';
   import { ModifierKeys } from '@interapp/types/modifierKeys';
   import { useUIStore } from '@renderer/store/ui';
+  import DeleteModals from './DeleteModals.vue';
   const uiStore = useUIStore();
+  const modals = useTemplateRef('modals');
   const currContest = ref<Contest | null>(null);
   const resizing = ref(false);
   const explorerWidth = ref(200);
@@ -24,6 +27,23 @@
     } else {
       const contest = await window.api.invoke<Contest>(InvokeChannels.createContest);
       callback(contest.id, contest.name);
+    }
+  }
+  function beforeDeleteNode(node: Node, callback: DeleteNodeCallback) {
+    if (!modals.value) throw new Error('Invalid modals!');
+    modals.value.showDeleteSingle(node, callback);
+  }
+  function beforeDeleteMultiple(files: number, folders: number, callback: DeleteNodeCallback) {
+    if (!modals.value) throw new Error('Invalid modals!');
+    modals.value.showDeleteMultiple(files, folders, callback);
+  }
+  async function contestDeleted() {
+    if (!currContest.value) return;
+    const contestId = currContest.value.id;
+    const result = await window.api.invoke<boolean>(InvokeChannels.contestExists, contestId);
+    if (!result) {
+      currContest.value = null;
+      uiStore.updateSettings({ currContestId: null });
     }
   }
   async function getContest(contestId: string) {
@@ -68,6 +88,7 @@
 <template>
   <div class="contests-page flex flex-col h-screen overflow-hidden" :class="{ resizing }">
     <SettingsPageHeader />
+    <DeleteModals ref="modals" @deleted="contestDeleted" />
     <div class="flex grow">
       <div :style="{ width: `${explorerWidth}px` }">
         <Explorer
@@ -75,6 +96,8 @@
           @before-create-node="beforeCreateNode"
           @node-click="nodeClick"
           @rename-file="renameContest"
+          @before-delete-node="beforeDeleteNode"
+          @before-delete-selected="beforeDeleteMultiple"
         />
       </div>
       <div class="custom-resizer" @mousedown="resizing = true"></div>

@@ -36,6 +36,13 @@ export class UIManager {
     Object.assign(this.proxy, settings);
   }
 
+  public contestDeleted(contestId: string) {
+    if (!this.proxy) throw new Error('UI settings not initialized!');
+    if (this.proxy.currContestId === contestId) {
+      this.proxy.currContestId = null;
+    }
+  }
+
   public clear() {
     this._proxy = null;
   }

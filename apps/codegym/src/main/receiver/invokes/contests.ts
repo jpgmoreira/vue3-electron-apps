@@ -23,3 +23,7 @@ ipcMain.handle(
     contestsManager.renameContest(contestId, newName);
   }
 );
+
+ipcMain.handle(InvokeChannels.contestExists, (_: IpcMainInvokeEvent, contestId: string) => {
+  return contestsManager.contestExists(contestId);
+});
