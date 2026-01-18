@@ -55,6 +55,19 @@ export class ContestsManager {
     return contest;
   }
 
+  public renameContest(contestId: string, newName: string) {
+    newName = newName.trim();
+    const contestPath = path.join(
+      DATA_DIR,
+      'profileData',
+      this.profileId!,
+      'contests',
+      `${contestId}.json`
+    );
+    const fp = new FileProxy(contestPath, getEmptyContest(contestId, newName, 0));
+    fp.proxy.name = newName;
+  }
+
   public clear() {
     this.profileId = null;
   }

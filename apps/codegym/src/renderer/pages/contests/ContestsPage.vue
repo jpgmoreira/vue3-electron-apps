@@ -35,6 +35,13 @@
     await getContest(node.id);
     uiStore.updateSettings({ currContestId: node.id });
   }
+  async function renameContest(contestId: string, newName: string) {
+    newName = newName.trim();
+    await window.api.invoke(InvokeChannels.renameContest, contestId, newName);
+    if (currContest.value && currContest.value.id === contestId) {
+      currContest.value.name = newName;
+    }
+  }
   function windowMouseMove(e: MouseEvent) {
     if (!resizing.value) return;
     const { clientX } = e;
@@ -63,7 +70,12 @@
     <SettingsPageHeader />
     <div class="flex grow">
       <div :style="{ width: `${explorerWidth}px` }">
-        <Explorer file-icon @before-create-node="beforeCreateNode" @node-click="nodeClick" />
+        <Explorer
+          file-icon
+          @before-create-node="beforeCreateNode"
+          @node-click="nodeClick"
+          @rename-file="renameContest"
+        />
       </div>
       <div class="custom-resizer" @mousedown="resizing = true"></div>
       <div :style="{ width: `${mainWidth}px` }">

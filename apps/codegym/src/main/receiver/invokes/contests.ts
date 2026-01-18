@@ -16,3 +16,10 @@ ipcMain.handle(InvokeChannels.createContest, (_: IpcMainInvokeEvent): Contest =>
 ipcMain.handle(InvokeChannels.getContest, (_: IpcMainInvokeEvent, contestId: string): Contest => {
   return contestsManager.getContest(contestId);
 });
+
+ipcMain.handle(
+  InvokeChannels.renameContest,
+  (_: IpcMainInvokeEvent, contestId: string, newName: string) => {
+    contestsManager.renameContest(contestId, newName);
+  }
+);

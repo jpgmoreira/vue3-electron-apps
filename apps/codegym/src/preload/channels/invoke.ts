@@ -14,4 +14,5 @@ export enum InvokeChannels {
   createFolder = 'create-folder',
   createContest = 'create-contest',
   getContest = 'get-contest',
+  renameContest = 'rename-contest',
 }
