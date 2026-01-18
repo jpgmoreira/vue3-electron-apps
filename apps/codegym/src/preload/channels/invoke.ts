@@ -17,4 +17,5 @@ export enum InvokeChannels {
   renameContest = 'rename-contest',
   contestExists = 'contest-exists',
   addContestProblem = 'add-contest-problem',
+  updateContestNotes = 'update-contest-notes',
 }

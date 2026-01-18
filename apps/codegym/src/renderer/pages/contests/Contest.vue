@@ -24,7 +24,9 @@
     );
     props.contest.problems.push(problem);
   }
-  function updateContestNotes() {}
+  function updateContestNotes() {
+    window.api.invoke(InvokeChannels.updateContestNotes, props.contest.id, props.contest.notes);
+  }
   function updateContestProblem(problem: ContestProblem) {}
   function toggleProblemFlag(problem: ContestProblem, flag: ContestProblemFlag) {}
   function deleteProblem(problem: ContestProblem) {}
