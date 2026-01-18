@@ -1,0 +1,41 @@
+.theme-dark .contest-container tr.todo input,
+.theme-dark .contest-container tr.todo textarea {
+  background-color: rgba(255, 200, 0, 0.2);
+}
+
+.theme-dark .contest-container tr.solved input,
+.theme-dark .contest-container tr.solved textarea {
+  background-color: rgba(0, 200, 120, 0.16);
+}
+
+.theme-dark .contest-container tr.todo td:first-child {
+  box-shadow: inset 4px 0 0 rgba(255, 200, 0, 0.4);
+}
+
+.theme-dark .contest-container tr.solved td:first-child {
+  box-shadow: inset 4px 0 0 rgba(0, 200, 120, 0.5);
+}
+
+.theme-dark .contest-container .contest-header {
+  background-color: #282b30;
+}
+
+.theme-dark .contest-container table th {
+  background-color: #26292b;
+  border-bottom: 1px solid white;
+}
+
+.theme-dark .contest-container table textarea,
+.theme-dark .contest-container table input {
+  border: none;
+  border-radius: 0 !important;
+  background-color: rgba(38, 41, 43, 0.16);
+}
+
+.theme-dark .contest-container table td:focus-within::after {
+  content: '';
+  position: absolute;
+  inset: 0px;
+  border: 2px solid rgba(255, 255, 255, 0.15);
+  pointer-events: none;
+}

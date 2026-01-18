@@ -48,3 +48,10 @@ ipcMain.handle(
     return contestsManager.updateContestProblem(contestId, problem);
   }
 );
+
+ipcMain.handle(
+  InvokeChannels.deleteContestProblem,
+  (_: IpcMainInvokeEvent, contestId: string, problemId: string) => {
+    return contestsManager.deleteContestProblem(contestId, problemId);
+  }
+);

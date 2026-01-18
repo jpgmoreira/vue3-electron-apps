@@ -40,7 +40,10 @@
     problem[flag] = !problem[flag];
     updateContestProblem(problem);
   }
-  function deleteProblem(problem: ContestProblem) {}
+  async function deleteProblem(problem: ContestProblem) {
+    await window.api.invoke(InvokeChannels.deleteContestProblem, contest.value.id, problem.id);
+    contest.value.problems = contest.value.problems.filter((p) => p.id !== problem.id);
+  }
   function acceptedInputKeydown(e: KeyboardEvent) {
     const allowedKeys = [
       'Backspace',
@@ -70,7 +73,7 @@
 </script>
 
 <template>
-  <div>
+  <div class="contest-container">
     <header class="contest-header whitespace-nowrap select-none p-1">
       <div>
         Contest:
@@ -115,7 +118,12 @@
             />
             <div class="flags-container absolute w-full left-0 flex justify-between">
               <div>
-                <img class="flag flag-trash" :src="trash" @dblclick="deleteProblem(problem)" />
+                <img
+                  class="flag flag-trash"
+                  v-tooltip="'Double-click to delete.'"
+                  :src="trash"
+                  @dblclick="deleteProblem(problem)"
+                />
               </div>
               <div class="flex gap-1">
                 <img
@@ -200,50 +208,11 @@
     bottom: 1px;
     height: 0px;
   }
-  tr:hover .flag:not(.active) {
+  tr:hover .flag:not(.active):not(:hover) {
     opacity: 0.5;
   }
-  .flag.active {
+  .flag.active,
+  .flag:hover {
     opacity: 1;
-  }
-
-  /*  */
-
-  tr.todo input,
-  tr.todo textarea {
-    background-color: rgba(255, 200, 0, 0.2);
-  }
-
-  tr.solved input,
-  tr.solved textarea {
-    background-color: rgba(0, 200, 120, 0.16);
-  }
-
-  tr.todo td:first-child {
-    box-shadow: inset 4px 0 0 rgba(255, 200, 0, 0.4);
-  }
-  tr.solved td:first-child {
-    box-shadow: inset 4px 0 0 rgba(0, 200, 120, 0.5);
-  }
-
-  .contest-header {
-    background-color: #282b30;
-  }
-  table th {
-    background-color: #26292b;
-    border-bottom: 1px solid white;
-  }
-  table textarea,
-  table input {
-    border: none;
-    border-radius: 0 !important;
-    background-color: rgba(38, 41, 43, 0.16);
-  }
-  table td:focus-within::after {
-    content: '';
-    position: absolute;
-    inset: 0px;
-    border: 2px solid rgba(255, 255, 255, 0.15);
-    pointer-events: none;
   }
 </style>

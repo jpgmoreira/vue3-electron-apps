@@ -111,6 +111,11 @@ export class ContestsManager {
     Object.assign(problemToUpdate, problem);
   }
 
+  public deleteContestProblem(contestId: string, problemId: string) {
+    this.guard(contestId);
+    this.proxy!.problems = this.proxy!.problems.filter((p) => p.id !== problemId);
+  }
+
   public clear() {
     this.profileId = null;
     this._proxy = null;
