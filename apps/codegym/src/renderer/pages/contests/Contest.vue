@@ -94,7 +94,8 @@
       v-model="contest.notes"
       @input="updateContestNotes"
     ></textarea>
-    <table v-if="contest.problems.length">
+    <div v-if="!contest.problems.length" class="message text-center pt-10">Add a new problem</div>
+    <table v-else>
       <thead>
         <tr>
           <th class="col-problem">Problem</th>

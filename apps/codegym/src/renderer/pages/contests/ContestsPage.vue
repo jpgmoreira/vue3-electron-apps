@@ -101,9 +101,9 @@
         />
       </div>
       <div class="custom-resizer" @mousedown="resizing = true"></div>
-      <div class="grow relative">
+      <div class="grow relative overflow-y-auto">
         <div class="absolute inset-0">
-          <div v-if="currContest">
+          <div v-if="currContest" class="pb-24">
             <ContestComponent :currContest="currContest" />
           </div>
           <div v-else class="absolute-center message-xl">No contest selected</div>
