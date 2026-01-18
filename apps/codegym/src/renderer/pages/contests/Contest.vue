@@ -1,12 +1,17 @@
 <script lang="ts" setup>
-  import { computed } from 'vue';
+  import { ref, computed, watch } from 'vue';
   import { Contest, ContestProblem, ContestProblemFlag } from '@common/schemas/contests';
   import { parseTimestamp } from '@interapp/utils/dateUtils';
   import { InvokeChannels } from '@preload/channels/invoke';
-  import { toRawDeep } from '@interapp/utils/utils';
-  const props = defineProps<{ contest: Contest }>();
+  import { cloneDeep, toRawDeep } from '@interapp/utils/utils';
+  import solved from '@renderer/assets/images/solved.png';
+  import todo from '@renderer/assets/images/to-do-list.png';
+  import trash from '@renderer/assets/images/trash.png';
+  import star from '@renderer/assets/images/star.png';
+  const props = defineProps<{ currContest: Contest }>();
+  const contest = ref(cloneDeep(props.currContest));
   const problemsSorted = computed(() => {
-    return [...props.contest.problems].sort(compare);
+    return [...contest.value.problems].sort(compare);
   });
   function compare(a: ContestProblem, b: ContestProblem) {
     const numA = Number(a.accepted);
@@ -21,15 +26,15 @@
   async function addProblem() {
     const problem = await window.api.invoke<ContestProblem>(
       InvokeChannels.addContestProblem,
-      props.contest.id
+      contest.value.id
     );
-    props.contest.problems.push(problem);
+    contest.value.problems.push(problem);
   }
   function updateContestNotes() {
-    window.api.invoke(InvokeChannels.updateContestNotes, props.contest.id, props.contest.notes);
+    window.api.invoke(InvokeChannels.updateContestNotes, contest.value.id, contest.value.notes);
   }
   function updateContestProblem(problem: ContestProblem) {
-    window.api.invoke(InvokeChannels.updateContestProblem, props.contest.id, toRawDeep(problem));
+    window.api.invoke(InvokeChannels.updateContestProblem, contest.value.id, toRawDeep(problem));
   }
   function toggleProblemFlag(problem: ContestProblem, flag: ContestProblemFlag) {}
   function deleteProblem(problem: ContestProblem) {}
@@ -52,6 +57,13 @@
     problem.accepted = (e.target as HTMLInputElement).value.trim();
     updateContestProblem(problem);
   }
+  watch(
+    () => props.currContest,
+    (newContest) => {
+      contest.value = cloneDeep(newContest);
+    },
+    { immediate: true }
+  );
 </script>
 
 <template>

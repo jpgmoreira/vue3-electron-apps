@@ -104,7 +104,7 @@
       <div class="grow relative">
         <div class="absolute inset-0">
           <div v-if="currContest">
-            <ContestComponent :contest="currContest" />
+            <ContestComponent :currContest="currContest" />
           </div>
           <div v-else class="absolute-center message-xl">No contest selected</div>
         </div>
