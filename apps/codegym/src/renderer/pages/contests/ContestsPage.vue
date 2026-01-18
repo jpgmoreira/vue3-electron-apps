@@ -18,7 +18,6 @@
   const currContest = ref<Contest | null>(null);
   const resizing = ref(false);
   const explorerWidth = ref(200);
-  const mainWidth = computed(() => window.innerWidth - explorerWidth.value);
   async function beforeCreateNode(type: NodeType, callback: CreateNodeCallback) {
     if (type === 'dir') {
       const number = await window.api.invoke<number>(InvokeChannels.createFolder);
@@ -102,11 +101,13 @@
         />
       </div>
       <div class="custom-resizer" @mousedown="resizing = true"></div>
-      <div class="relative" :style="{ width: `${mainWidth}px` }" style="border: 1px solid orange">
-        <div v-if="currContest">
-          <ContestComponent :contest="currContest" />
+      <div class="grow relative">
+        <div class="absolute inset-0">
+          <div v-if="currContest">
+            <ContestComponent :contest="currContest" />
+          </div>
+          <div v-else class="absolute-center message-xl">No contest selected</div>
         </div>
-        <div v-else class="absolute-center message-xl">No contest selected</div>
       </div>
     </div>
   </div>
