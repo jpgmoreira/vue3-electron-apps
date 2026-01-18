@@ -16,17 +16,17 @@ export class ContestsManager {
   private counter: NodeCounterManager;
   private readonly dummy: Contest;
 
-  constructor(emitter: EventEmitter, counter: NodeCounterManager) {
-    emitter.on(CommonEvents.clearProfileData, () => this.clear);
-    this.counter = counter;
-    this.dummy = deepFreeze(getEmptyContest('', '', 0));
-  }
-
   private get proxy() {
     return this._proxy?.proxy;
   }
   private get target() {
     return this._proxy?.target;
+  }
+
+  constructor(emitter: EventEmitter, counter: NodeCounterManager) {
+    emitter.on(CommonEvents.clearProfileData, () => this.clear);
+    this.counter = counter;
+    this.dummy = deepFreeze(getEmptyContest('', '', 0));
   }
 
   public loadProfile(profileId: string) {
@@ -53,18 +53,24 @@ export class ContestsManager {
   }
 
   public getContest(contestId: string): Contest {
+    if (this.target && this.target.id === contestId) {
+      return this.target;
+    }
     const contestPath = this.buildContestPath(contestId);
     this._proxy = new FileProxy(contestPath, this.dummy);
     return this.target!;
   }
 
-  public renameContest(contestId: string, newName: string) {
-    if (!this.proxy) throw new Error('Current contest not set!');
-    if (this.proxy.id !== contestId) {
+  private guard(contestId: string) {
+    if (this.proxy?.id !== contestId) {
       this.getContest(contestId);
     }
+  }
+
+  public renameContest(contestId: string, newName: string) {
+    this.guard(contestId);
     newName = newName.trim();
-    this.proxy.name = newName;
+    this.proxy!.name = newName;
   }
 
   public deleteContest(contestId: string) {
@@ -81,22 +87,16 @@ export class ContestsManager {
   }
 
   public addContestProblem(contestId: string) {
-    if (!this.proxy) throw new Error('Current contest not set!');
-    if (this.proxy.id !== contestId) {
-      this.getContest(contestId);
-    }
+    this.guard(contestId);
     const id = randomId();
     const problem = getEmptyContestProblem(id);
-    this.proxy.problems.push(problem);
+    this.proxy!.problems.push(problem);
     return problem;
   }
 
   public updateContestNotes(contestId: string, notes: string) {
-    if (!this.proxy) throw new Error('Current contest not set!');
-    if (this.proxy.id !== contestId) {
-      this.getContest(contestId);
-    }
-    this.proxy.notes = notes;
+    this.guard(contestId);
+    this.proxy!.notes = notes;
   }
 
   public clear() {
