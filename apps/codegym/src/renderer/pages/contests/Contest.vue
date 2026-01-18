@@ -103,27 +103,36 @@
               v-model="problem.title"
               spellcheck="false"
               type="text"
-              class="absolute inset-0 text-center font-bold"
+              class="font-bold"
               @input="updateContestProblem(problem)"
             />
-            <!-- <span @click="toggleProblemFlag(problem, 'solved')">
-              <img :src="solved" />
-            </span>
-            <span @click="toggleProblemFlag(problem, 'todo')">
-              <img :src="todo" />
-            </span>
-            <span @click="toggleProblemFlag(problem, 'favorite')">
-              <img :src="star" />
-            </span>
-            <span @dblclick="deleteProblem(problem)">
-              <img :src="trash" />
-            </span> -->
+            <div class="flags-container absolute w-full left-0 flex justify-between">
+              <div>
+                <img class="flag flag-trash" :src="trash" @dblclick="deleteProblem(problem)" />
+              </div>
+              <div class="flex gap-1">
+                <img
+                  class="flag flag-todo"
+                  :src="todo"
+                  @click="toggleProblemFlag(problem, 'todo')"
+                />
+                <img
+                  class="flag flag-star"
+                  :src="star"
+                  @click="toggleProblemFlag(problem, 'favorite')"
+                />
+                <img
+                  class="flag flag-solved"
+                  :src="solved"
+                  @click="toggleProblemFlag(problem, 'solved')"
+                />
+              </div>
+            </div>
           </td>
           <td>
             <input
               type="text"
               spellcheck="false"
-              class="absolute inset-0 text-center"
               :value="problem.accepted"
               @change="(e: Event) => acceptedInputChange(problem, e)"
               @keydown="acceptedInputKeydown"
@@ -159,9 +168,28 @@
   table td {
     position: relative;
   }
+  table td input {
+    position: absolute;
+    inset: 0;
+    text-align: center;
+  }
   table textarea {
     max-height: 200px;
+    min-height: 35px;
   }
+  .flag {
+    cursor: pointer;
+    width: 20px;
+    height: 20px;
+    transform: translateY(-100%);
+  }
+  .flags-container {
+    padding: 0 3px;
+    bottom: 1px;
+    height: 0px;
+  }
+
+  /*  */
 
   .contest-header {
     background-color: #282b30;
