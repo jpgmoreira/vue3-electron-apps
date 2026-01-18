@@ -4,10 +4,11 @@
   import Explorer, {
     CreateNodeCallback,
   } from '@interapp/components/Explorer/renderer/Explorer.vue';
-  import { NodeType } from '@interapp/components/Explorer/common/tree';
+  import { Node, NodeType } from '@interapp/components/Explorer/common/tree';
   import { InvokeChannels } from '@preload/channels/invoke';
   import { randomId } from '@interapp/utils/utils';
   import { Contest } from '@common/schemas/contests';
+  import { ModifierKeys } from '@interapp/types/modifierKeys';
   const resizing = ref(false);
   const explorerWidth = ref(200);
   const mainWidth = computed(() => window.innerWidth - explorerWidth.value);
@@ -22,6 +23,10 @@
       callback(contest.id, contest.name);
     }
   }
+  function nodeClick(node: Node, keys: ModifierKeys) {
+    if (node.type === 'dir' || keys.ctrl) return;
+  }
+
   function windowMouseMove(e: MouseEvent) {
     if (!resizing.value) return;
     const { clientX } = e;
@@ -48,7 +53,7 @@
     <SettingsPageHeader />
     <div class="flex grow">
       <div style="border: 1px solid red" :style="{ width: `${explorerWidth}px` }">
-        <Explorer file-icon @before-create-node="beforeCreateNode" />
+        <Explorer file-icon @before-create-node="beforeCreateNode" @node-click="nodeClick" />
       </div>
       <div class="custom-resizer" @mousedown="resizing = true"></div>
       <div :style="{ width: `${mainWidth}px` }"></div>
