@@ -12,6 +12,7 @@
   import { ModifierKeys } from '@interapp/types/modifierKeys';
   import { useUIStore } from '@renderer/store/ui';
   import DeleteModals from './DeleteModals.vue';
+  import ContestComponent from './Contest.vue';
   const uiStore = useUIStore();
   const modals = useTemplateRef('modals');
   const currContest = ref<Contest | null>(null);
@@ -101,9 +102,11 @@
         />
       </div>
       <div class="custom-resizer" @mousedown="resizing = true"></div>
-      <div :style="{ width: `${mainWidth}px` }">
-        <div v-if="currContest">{{ currContest.name }}</div>
-        <div v-else>No contest</div>
+      <div class="relative" :style="{ width: `${mainWidth}px` }">
+        <div v-if="currContest">
+          <ContestComponent :contest="currContest" />
+        </div>
+        <div v-else class="absolute-center message-xl">No contest selected</div>
       </div>
     </div>
   </div>
