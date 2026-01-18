@@ -6,7 +6,7 @@
   const ojContextStore = useOjContextStore();
   const ojMetaStore = useOjMetaStore();
   const snapshot = computed(() => ojContextStore.context['cf'].snapshot!);
-  const tags = computed(() => JSON.parse(snapshot.value.tags));
+  const tags = computed(() => JSON.parse(String(JSON.parse(snapshot.value.tags))));
   const meta = computed(() => ojMetaStore.ojMeta['cf']);
   const showTags = ref(false);
 </script>
