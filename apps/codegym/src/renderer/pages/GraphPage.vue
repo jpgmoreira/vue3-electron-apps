@@ -1,19 +1,17 @@
 <script lang="ts" setup>
-  import { onActivated, ref, useTemplateRef } from 'vue';
+  import { ref, onBeforeMount } from 'vue';
   import SettingsPageHeader from '@renderer/components/header/SettingsPageHeader.vue';
   import LineChart, { LineChartProps } from '@interapp/components/LineChart.vue';
   import { OjList, OjNames, OjColors } from '@common/schemas/oj';
   import { parseNumericDate, incrementDate, getTodayDate } from '@interapp/utils/dateUtils';
-  import { cloneDeep, deepFreeze, randomId } from '@interapp/utils/utils';
+  import { randomId } from '@interapp/utils/utils';
   import { useGraphStore } from '@renderer/store/graph';
-  const emptyContent: LineChartProps = deepFreeze({
+  const content = ref<LineChartProps>({
     allXValues: [],
     allXLabels: [],
     data: [],
     yLinesMode: 'all',
   });
-  const content = ref<LineChartProps>(cloneDeep(emptyContent));
-  const chart = useTemplateRef('chart');
   const store = useGraphStore();
   const hasContent = ref(false);
   const graph = store.graphData;
@@ -60,13 +58,10 @@
     }
     content.value.data = Object.values(ojToSeries);
   }
-  onActivated(() => {
-    hasContent.value = false;
+  onBeforeMount(() => {
     if (graph.length) {
-      content.value = cloneDeep(emptyContent);
       setContent();
       hasContent.value = true;
-      chart.value?.flush();
     }
   });
 </script>
@@ -74,7 +69,7 @@
 <template>
   <div class="w-full h-screen flex flex-col">
     <SettingsPageHeader />
-    <LineChart v-if="hasContent" ref="chart" v-bind="content" />
+    <LineChart v-if="hasContent" v-bind="content" />
     <div v-else class="flex grow items-center justify-center text-xl opacity-70">
       No problems solved yet!
     </div>

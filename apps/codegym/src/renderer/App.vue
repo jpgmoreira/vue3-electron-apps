@@ -6,10 +6,6 @@
 <template>
   <Toast />
   <main class="flex flex-col min-h-screen">
-    <router-view v-slot="{ Component }">
-      <keep-alive>
-        <component :is="Component" />
-      </keep-alive>
-    </router-view>
+    <RouterView />
   </main>
 </template>
