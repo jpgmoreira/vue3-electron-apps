@@ -93,7 +93,7 @@
 </script>
 
 <template>
-  <div class="contest-container">
+  <div class="contest-container flex flex-col grow" style="border: 1px solid cyan">
     <header class="contest-header whitespace-nowrap select-none p-1">
       <div>
         Contest:
@@ -114,79 +114,81 @@
       v-model="contest.notes"
       @input="updateContestNotes"
     ></textarea>
-    <div v-if="!contest.problems.length" class="message text-center pt-10">Add a new problem</div>
-    <table v-else>
-      <thead>
-        <tr>
-          <th class="col-problem">Problem</th>
-          <th class="col-accepted">#Accepted</th>
-          <th>Notes</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr
-          v-for="problem in problemsSorted"
-          :key="problem.id"
-          :class="{ todo: problem.todo, solved: problem.solved }"
-        >
-          <td>
-            <input
-              v-model="problem.title"
-              spellcheck="false"
-              type="text"
-              class="font-bold"
-              @input="updateContestProblem(problem)"
-            />
-            <div class="flags-container absolute w-full left-0 flex justify-between">
-              <div>
-                <img
-                  class="flag flag-trash"
-                  v-tooltip="'Double-click to delete.'"
-                  :src="trash"
-                  @dblclick="deleteProblem(problem)"
-                />
+    <div class="grow relative">
+      <div v-if="!contest.problems.length" class="message absolute-center">Add a new problem</div>
+      <table v-else>
+        <thead>
+          <tr>
+            <th class="col-problem">Problem</th>
+            <th class="col-accepted">#Accepted</th>
+            <th>Notes</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            v-for="problem in problemsSorted"
+            :key="problem.id"
+            :class="{ todo: problem.todo, solved: problem.solved }"
+          >
+            <td>
+              <input
+                v-model="problem.title"
+                spellcheck="false"
+                type="text"
+                class="font-bold"
+                @input="updateContestProblem(problem)"
+              />
+              <div class="flags-container absolute w-full left-0 flex justify-between">
+                <div>
+                  <img
+                    class="flag flag-trash"
+                    v-tooltip="'Double-click to delete.'"
+                    :src="trash"
+                    @dblclick="deleteProblem(problem)"
+                  />
+                </div>
+                <div class="flex gap-1">
+                  <img
+                    class="flag flag-todo"
+                    :class="{ active: problem.todo }"
+                    :src="todo"
+                    @click="toggleProblemFlag(problem, 'todo')"
+                  />
+                  <img
+                    class="flag flag-star"
+                    :class="{ active: problem.favorite }"
+                    :src="star"
+                    @click="toggleProblemFlag(problem, 'favorite')"
+                  />
+                  <img
+                    class="flag flag-solved"
+                    :class="{ active: problem.solved }"
+                    :src="solved"
+                    @click="toggleProblemFlag(problem, 'solved')"
+                  />
+                </div>
               </div>
-              <div class="flex gap-1">
-                <img
-                  class="flag flag-todo"
-                  :class="{ active: problem.todo }"
-                  :src="todo"
-                  @click="toggleProblemFlag(problem, 'todo')"
-                />
-                <img
-                  class="flag flag-star"
-                  :class="{ active: problem.favorite }"
-                  :src="star"
-                  @click="toggleProblemFlag(problem, 'favorite')"
-                />
-                <img
-                  class="flag flag-solved"
-                  :class="{ active: problem.solved }"
-                  :src="solved"
-                  @click="toggleProblemFlag(problem, 'solved')"
-                />
-              </div>
-            </div>
-          </td>
-          <td>
-            <input
-              type="text"
-              spellcheck="false"
-              :value="problem.accepted"
-              @change="(e: Event) => acceptedInputChange(problem, e)"
-              @keydown="acceptedInputKeydown"
-            />
-          </td>
-          <td class="!p-0">
-            <textarea
-              v-model="problem.notes"
-              spellcheck="false"
-              @input="updateContestProblem(problem)"
-            ></textarea>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+            </td>
+            <td>
+              <input
+                type="text"
+                spellcheck="false"
+                :value="problem.accepted"
+                @change="(e: Event) => acceptedInputChange(problem, e)"
+                @keydown="acceptedInputKeydown"
+              />
+            </td>
+            <td class="!p-0">
+              <textarea
+                v-model="problem.notes"
+                spellcheck="false"
+                @input="updateContestProblem(problem)"
+              ></textarea>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 </template>
 
