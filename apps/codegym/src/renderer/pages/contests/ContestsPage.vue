@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-  import { ref, computed, useTemplateRef, onMounted, onBeforeUnmount } from 'vue';
+  import { ref, useTemplateRef, onMounted, onBeforeUnmount } from 'vue';
   import SettingsPageHeader from '@renderer/components/header/SettingsPageHeader.vue';
   import Explorer, {
     CreateNodeCallback,

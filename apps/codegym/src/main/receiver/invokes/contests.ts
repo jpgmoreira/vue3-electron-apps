@@ -41,3 +41,10 @@ ipcMain.handle(
     return contestsManager.updateContestNotes(contestId, notes);
   }
 );
+
+ipcMain.handle(
+  InvokeChannels.updateContestProblem,
+  (_: IpcMainInvokeEvent, contestId: string, problem: ContestProblem) => {
+    return contestsManager.updateContestProblem(contestId, problem);
+  }
+);

@@ -4,7 +4,12 @@ import { CommonEvents } from '@interapp/events/commonEvents';
 import path from 'path';
 import { ensureDirExists } from '@interapp/utils/fileUtils';
 import { buildId, deepFreeze, randomId } from '@interapp/utils/utils';
-import { Contest, getEmptyContest, getEmptyContestProblem } from '@common/schemas/contests';
+import {
+  Contest,
+  ContestProblem,
+  getEmptyContest,
+  getEmptyContestProblem,
+} from '@common/schemas/contests';
 import { FileProxy } from '@interapp/utils/fileProxy';
 import { NodeCounterManager } from './nodeCounterManager';
 import fs from 'fs';
@@ -97,6 +102,13 @@ export class ContestsManager {
   public updateContestNotes(contestId: string, notes: string) {
     this.guard(contestId);
     this.proxy!.notes = notes;
+  }
+
+  public updateContestProblem(contestId: string, problem: ContestProblem) {
+    this.guard(contestId);
+    const problemToUpdate = this.proxy!.problems.find((p) => p.id === problem.id);
+    if (!problemToUpdate) throw new Error('Problem not found!');
+    Object.assign(problemToUpdate, problem);
   }
 
   public clear() {
