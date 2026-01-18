@@ -1,17 +1,19 @@
 <script lang="ts" setup>
-  import { onBeforeMount, ref } from 'vue';
+  import { onActivated, ref, useTemplateRef } from 'vue';
   import SettingsPageHeader from '@renderer/components/header/SettingsPageHeader.vue';
   import LineChart, { LineChartProps } from '@interapp/components/LineChart.vue';
   import { OjList, OjNames, OjColors } from '@common/schemas/oj';
   import { parseNumericDate, incrementDate, getTodayDate } from '@interapp/utils/dateUtils';
-  import { randomId } from '@interapp/utils/utils';
+  import { cloneDeep, deepFreeze, randomId } from '@interapp/utils/utils';
   import { useGraphStore } from '@renderer/store/graph';
-  const content: LineChartProps = {
+  const emptyContent: LineChartProps = deepFreeze({
     allXValues: [],
     allXLabels: [],
     data: [],
     yLinesMode: 'all',
-  };
+  });
+  const content = ref<LineChartProps>(cloneDeep(emptyContent));
+  const chart = useTemplateRef('chart');
   const store = useGraphStore();
   const hasContent = ref(false);
   const graph = store.graphData;
@@ -35,8 +37,8 @@
       {} as Record<string, LineChartProps['data'][number]>
     );
     for (let date = firstDate, i = 0, j = 0; date <= lastDate; date = incrementDate(date), i++) {
-      content.allXValues.push(i);
-      content.allXLabels.push(parseNumericDate(date));
+      content.value.allXValues.push(i);
+      content.value.allXLabels.push(parseNumericDate(date));
       const record = j < graph.length ? graph[j] : null;
       if (record && record.date === date) {
         let total = 0;
@@ -56,12 +58,15 @@
         }
       }
     }
-    content.data = Object.values(ojToSeries);
+    content.value.data = Object.values(ojToSeries);
   }
-  onBeforeMount(() => {
+  onActivated(() => {
+    hasContent.value = false;
     if (graph.length) {
+      content.value = cloneDeep(emptyContent);
       setContent();
       hasContent.value = true;
+      chart.value?.flush();
     }
   });
 </script>
@@ -69,7 +74,7 @@
 <template>
   <div class="w-full h-screen flex flex-col">
     <SettingsPageHeader />
-    <LineChart v-if="hasContent" v-bind="content" />
+    <LineChart v-if="hasContent" ref="chart" v-bind="content" />
     <div v-else class="flex grow items-center justify-center text-xl opacity-70">
       No problems solved yet!
     </div>

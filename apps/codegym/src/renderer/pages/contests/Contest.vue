@@ -1,15 +1,17 @@
 <script lang="ts" setup>
   import { ref, computed, watch } from 'vue';
   import { Contest, ContestProblem, ContestProblemFlag } from '@common/schemas/contests';
-  import { parseTimestamp } from '@interapp/utils/dateUtils';
+  import { getTodayDate, parseTimestamp } from '@interapp/utils/dateUtils';
   import { InvokeChannels } from '@preload/channels/invoke';
   import { cloneDeep, toRawDeep } from '@interapp/utils/utils';
+  import { useGraphStore } from '@renderer/store/graph';
   import solved from '@renderer/assets/images/solved.png';
   import todo from '@renderer/assets/images/to-do-list.png';
   import trash from '@renderer/assets/images/trash.png';
   import star from '@renderer/assets/images/star.png';
   const props = defineProps<{ currContest: Contest }>();
   const contest = ref(cloneDeep(props.currContest));
+  const graphStore = useGraphStore();
   const problemsSorted = computed(() => {
     return [...contest.value.problems].sort(compare);
   });
@@ -36,12 +38,30 @@
   function updateContestProblem(problem: ContestProblem) {
     window.api.invoke(InvokeChannels.updateContestProblem, contest.value.id, toRawDeep(problem));
   }
+  function handleToggleSolved(problem: ContestProblem) {
+    const nextVal = !problem.solved;
+    const today = getTodayDate();
+    if (nextVal) {
+      problem.solvedDate = today;
+      graphStore.updateGraph('contests', today, 1);
+    } else {
+      const date = problem.solvedDate;
+      problem.solvedDate = null;
+      if (date !== today) return; // Do not un-solve old problems in the graph.
+      graphStore.updateGraph('contests', today, -1);
+    }
+  }
   function toggleProblemFlag(problem: ContestProblem, flag: ContestProblemFlag) {
+    if (flag === 'solved') handleToggleSolved(problem);
     problem[flag] = !problem[flag];
     updateContestProblem(problem);
   }
   async function deleteProblem(problem: ContestProblem) {
     await window.api.invoke(InvokeChannels.deleteContestProblem, contest.value.id, problem.id);
+    const today = getTodayDate();
+    if (problem.solved && problem.solvedDate === today) {
+      graphStore.updateGraph('contests', today, -1);
+    }
     contest.value.problems = contest.value.problems.filter((p) => p.id !== problem.id);
   }
   function acceptedInputKeydown(e: KeyboardEvent) {
