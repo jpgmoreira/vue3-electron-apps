@@ -48,7 +48,7 @@
     <SettingsPageHeader />
     <div class="flex grow">
       <div style="border: 1px solid red" :style="{ width: `${explorerWidth}px` }">
-        <Explorer @before-create-node="beforeCreateNode" />
+        <Explorer file-icon @before-create-node="beforeCreateNode" />
       </div>
       <div class="custom-resizer" @mousedown="resizing = true"></div>
       <div :style="{ width: `${mainWidth}px` }"></div>

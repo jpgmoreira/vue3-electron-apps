@@ -6,18 +6,6 @@
   background-color: #282828;
 }
 
-/* Caret Icon */
-.theme-dark .explorer .node-caret {
-  background-image: url('@renderer/assets/images/arrow-down.png');
-  background-repeat: no-repeat;
-  background-position: center;
-  width: 12px;
-  height: 12px;
-  background-size: 17px;
-  margin-left: 3px;
-  margin-right: 1px;
-}
-
 /* Base Node */
 .theme-dark .explorer .node-input {
   color: #dedede;
@@ -76,12 +64,16 @@
      STRUCTURE & MISC
      ======================== */
 
-/* Icons */
-.theme-dark .explorer .file-icon {
-  background-image: url('@renderer/assets/images/file.png');
+/* Caret */
+.theme-dark .explorer .node-caret {
+  background-image: url('@renderer/assets/images/arrow-down.png');
+  background-repeat: no-repeat;
+  background-position: center;
+  width: 12px;
+  height: 12px;
+  background-size: 17px;
   margin-left: 3px;
-  min-width: 23px;
-  min-height: 23px;
+  margin-right: 1px;
 }
 
 /* Hint text */
