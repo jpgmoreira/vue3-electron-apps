@@ -6,6 +6,11 @@
   background-repeat: no-repeat;
 }
 
+.theme-dark .cards-page .filters-container {
+  background: linear-gradient(180deg, #282b2f 0%, #222427 100%);
+  border-top: 1px solid #2f3236;
+}
+
 /* --- chatgpt: --- */
 .theme-dark .cards-page footer {
   background: linear-gradient(180deg, #242628, #1d1f20);

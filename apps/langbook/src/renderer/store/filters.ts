@@ -4,6 +4,7 @@ import { getEmptyFilters } from '@common/schemas/filters';
 
 export const useFiltersStore = defineStore('filters', {
   state: () => ({
+    dirty: false,
     filters: getEmptyFilters(),
   }),
   actions: {

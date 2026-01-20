@@ -13,6 +13,8 @@
   import { randomId } from '@interapp/utils/utils';
   import { Session } from '@common/schemas/session';
   import { MultiselectOption } from '@interapp/components/Multiselect.vue';
+  import SelectionList from '@interapp/components/SelectionList.vue';
+  import { FREQUENCY_OPTIONS } from './options';
   const uiStore = useUIStore();
   const tagsStore = useTagsStore();
   const filtersStore = useFiltersStore();
@@ -90,8 +92,8 @@
       <div class="custom-resizer" @mousedown="resizing = true"></div>
       <div class="grow relative" style="border: 1px solid orchid">
         <div class="flex flex-col absolute inset-0" style="border: 1px solid lightgreen">
-          <div class="grow" style="border: 2px solid gold"></div>
-          <div v-if="uiStore.showFilters">
+          <div class="grow"></div>
+          <div v-if="uiStore.showFilters" class="filters-container flex flex-col px-2 py-1.5 gap-1">
             <div>Filters:</div>
             <Multiselect
               :options="tagsOptions"
@@ -101,6 +103,31 @@
               close
               :mode="filtersStore.filters.tagMode"
             />
+            <input
+              type="text"
+              placeholder="Text"
+              spellcheck="false"
+              v-model.trim="filtersStore.filters.text"
+              @input="filtersStore.dirty = true"
+            />
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-1">
+                <span>Frequency:</span>
+                <SelectionList
+                  :options="[...FREQUENCY_OPTIONS]"
+                  :SELECTED="filtersStore.filters.frequencies"
+                />
+              </div>
+              <div class="flex items-center gap-1">
+                <label for="bucket-input">Review bucket:</label>
+                <input
+                  type="checkbox"
+                  id="bucket-input"
+                  name="bucket-input"
+                  v-model="filtersStore.filters.bucket"
+                />
+              </div>
+            </div>
           </div>
           <footer class="flex items-center justify-evenly mt-auto">
             <button

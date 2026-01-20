@@ -15,6 +15,7 @@
 @import './components/header.css';
 @import './components/multiselect.css';
 @import './components/linechart.css';
+@import './components/selectionlist.css';
 @import './components/explorer/contextmenu.css';
 @import './components/explorer/explorer.css';
 

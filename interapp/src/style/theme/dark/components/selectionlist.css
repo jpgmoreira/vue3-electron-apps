@@ -1,0 +1,33 @@
+.theme-dark .selection-list {
+  display: inline-flex;
+  width: fit-content;
+  user-select: none;
+  background-color: #2c2f33;
+  border: 1px solid #3a3d42;
+  border-radius: 6px;
+  overflow: hidden;
+  font-size: 14px; /* slightly larger text */
+}
+
+.theme-dark .selection-list > div {
+  padding: 2px 6px; /* tighter spacing */
+  cursor: pointer;
+  border-left: 1px solid #3a3d42;
+  background-color: #2c2f33;
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease;
+}
+
+.theme-dark .selection-list > div:first-child {
+  border-left: none;
+}
+
+.theme-dark .selection-list > div:hover {
+  background-color: #3c4046;
+}
+
+.theme-dark .selection-list > div.selected {
+  background-color: #4a80c2;
+  color: white;
+}
