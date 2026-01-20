@@ -51,7 +51,7 @@
     <Header />
     <div class="flex grow">
       <div :style="{ width: `${explorerWidth}px` }">
-        <Explorer @before-create-node="beforeCreateNode" />
+        <Explorer file-icon checkbox @before-create-node="beforeCreateNode" />
       </div>
       <div class="custom-resizer" @mousedown="resizing = true"></div>
     </div>

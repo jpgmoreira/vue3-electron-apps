@@ -1,0 +1,8 @@
+.theme-dark .explorer .file-icon {
+  background-image: url('@renderer/assets/images/open-book.png');
+  width: 21px;
+  height: 21px;
+  background-size: 21px;
+  background-repeat: no-repeat;
+  background-position: 1px 1px;
+}
