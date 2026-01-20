@@ -21,18 +21,21 @@ export class UIManager {
     emitter.on(CommonEvents.clearProfileData, () => this.clear);
   }
 
+  private guard<T extends UISettings>(obj: T | null): asserts obj is T {
+    if (!obj) throw new Error('UI settings not initialized!');
+  }
+
   public loadProfile(profileId: string) {
     const fPath = path.join(DATA_DIR, 'profileData', profileId, 'ui.json');
     this._proxy = new FileProxy(fPath, getEmptyUISettings());
   }
 
-  public getUISettings() {
-    if (!this.target) throw new Error('UI settings not initialized!');
+  public getUISettings(): UISettings | null {
     return cloneDeep(this.target);
   }
 
   public setUISettings(settings: Partial<UISettings>) {
-    if (!this.proxy) throw new Error('UI settings not initialized!');
+    this.guard(this.proxy);
     Object.assign(this.proxy, settings);
   }
 

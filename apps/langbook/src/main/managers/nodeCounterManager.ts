@@ -21,18 +21,22 @@ export class NodeCounterManager {
     emitter.on(CommonEvents.clearProfileData, () => this.clear);
   }
 
+  private guard<T extends NodeCounter>(obj: T | null): asserts obj is T {
+    if (!obj) throw new Error('Node counter not initialized!');
+  }
+
   public loadProfile(profileId: string) {
     const fPath = path.join(DATA_DIR, 'profileData', profileId, 'nodeCounter.json');
     this._proxy = new FileProxy(fPath, getEmptyNodeCounter());
   }
 
-  public getCounter() {
-    if (!this.target) throw new Error('UI settings not initialized!');
+  public getCounter(): NodeCounter {
+    this.guard(this.target);
     return cloneDeep(this.target);
   }
 
   public increment(type: NodeType) {
-    if (!this.proxy) throw new Error('UI settings not initialized!');
+    this.guard(this.proxy);
     if (type === 'file') this.proxy.nextFile++;
     else this.proxy.nextDir++;
   }

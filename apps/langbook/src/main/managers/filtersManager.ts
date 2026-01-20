@@ -25,23 +25,26 @@ export class FiltersManager {
     this.explorerManager = explorerManager;
   }
 
+  private guard<T extends Filters>(obj: T | null): asserts obj is T {
+    if (!obj) throw new Error('Filters not initialized!');
+  }
+
   public loadProfile(profileId: string) {
     const fPath = path.join(DATA_DIR, 'profileData', profileId, 'filters.json');
     this._proxy = new FileProxy(fPath, getEmptyFilters());
   }
 
-  public getFilters() {
-    if (!this.target) throw new Error('Filters not initialized!');
+  public getFilters(): Filters | null {
     return cloneDeep(this.target);
   }
 
   public setFilters(filters: Partial<Filters>) {
-    if (!this.proxy) throw new Error('Filters not initialized!');
+    this.guard(this.proxy);
     Object.assign(this.proxy, filters);
   }
 
   public tagDeleted(tag: string) {
-    if (!this.proxy) throw new Error('Filters not initialized!');
+    this.guard(this.proxy);
     if (this.proxy.tags.includes(tag)) {
       this.proxy.tags = this.proxy.tags.filter((t) => t !== tag);
     }
@@ -49,7 +52,7 @@ export class FiltersManager {
 
   public satisfyCurrentFilters(card: Card): boolean {
     // - Frequency matching:
-    if (!this.target) throw new Error('Filters not initialized!');
+    this.guard(this.target);
     if (this.target.frequencies.length && !this.target.frequencies.includes(card.frequency)) {
       return false;
     }

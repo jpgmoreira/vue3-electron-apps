@@ -27,7 +27,7 @@ export class SessionsManager {
   }
 
   public getSessionsMap() {
-    return cloneDeep(this._proxy!.target);
+    return cloneDeep(this.target);
   }
 
   public createSession(n: number): Session {
