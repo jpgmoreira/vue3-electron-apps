@@ -128,6 +128,13 @@ export class ProfileManager {
     }
   }
 
+  public addSessions(n: number) {
+    if (!this.currProfileProxy) throw new Error('Profile not initialized!');
+    const record = this.findProfileRecord(this.currProfileProxy.target.id);
+    if (!record) throw new Error('Profile record not found!');
+    record.nSessions += n;
+  }
+
   public logout() {
     this.emitter.emit(CommonEvents.clearProfileData);
     this.currProfileProxy = null;

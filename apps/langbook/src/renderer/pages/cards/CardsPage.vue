@@ -1,8 +1,14 @@
 <script lang="ts" setup>
   import { onBeforeUnmount, onMounted, ref } from 'vue';
+  import { NodeType } from '@interapp/components/Explorer/common/tree';
   import { useUIStore } from '@renderer/store/ui';
   import Header from '@renderer/components/Header.vue';
-  import Explorer from '@interapp/components/Explorer/renderer/Explorer.vue';
+  import Explorer, {
+    CreateNodeCallback,
+  } from '@interapp/components/Explorer/renderer/Explorer.vue';
+  import { InvokeChannels } from '@preload/channels/invoke';
+  import { randomId } from '@interapp/utils/utils';
+  import { Session } from '@common/schemas/session';
   const uiStore = useUIStore();
   const resizing = ref(false);
   const explorerWidth = ref(uiStore.settings.explorerWidth);
@@ -19,6 +25,17 @@
   function windowMouseUp() {
     resizing.value = false;
   }
+  async function beforeCreateNode(type: NodeType, callback: CreateNodeCallback) {
+    if (type === 'dir') {
+      const number = await window.api.invoke<number>(InvokeChannels.createFolder);
+      const name = `Folder ${number}`;
+      const id = randomId();
+      callback(id, name);
+    } else {
+      const session = await window.api.invoke<Session>(InvokeChannels.createSession);
+      callback(session.id, session.name);
+    }
+  }
   onMounted(async () => {
     window.addEventListener('mouseup', windowMouseUp);
     window.addEventListener('mousemove', windowMouseMove);
@@ -34,7 +51,7 @@
     <Header />
     <div class="flex grow">
       <div :style="{ width: `${explorerWidth}px` }">
-        <Explorer />
+        <Explorer @before-create-node="beforeCreateNode" />
       </div>
       <div class="custom-resizer" @mousedown="resizing = true"></div>
     </div>

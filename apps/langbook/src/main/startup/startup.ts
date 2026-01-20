@@ -1,5 +1,5 @@
 import { StartupData } from '@common/schemas/startup';
-import { profileManager, uiManager, nodeCounterManager } from './instances';
+import { profileManager, uiManager, nodeCounterManager, sessionsManager } from './instances';
 import { UISettings } from '@common/schemas/ui';
 import path from 'path';
 import { DATA_DIR } from '@main/constants';
@@ -13,6 +13,7 @@ export async function loadStartupData(): Promise<StartupData> {
   if (currProfile) {
     uiManager.loadProfile(currProfile.id);
     nodeCounterManager.loadProfile(currProfile.id);
+    sessionsManager.loadProfile(currProfile.id);
     const treePath = path.join(DATA_DIR, 'profileData', currProfile.id, 'tree.json');
     explorerManager.loadTree(treePath);
     explorerManager.registerDeleteCallback(async (node: Node) => {

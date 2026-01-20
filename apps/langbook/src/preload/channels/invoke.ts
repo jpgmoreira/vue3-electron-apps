@@ -5,4 +5,6 @@ export enum InvokeChannels {
   login = 'login',
   logout = 'logout',
   updateUISettings = 'update-ui-settings',
+  createFolder = 'create-folder',
+  createSession = 'create-session',
 }
