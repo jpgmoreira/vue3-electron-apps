@@ -1,0 +1,21 @@
+{
+  "extends": "@electron-toolkit/tsconfig/tsconfig.node.json",
+  "include": [
+    "electron.vite.config.ts",
+    "vite.alias.ts",
+    "src/main/**/*",
+    "src/preload/**/*",
+    "src/common/**/*",
+    "../../interapp/src/**/*"
+  ],
+  "compilerOptions": {
+    "composite": true,
+    "types": ["electron-vite/node", "vitest/globals"],
+    "paths": {
+      "@interapp/*": ["../../interapp/src/*"],
+      "@main/*": ["./src/main/*"],
+      "@common/*": ["./src/common/*"],
+      "@preload/*": ["./src/preload/*"]
+    }
+  }
+}

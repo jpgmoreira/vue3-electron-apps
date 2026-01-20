@@ -112,6 +112,55 @@ importers:
         specifier: ^3.5.21
         version: 3.5.26(typescript@5.9.3)
 
+  apps/langbook:
+    dependencies:
+      '@electron-toolkit/preload':
+        specifier: ^3.0.2
+        version: 3.0.2(electron@38.7.2)
+      '@electron-toolkit/utils':
+        specifier: ^4.0.0
+        version: 4.0.0(electron@38.7.2)
+      pinia:
+        specifier: ^3.0.3
+        version: 3.0.4(typescript@5.9.3)(vue@3.5.26(typescript@5.9.3))
+      sqlite:
+        specifier: ^5.1.1
+        version: 5.1.1
+      sqlite3:
+        specifier: ^5.1.7
+        version: 5.1.7
+      vue-router:
+        specifier: ^4.6.3
+        version: 4.6.4(vue@3.5.26(typescript@5.9.3))
+    devDependencies:
+      '@testing-library/vue':
+        specifier: ^8.1.0
+        version: 8.1.0(@vue/compiler-sfc@3.5.26)(vue@3.5.26(typescript@5.9.3))
+      '@vitejs/plugin-vue':
+        specifier: ^6.0.1
+        version: 6.0.3(vite@7.3.1(@types/node@25.0.9)(jiti@1.21.7)(yaml@2.8.2))(vue@3.5.26(typescript@5.9.3))
+      electron:
+        specifier: ^38.1.2
+        version: 38.7.2
+      electron-builder:
+        specifier: ^25.1.8
+        version: 25.1.8(electron-builder-squirrel-windows@25.1.8)
+      electron-devtools-installer:
+        specifier: ^4.0.0
+        version: 4.0.0
+      electron-vite:
+        specifier: ^4.0.1
+        version: 4.0.1(vite@7.3.1(@types/node@25.0.9)(jiti@1.21.7)(yaml@2.8.2))
+      happy-dom:
+        specifier: ^20.0.10
+        version: 20.3.1
+      vite:
+        specifier: ^7.1.6
+        version: 7.3.1(@types/node@25.0.9)(jiti@1.21.7)(yaml@2.8.2)
+      vue:
+        specifier: ^3.5.21
+        version: 3.5.26(typescript@5.9.3)
+
   interapp:
     dependencies:
       electron:
