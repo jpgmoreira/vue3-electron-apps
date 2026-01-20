@@ -1,7 +1,7 @@
 import { createMemoryHistory, createRouter } from 'vue-router';
 import LoginPage from '@renderer/pages/login/LoginPage.vue';
 import GraphPage from '@renderer/pages/GraphPage.vue';
-import CardsPage from '@renderer/pages/CardsPage.vue';
+import CardsPage from '@renderer/pages/cards/CardsPage.vue';
 import FlashcardsPage from '@renderer/pages/FlashcardsPage.vue';
 import SettingsPage from '@renderer/pages/SettingsPage.vue';
 import { useUIStore } from '@renderer/store/ui';
