@@ -1,18 +1,40 @@
 <script lang="ts" setup>
-  import { onBeforeUnmount, onMounted, ref } from 'vue';
+  import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
   import { NodeType } from '@interapp/components/Explorer/common/tree';
   import { useUIStore } from '@renderer/store/ui';
+  import { useTagsStore } from '@renderer/store/tags';
+  import { useFiltersStore } from '@renderer/store/filters';
   import Header from '@renderer/components/Header.vue';
+  import Multiselect from '@interapp/components/Multiselect.vue';
   import Explorer, {
     CreateNodeCallback,
   } from '@interapp/components/Explorer/renderer/Explorer.vue';
   import { InvokeChannels } from '@preload/channels/invoke';
   import { randomId } from '@interapp/utils/utils';
   import { Session } from '@common/schemas/session';
+  import { MultiselectOption } from '@interapp/components/Multiselect.vue';
   const uiStore = useUIStore();
+  const tagsStore = useTagsStore();
+  const filtersStore = useFiltersStore();
   const resizing = ref(false);
   const explorerWidth = ref(uiStore.settings.explorerWidth);
-  const initialExplorerScroll = ref(uiStore.settings.explorerScrollTop);
+  const initialExplorerScroll = uiStore.settings.explorerScrollTop;
+  const filterTags = computed(() => filtersStore.filters.tags);
+  const tagsOptions = computed(() => {
+    const entries = Object.entries(tagsStore.tags);
+    const result: MultiselectOption[] = [];
+    for (const [tag, count] of entries) {
+      const option: MultiselectOption = {
+        text: `${tag} (${count})`,
+        value: tag,
+      };
+      if (tag === 'audio') {
+        option.class = 'audio';
+      }
+      result.push(option);
+    }
+    return result;
+  });
   function toggleShowFilters() {
     uiStore.showFilters = !uiStore.showFilters;
   }
@@ -71,6 +93,14 @@
           <div class="grow" style="border: 2px solid gold"></div>
           <div v-if="uiStore.showFilters">
             <div>Filters:</div>
+            <Multiselect
+              :options="tagsOptions"
+              :selected="filterTags"
+              placeholder="Tags"
+              direction="up"
+              close
+              :mode="filtersStore.filters.tagMode"
+            />
           </div>
           <footer class="flex items-center justify-evenly mt-auto">
             <button
