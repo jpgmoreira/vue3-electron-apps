@@ -66,18 +66,24 @@
         />
       </div>
       <div class="custom-resizer" @mousedown="resizing = true"></div>
-      <div class="grow flex flex-col">
-        <footer class="flex items-center justify-evenly mt-auto">
-          <button
-            type="button"
-            class="caret-button"
-            :class="{ rotated: !uiStore.showFilters }"
-            @click="toggleShowFilters"
-          ></button>
-          <button type="button" class="btn-primary">Filter</button>
-          <button type="button" class="btn-primary">Clear</button>
-          <button type="button" class="btn-primary whitespace-nowrap">Add card</button>
-        </footer>
+      <div class="grow relative" style="border: 1px solid orchid">
+        <div class="flex flex-col absolute inset-0" style="border: 1px solid lightgreen">
+          <div class="grow" style="border: 2px solid gold"></div>
+          <div v-if="uiStore.showFilters">
+            <div>Filters:</div>
+          </div>
+          <footer class="flex items-center justify-evenly mt-auto">
+            <button
+              type="button"
+              class="caret-button"
+              :class="{ rotated: !uiStore.showFilters }"
+              @click="toggleShowFilters"
+            ></button>
+            <button type="button" class="btn-primary">Filter</button>
+            <button type="button" class="btn-primary">Clear</button>
+            <button type="button" class="btn-primary whitespace-nowrap">Add card</button>
+          </footer>
+        </div>
       </div>
     </div>
   </div>
