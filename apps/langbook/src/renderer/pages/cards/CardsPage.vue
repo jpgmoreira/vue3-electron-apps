@@ -12,7 +12,7 @@
   const uiStore = useUIStore();
   const resizing = ref(false);
   const explorerWidth = ref(uiStore.settings.explorerWidth);
-  const explorerScrollTop = ref(uiStore.settings.explorerScrollTop);
+  const initialExplorerScroll = ref(uiStore.settings.explorerScrollTop);
   function windowMouseMove(e: MouseEvent) {
     if (!resizing.value) return;
     const { clientX } = e;
@@ -24,6 +24,9 @@
   }
   function windowMouseUp() {
     resizing.value = false;
+  }
+  function explorerScroll(scrollTop: number) {
+    uiStore.updateSettings({ explorerScrollTop: scrollTop });
   }
   async function beforeCreateNode(type: NodeType, callback: CreateNodeCallback) {
     if (type === 'dir') {
@@ -51,7 +54,13 @@
     <Header />
     <div class="flex grow">
       <div :style="{ width: `${explorerWidth}px` }">
-        <Explorer file-icon checkbox @before-create-node="beforeCreateNode" />
+        <Explorer
+          file-icon
+          checkbox
+          :initial-scroll-top="initialExplorerScroll"
+          @scroll="explorerScroll"
+          @before-create-node="beforeCreateNode"
+        />
       </div>
       <div class="custom-resizer" @mousedown="resizing = true"></div>
     </div>

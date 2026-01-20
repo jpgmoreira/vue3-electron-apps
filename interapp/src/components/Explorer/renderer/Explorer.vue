@@ -45,6 +45,7 @@
       dirIcon?: boolean;
       fileIcon?: boolean;
       selectionOnly?: boolean;
+      initialScrollTop?: number;
     }>(),
     {
       checkbox: false,
@@ -52,6 +53,7 @@
       dirIcon: false,
       fileIcon: false,
       selectionOnly: false,
+      initialScrollTop: 0,
     }
   );
 
@@ -66,6 +68,7 @@
       callback: DeleteNodeCallback
     ): void;
     (e: 'node-click', node: Node, keys: ModifierKeys): void;
+    (e: 'scroll', scrollTop: number): void;
   }>();
 
   // --- Variables: ---
@@ -82,7 +85,7 @@
     ctrl: false,
   };
 
-  const lastScrollTop = ref(0);
+  const lastScrollTop = ref(props.initialScrollTop);
 
   const hasLoaded = ref(false);
   const tree = ref<TreeSnapshot | null>(null);
@@ -426,6 +429,7 @@
       );
       updateTree(newTree);
       nodeContainerOffset.value = (tree.value?.page[0].ui.position || 0) * rowHeight; // This is the key! Using a computed-value causes flickering.
+      emit('scroll', lastScrollTop.value);
     }, 40);
   }
 
@@ -475,7 +479,7 @@
     hasLoaded.value = true;
     await nextTick();
     if (scrollContainer.value) {
-      scrollContainer.value.scrollTop = 0;
+      scrollContainer.value.scrollTop = lastScrollTop.value;
     }
     nodeContainerOffset.value = (tree.value?.page[0]?.ui.position || 0) * rowHeight;
     window.addEventListener('click', windowClick);
