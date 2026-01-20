@@ -13,17 +13,8 @@
   const resizing = ref(false);
   const explorerWidth = ref(uiStore.settings.explorerWidth);
   const initialExplorerScroll = ref(uiStore.settings.explorerScrollTop);
-  function windowMouseMove(e: MouseEvent) {
-    if (!resizing.value) return;
-    const { clientX } = e;
-    if (clientX < 0 || clientX > window.innerWidth) {
-      return;
-    }
-    explorerWidth.value = clientX;
-    uiStore.updateSettings({ explorerWidth: clientX });
-  }
-  function windowMouseUp() {
-    resizing.value = false;
+  function toggleShowFilters() {
+    uiStore.showFilters = !uiStore.showFilters;
   }
   function explorerScroll(scrollTop: number) {
     uiStore.updateSettings({ explorerScrollTop: scrollTop });
@@ -38,6 +29,18 @@
       const session = await window.api.invoke<Session>(InvokeChannels.createSession);
       callback(session.id, session.name);
     }
+  }
+  function windowMouseMove(e: MouseEvent) {
+    if (!resizing.value) return;
+    const { clientX } = e;
+    if (clientX < 0 || clientX > window.innerWidth) {
+      return;
+    }
+    explorerWidth.value = clientX;
+    uiStore.updateSettings({ explorerWidth: clientX });
+  }
+  function windowMouseUp() {
+    resizing.value = false;
   }
   onMounted(async () => {
     window.addEventListener('mouseup', windowMouseUp);
@@ -63,6 +66,19 @@
         />
       </div>
       <div class="custom-resizer" @mousedown="resizing = true"></div>
+      <div class="grow flex flex-col">
+        <footer class="flex items-center justify-evenly mt-auto">
+          <button
+            type="button"
+            class="caret-button"
+            :class="{ rotated: !uiStore.showFilters }"
+            @click="toggleShowFilters"
+          ></button>
+          <button type="button" class="btn-primary">Filter</button>
+          <button type="button" class="btn-primary">Clear</button>
+          <button type="button" class="btn-primary whitespace-nowrap">Add card</button>
+        </footer>
+      </div>
     </div>
   </div>
 </template>
@@ -70,5 +86,11 @@
 <style scoped>
   .cards-page.resizing {
     cursor: col-resize;
+  }
+  .caret-button {
+    transition: transform 0.2s ease;
+  }
+  .caret-button.rotated {
+    transform: rotate(180deg);
   }
 </style>

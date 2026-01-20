@@ -6,7 +6,11 @@ import { StartupData } from '@common/schemas/startup';
 
 export const useUIStore = defineStore('ui', {
   state: () => ({
+    // Persisted settings:
     settings: getEmptyUISettings(),
+    // Not persisted:
+    showFilters: true,
+    // Internal:
     timer: undefined as ReturnType<typeof setTimeout> | undefined,
   }),
   actions: {
