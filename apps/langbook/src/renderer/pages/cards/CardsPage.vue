@@ -12,12 +12,14 @@
   import { InvokeChannels } from '@preload/channels/invoke';
   import { randomId } from '@interapp/utils/utils';
   import { Session } from '@common/schemas/session';
+  import { useRouter } from 'vue-router';
   import { MultiselectOption } from '@interapp/components/Multiselect.vue';
   import SelectionList from '@interapp/components/SelectionList.vue';
-  import { FREQUENCY_OPTIONS } from './options';
+  import { FREQUENCY_OPTIONS, YES_OR_NO_OPTIONS } from './options';
   const uiStore = useUIStore();
   const tagsStore = useTagsStore();
   const filtersStore = useFiltersStore();
+  const router = useRouter();
   const resizing = ref(false);
   const explorerWidth = ref(uiStore.settings.explorerWidth);
   const initialExplorerScroll = uiStore.settings.explorerScrollTop;
@@ -39,6 +41,9 @@
   });
   function toggleShowFilters() {
     uiStore.showFilters = !uiStore.showFilters;
+  }
+  function goAddCard() {
+    router.push('/editor');
   }
   function explorerScroll(scrollTop: number) {
     uiStore.updateSettings({ explorerScrollTop: scrollTop });
@@ -115,16 +120,14 @@
                 <span>Frequency:</span>
                 <SelectionList
                   :options="[...FREQUENCY_OPTIONS]"
-                  :SELECTED="filtersStore.filters.frequencies"
+                  :selected="filtersStore.filters.frequencies"
                 />
               </div>
               <div class="flex items-center gap-1">
-                <label for="bucket-input">Review bucket:</label>
-                <input
-                  type="checkbox"
-                  id="bucket-input"
-                  name="bucket-input"
-                  v-model="filtersStore.filters.bucket"
+                <span>Review bucket:</span>
+                <SelectionList
+                  :options="[...YES_OR_NO_OPTIONS]"
+                  :selected="filtersStore.filters.bucket"
                 />
               </div>
             </div>
@@ -138,7 +141,9 @@
             ></button>
             <button type="button" class="btn-primary">Filter</button>
             <button type="button" class="btn-primary">Clear</button>
-            <button type="button" class="btn-primary whitespace-nowrap">Add card</button>
+            <button type="button" class="btn-primary whitespace-nowrap" @click="goAddCard">
+              Add card
+            </button>
           </footer>
         </div>
       </div>
