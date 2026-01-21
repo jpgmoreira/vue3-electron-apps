@@ -160,7 +160,9 @@
             >
               Filter
             </button>
-            <button type="button" class="btn-primary">Clear</button>
+            <button type="button" class="btn-primary" @click="filtersStore.clickedClear">
+              Clear
+            </button>
             <button type="button" class="btn-primary whitespace-nowrap" @click="goAddCard">
               Add card
             </button>

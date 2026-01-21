@@ -54,6 +54,18 @@ export const useFiltersStore = defineStore('filters', {
       await window.api.invoke(InvokeChannels.updateFilters, toRawDeep(this.filters));
       this.dirty = false;
     },
+    clickedClear() {
+      if (
+        this.filters.bucket.length ||
+        this.filters.frequencies.length ||
+        this.filters.tags.length ||
+        this.filters.tagMode !== 'all' ||
+        this.filters.text
+      ) {
+        this.dirty = true;
+      }
+      this.clear();
+    },
     clear() {
       this.filters = getEmptyFilters();
     },
