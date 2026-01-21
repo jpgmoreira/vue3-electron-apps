@@ -25,7 +25,6 @@
   const filtering = ref(false);
   const explorerWidth = ref(uiStore.settings.explorerWidth);
   const initialExplorerScroll = uiStore.settings.explorerScrollTop;
-  const filterTags = computed(() => filtersStore.filters.tags);
   const tagsOptions = computed(() => {
     const entries = Object.entries(tagsStore.tags);
     const result: MultiselectOption[] = [];
@@ -45,6 +44,7 @@
     router.push('/editor');
   }
   async function filterClick() {
+    if (!filtersStore.dirty) return;
     filtering.value = true;
     try {
       await filtersStore.updateFilters();
@@ -110,7 +110,7 @@
             <div>Filters:</div>
             <Multiselect
               :options="tagsOptions"
-              :selected="filterTags"
+              :selected="filtersStore.filters.tags"
               placeholder="Tags"
               direction="up"
               close
