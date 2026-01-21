@@ -18,16 +18,6 @@
     (e: 'blur'): void;
   }>();
 
-  // --- Props: ---
-
-  const props = defineProps({
-    initial: {
-      type: String,
-      default: '',
-      required: false,
-    },
-  });
-
   // --- Variables: ---
 
   const rteRef = useTemplateRef('rte');
@@ -43,14 +33,6 @@
   function focus() {
     isToolbarVisible.value = true;
     rteRef.value?.focus();
-  }
-
-  /**
-   * Refreshes content based on the "initial" prop.
-   */
-  function refresh() {
-    if (!rteRef.value) return;
-    rteRef.value.innerHTML = props.initial;
   }
 
   function blur() {
@@ -155,32 +137,6 @@
     const si = [...rteRef.value.querySelectorAll(`.${selectedImageClass}`)];
     si.forEach((element) => element.classList.remove(selectedImageClass));
   }
-
-  // --- Drop: ---
-
-  function drop(e: DragEvent) {
-    // Due to some problems and difficulties related to drop events in JavaScript, the only thing you are allowed to drop
-    //   in a card's field are image files from your operating system.
-    e.preventDefault();
-    if (!e.dataTransfer) return;
-    for (const item of e.dataTransfer.items) {
-      if (item.kind === 'file' && item.type.startsWith('image/')) {
-        const file = item.getAsFile();
-        if (!file) return;
-        console.log('-> drop an image from the operating system.');
-        const reader = new FileReader();
-        reader.onload = (fileEvent) => {
-          focus();
-          const result = fileEvent.target?.result;
-          if (typeof result !== 'string') return;
-          document.execCommand('insertImage', false, result);
-        };
-        reader.readAsDataURL(file);
-      }
-    }
-  }
-
-  // --- Paste: ---
 
   // --- Add identifier class to all spans before cut and copy: ---
 
@@ -332,13 +288,6 @@
   function changeBackgroundColor(color: string) {
     document.execCommand('backColor', false, color);
   }
-
-  // -- Lifecycle hooks: ---
-
-  onMounted(() => {
-    document.execCommand('styleWithCSS');
-    refresh();
-  });
 </script>
 
 <template>
@@ -396,14 +345,5 @@
     white-space: pre-wrap;
     word-wrap: normal;
     word-break: normal;
-  }
-  :deep(.rte img) {
-    display: inline-block;
-  }
-  :deep(.rte span) {
-    color: inherit;
-  }
-  .context-menu {
-    position: absolute;
   }
 </style>
