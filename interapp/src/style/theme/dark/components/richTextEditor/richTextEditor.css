@@ -1,0 +1,36 @@
+.theme-dark .rte-root .selected-image {
+  outline: 4px solid rgb(30, 144, 255, 0.6);
+}
+
+.theme-dark .rte-root .rte {
+  background-color: #292a2b;
+  padding: 3px;
+  border: 1px solid #464b53;
+}
+
+.theme-dark .rte-root .context-menu {
+  background: #1e1e1e;
+  border: 1px solid #3b3b3b;
+  border-radius: 6px;
+  padding: 4px 0;
+  min-width: 150px;
+  box-shadow: 0 4px 5px rgba(0, 0, 0, 0.45);
+  font-size: 14px;
+  color: #e5e5e5;
+  z-index: 999999;
+}
+
+.theme-dark .rte-root .context-menu > div {
+  padding: 7px 12px;
+  cursor: pointer;
+  user-select: none;
+  transition: background 0.15s ease;
+}
+
+.theme-dark .rte-root .context-menu > div:hover {
+  background: #2a2a2a;
+}
+
+.theme-dark .rte-root .context-menu > div:active {
+  background: #333;
+}

@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+  import RichTextEditor from '@interapp/components/RichTextEditor/RichTextEditor.vue';
   import { useRouter } from 'vue-router';
   const router = useRouter();
   function onClick() {
@@ -7,5 +8,8 @@
 </script>
 
 <template>
-  <button type="button" class="btn-primary" @click="onClick">Go back</button>
+  <div>
+    <RichTextEditor />
+    <button type="button" class="btn-primary" @click="onClick">Go back</button>
+  </div>
 </template>

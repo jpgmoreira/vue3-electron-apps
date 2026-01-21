@@ -17,9 +17,11 @@
   import SelectionList from '@interapp/components/SelectionList.vue';
   import { FREQUENCY_OPTIONS, YES_OR_NO_OPTIONS } from './options';
   import { CardFrequency } from '@common/schemas/card';
+  import { useEditorStore } from '@renderer/store/editor';
   const uiStore = useUIStore();
   const tagsStore = useTagsStore();
   const filtersStore = useFiltersStore();
+  const editorStore = useEditorStore();
   const router = useRouter();
   const resizing = ref(false);
   const filtering = ref(false);
@@ -41,6 +43,7 @@
     return result;
   });
   function goAddCard() {
+    editorStore.clear();
     router.push('/editor');
   }
   async function filterClick() {

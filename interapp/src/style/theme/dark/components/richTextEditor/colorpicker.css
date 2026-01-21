@@ -1,0 +1,25 @@
+.theme-dark .color-picker {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 3px;
+  overflow-y: auto;
+  height: 200px;
+}
+.theme-dark .color-picker::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+.theme-dark .color-row {
+  display: flex;
+  gap: 3px;
+}
+.theme-dark .color-box {
+  width: 26px;
+  height: 26px;
+  cursor: pointer;
+  border: 1px solid rgba(0, 0, 0, 0.3);
+}
+.theme-dark .color-box:hover {
+  outline: 2px solid rgba(30, 144, 255, 0.9);
+}
