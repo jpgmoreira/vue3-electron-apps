@@ -7,7 +7,7 @@
   <Header class="flex justify-between">
     <div class="flex">
       <HeaderButton to="/cards">Cards</HeaderButton>
-      <HeaderButton to="/flashcards">Flashcards</HeaderButton>
+      <HeaderButton to="/pre-flashcards">Flashcards</HeaderButton>
     </div>
     <div class="flex">
       <HeaderButton to="/graph">Graph</HeaderButton>
