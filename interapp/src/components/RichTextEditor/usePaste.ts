@@ -139,6 +139,7 @@ export function usePaste() {
       // and that have their source as an HTTP or HTTPS url.
       // This was done because I don't style content pasted from outside of the editor,
       // and I don't think it is important to keep the images in these cases.
+      // Also images copied and pasted from inside of the editor will be base64 images.
       if (el.tagName === 'IMG') {
         try {
           const url = new URL((el as HTMLImageElement).src);
