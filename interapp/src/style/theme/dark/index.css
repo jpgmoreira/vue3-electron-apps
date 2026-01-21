@@ -20,5 +20,7 @@
 @import './components/explorer/contextmenu.css';
 @import './components/explorer/explorer.css';
 
+@import './components/rte/rte.css';
+
 @import './pages/login.css';
 @import './pages/settings.css';

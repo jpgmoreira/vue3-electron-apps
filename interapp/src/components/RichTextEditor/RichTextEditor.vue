@@ -1,3 +1,7 @@
 <script lang="ts" setup></script>
 
-<template>RTE</template>
+<template>
+  <div class="rte">
+    <div class="editor" spellcheck="false" contenteditable="true"></div>
+  </div>
+</template>
