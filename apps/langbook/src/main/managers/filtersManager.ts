@@ -38,7 +38,7 @@ export class FiltersManager {
     return cloneDeep(this.target);
   }
 
-  public setFilters(filters: Partial<Filters>) {
+  public updateFilters(filters: Partial<Filters>) {
     this.guard(this.proxy);
     Object.assign(this.proxy, filters);
   }

@@ -26,6 +26,9 @@ export const useUIStore = defineStore('ui', {
         window.api.invoke(InvokeChannels.updateUISettings, toRawDeep(this.settings));
       }, 500);
     },
+    toggleShowFilters() {
+      this.showFilters = !this.showFilters;
+    },
     clear() {
       this.settings = getEmptyUISettings();
     },

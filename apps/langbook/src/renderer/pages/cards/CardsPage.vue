@@ -16,6 +16,7 @@
   import { MultiselectOption } from '@interapp/components/Multiselect.vue';
   import SelectionList from '@interapp/components/SelectionList.vue';
   import { FREQUENCY_OPTIONS, YES_OR_NO_OPTIONS } from './options';
+  import { CardFrequency } from '@common/schemas/card';
   const uiStore = useUIStore();
   const tagsStore = useTagsStore();
   const filtersStore = useFiltersStore();
@@ -39,11 +40,12 @@
     }
     return result;
   });
-  function toggleShowFilters() {
-    uiStore.showFilters = !uiStore.showFilters;
-  }
   function goAddCard() {
     router.push('/editor');
+  }
+  async function filterClick() {
+    await filtersStore.updateFilters();
+    // TODO: filter...
   }
   function explorerScroll(scrollTop: number) {
     uiStore.updateSettings({ explorerScrollTop: scrollTop });
@@ -107,13 +109,16 @@
               direction="up"
               close
               :mode="filtersStore.filters.tagMode"
+              @change-mode="filtersStore.toggleTagMode"
+              @select-option="filtersStore.selectTag"
+              @deselect-option="filtersStore.deselectTag"
             />
             <input
               type="text"
               placeholder="Text"
               spellcheck="false"
               v-model.trim="filtersStore.filters.text"
-              @input="filtersStore.dirty = true"
+              @input="filtersStore.setDirty(true)"
             />
             <div class="flex items-center justify-between">
               <div class="flex items-center gap-1">
@@ -121,6 +126,7 @@
                 <SelectionList
                   :options="[...FREQUENCY_OPTIONS]"
                   :selected="filtersStore.filters.frequencies"
+                  @toggle="filtersStore.toggleFrequency"
                 />
               </div>
               <div class="flex items-center gap-1">
@@ -128,6 +134,7 @@
                 <SelectionList
                   :options="[...YES_OR_NO_OPTIONS]"
                   :selected="filtersStore.filters.bucket"
+                  @toggle="filtersStore.toggleBucket"
                 />
               </div>
             </div>
@@ -137,9 +144,15 @@
               type="button"
               class="caret-button"
               :class="{ rotated: !uiStore.showFilters }"
-              @click="toggleShowFilters"
+              @click="uiStore.toggleShowFilters"
             ></button>
-            <button type="button" class="btn-primary">Filter</button>
+            <button
+              type="button"
+              :class="filtersStore.dirty ? 'btn-warning' : 'btn-primary'"
+              @click="filterClick"
+            >
+              Filter
+            </button>
             <button type="button" class="btn-primary">Clear</button>
             <button type="button" class="btn-primary whitespace-nowrap" @click="goAddCard">
               Add card

@@ -7,4 +7,5 @@ export enum InvokeChannels {
   updateUISettings = 'update-ui-settings',
   createFolder = 'create-folder',
   createSession = 'create-session',
+  updateFilters = 'update-filters',
 }
