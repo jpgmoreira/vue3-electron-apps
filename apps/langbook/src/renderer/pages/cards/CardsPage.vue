@@ -22,6 +22,7 @@
   const filtersStore = useFiltersStore();
   const router = useRouter();
   const resizing = ref(false);
+  const filtering = ref(false);
   const explorerWidth = ref(uiStore.settings.explorerWidth);
   const initialExplorerScroll = uiStore.settings.explorerScrollTop;
   const filterTags = computed(() => filtersStore.filters.tags);
@@ -44,8 +45,13 @@
     router.push('/editor');
   }
   async function filterClick() {
-    await filtersStore.updateFilters();
-    // TODO: filter...
+    filtering.value = true;
+    try {
+      await filtersStore.updateFilters();
+      // TODO: filter...
+    } finally {
+      filtering.value = false;
+    }
   }
   function explorerScroll(scrollTop: number) {
     uiStore.updateSettings({ explorerScrollTop: scrollTop });
@@ -150,6 +156,7 @@
               type="button"
               :class="filtersStore.dirty ? 'btn-warning' : 'btn-primary'"
               @click="filterClick"
+              :disabled="filtering"
             >
               Filter
             </button>
