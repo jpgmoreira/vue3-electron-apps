@@ -25,13 +25,19 @@
   function hideContext() {
     context.visible = false;
   }
+  function contextCut() {
+    document.execCommand('cut');
+  }
+  function contextCopy() {
+    document.execCommand('copy');
+  }
 </script>
 
 <template>
   <div class="rte" @click="hideContext" @wheel="hideContext">
     <div v-if="context.visible" ref="context-menu" :style="contextStyle" class="context-menu">
-      <div>Cut</div>
-      <div>Copy</div>
+      <div @click="contextCut">Cut</div>
+      <div @click="contextCopy">Copy</div>
       <div>Paste</div>
     </div>
     <div
