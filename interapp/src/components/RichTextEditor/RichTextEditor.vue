@@ -41,10 +41,16 @@
 
   const isToolbarVisible = ref(false);
 
-  // Class to identify spans that were styled inside of this component:
+  // Class to identify spans that were styled inside of this component.
+  // This is needed to allow pasting styled content that was styled
+  //   inside of this component only. Styled content from outside
+  //   will have its styles dropped.
+  // Remember that all text styles are applied to span elements only,
+  //  that's why I treat only span elements.
   const styledSpanClass = 'xrte';
 
-  // Current image selected for resizing:
+  // Current image selected for resizing.
+  // There will be at most once with this class at a time.
   const selectedImageClass = 'selected-image';
 
   const allowedSpanStyles = Object.freeze([
@@ -65,6 +71,9 @@
     rteRef.value?.focus();
   }
 
+  /**
+   * Refreshes content based on the "initial" prop.
+   */
   function refresh() {
     if (!rteRef.value) return;
     rteRef.value.innerHTML = props.initial;
@@ -159,6 +168,7 @@
 
   function getContent() {
     if (!rteRef.value) return '';
+    // Create a clone for precaution, even though the HTML content is not modified directly.
     const clone = rteRef.value.cloneNode(true) as HTMLElement;
     let content = normalizeLines(clone);
     content = linkifyText(content);
@@ -306,7 +316,6 @@
       return;
     }
     // 2. Check if pasting HTML content.
-    // FIX: Allow pasting of content that comes from inside the RTE, including styles and images.
     const html = data.getData('text/html').trim();
     if (html) {
       console.log('-> paste as html');
@@ -352,14 +361,21 @@
     }
   }
 
+  /**
+   * Sanitizes pasted HTML.
+   * Remember that styled content pasted from outside of the editor
+   *   will have their styles removed.
+   */
   function sanitizeNode(node: Node) {
     const allowedAttributes = ['src', 'class', 'width'];
     const allowedClasses = [styledSpanClass];
     if (node.nodeType === Node.ELEMENT_NODE) {
       const el = node as HTMLElement;
+
+      // --- Attributes: ---
       for (const attr of el.attributes) {
         const name = attr.name.toLowerCase();
-        // Allow pasting only allowed styles for spans.
+        // Allow pasting only allowed styles for spans that came from inside the RTE.
         if (name === 'style' && el.tagName === 'SPAN' && el.classList.contains(styledSpanClass)) {
           cleanSpanStyle(el);
           continue;
@@ -368,6 +384,8 @@
           el.removeAttribute(name);
         }
       }
+
+      // --- Classes: ---
       if (el.hasAttribute('class')) {
         const finalClasses = el.classList.value
           .split(/\s+/)
@@ -378,6 +396,8 @@
           el.removeAttribute('class');
         }
       }
+
+      // --- Images: ---
       if (el.tagName === 'IMG') {
         try {
           const url = new URL((el as HTMLImageElement).src);
@@ -396,6 +416,10 @@
 
   // --- Add identifier class to all spans before cut and copy: ---
 
+  /**
+   * This class is to identify spans that came from inside of the RTE
+   * when you paste content.
+   */
   function addClassToSpans() {
     if (!rteRef.value) return;
     const allSpans = rteRef.value.querySelectorAll('span');
