@@ -20,13 +20,7 @@
 
   // --- Variables: ---
 
-  const rteRef = useTemplateRef('rte');
-
   const isToolbarVisible = ref(false);
-
-  // Current image selected for resizing.
-  // There will be at most once with this class at a time.
-  const selectedImageClass = 'selected-image';
 
   // --- Functions: ---
 
@@ -132,26 +126,6 @@
     return content;
   }
 
-  function clearSelectedImage() {
-    if (!rteRef.value) return;
-    const si = [...rteRef.value.querySelectorAll(`.${selectedImageClass}`)];
-    si.forEach((element) => element.classList.remove(selectedImageClass));
-  }
-
-  // --- Add identifier class to all spans before cut and copy: ---
-
-  /**
-   * This class is to identify spans that came from inside of the RTE
-   * when you paste content.
-   */
-  function addClassToSpans() {
-    if (!rteRef.value) return;
-    const allSpans = rteRef.value.querySelectorAll('span');
-    allSpans.forEach((span) => {
-      span.classList.add(styledSpanClass);
-    });
-  }
-
   // --- Other user events: ---
 
   function keydown(e: KeyboardEvent) {
@@ -202,29 +176,6 @@
         e.preventDefault();
         document.execCommand('insertHtml', false, '&nbsp;');
       }
-    }
-  }
-
-  function click(e: MouseEvent) {
-    if (!rteRef.value) return;
-    const element = e.target as HTMLElement;
-    const si = [...rteRef.value.querySelectorAll(`.${selectedImageClass}`)];
-    clearSelectedImage();
-    if (element.tagName === 'IMG' && !si.includes(element)) {
-      element.classList.add(selectedImageClass);
-    }
-  }
-
-  function wheel(e: WheelEvent) {
-    isCtxVisible.value = false;
-    const el = e.target as HTMLElement;
-    if (el.tagName === 'IMG' && el.classList.contains(selectedImageClass)) {
-      e.preventDefault();
-      const img = el as HTMLImageElement;
-      const factor = e.ctrlKey ? 60 : 6;
-      let scale = img.width ? Math.max(img.width / factor, 3) : 3;
-      if (e.deltaY > 0) scale *= -1;
-      img.width += scale;
     }
   }
 
@@ -297,15 +248,7 @@
       <div @mousedown.prevent="contextMenuCopy">Copy</div>
       <div @mousedown.prevent="contextMenuPaste">Paste</div>
     </div>
-    <div
-      @focus="focus"
-      @blur="blur"
-      @click="click"
-      @keydown="keydown"
-      @mousedown.right.prevent="openCtx"
-      @mousedown.left="isCtxVisible = false"
-      @wheel="wheel"
-    ></div>
+    <div @focus="focus" @blur="blur" @keydown="keydown"></div>
     <Toolbar
       v-if="isToolbarVisible"
       @undo="undo"

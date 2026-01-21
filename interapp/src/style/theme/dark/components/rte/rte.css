@@ -4,6 +4,10 @@
   border: 1px solid #464b53;
 }
 
+.theme-dark .rte .selected-image {
+  outline: 4px solid rgb(30, 144, 255, 0.6);
+}
+
 .theme-dark .rte .context-menu {
   background: #1e1e1e;
   border: 1px solid #3b3b3b;

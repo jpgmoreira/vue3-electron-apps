@@ -3,10 +3,11 @@
    * Here in this component I used the amazing strategy of separating the domains into composables.
    * I should have had this idea much earlier in this project.
    */
-  import { useTemplateRef, onMounted } from 'vue';
+  import { useTemplateRef, onMounted, onBeforeUnmount } from 'vue';
   import { useContextMenu } from './useContextMenu';
   import { usePaste } from './usePaste';
   import { useDrop } from './useDrop';
+  import { useEvents } from './useEvents';
 
   const props = defineProps({
     initial: {
@@ -18,11 +19,13 @@
 
   const contextRef = useTemplateRef('context-menu');
   const editorRef = useTemplateRef('editor');
+  const rteRef = useTemplateRef('rte');
 
-  const { context, hideContext, contextStyle, contextCut, contextCopy, openContext } =
+  const { context, contextStyle, hideContext, contextCut, contextCopy, openContext } =
     useContextMenu(contextRef);
   const { manualPaste, contextPaste, addClassToSpans } = usePaste(editorRef);
   const { drop } = useDrop();
+  const { click, wheel, clearSelectedImage } = useEvents(editorRef);
 
   /**
    * Refreshes content based on the "initial" prop.
@@ -32,14 +35,26 @@
     editorRef.value.innerHTML = props.initial;
   }
 
+  function documentClick(e: MouseEvent) {
+    if (!rteRef.value) throw new Error('RTE not set!');
+    if (!rteRef.value.contains(e.target as Node)) {
+      clearSelectedImage();
+      hideContext();
+    }
+  }
+
   onMounted(() => {
     document.execCommand('styleWithCSS');
+    document.addEventListener('click', documentClick);
     refresh();
+  });
+  onBeforeUnmount(() => {
+    document.removeEventListener('click', documentClick);
   });
 </script>
 
 <template>
-  <div class="rte" @click="hideContext" @wheel="hideContext">
+  <div class="rte" ref="rte" @click="hideContext" @wheel="hideContext">
     <div v-if="context.visible" ref="context-menu" :style="contextStyle" class="context-menu">
       <div @click="contextCut">Cut</div>
       <div @click="contextCopy">Copy</div>
@@ -55,6 +70,8 @@
       @drop="drop"
       @copy="addClassToSpans"
       @cut="addClassToSpans"
+      @click="click"
+      @wheel="wheel"
     ></div>
   </div>
 </template>
