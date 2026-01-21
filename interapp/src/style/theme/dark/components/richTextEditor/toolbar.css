@@ -42,38 +42,38 @@
 }
 
 .theme-dark .rte-root .toolbar-undo {
-  background-image: url('../../../../../components/RichTextEditor/assets/toolbar/undo.png');
+  background-image: url('./assets/toolbar/undo.png');
 }
 .theme-dark .rte-root .toolbar-redo {
-  background-image: url('../../../../../components/RichTextEditor/assets/toolbar/redo.png');
+  background-image: url('./assets/toolbar/redo.png');
 }
 .theme-dark .rte-root .toolbar-bold {
-  background-image: url('../../../../../components/RichTextEditor/assets/toolbar/bold.png');
+  background-image: url('./assets/toolbar/bold.png');
 }
 .theme-dark .rte-root .toolbar-italic {
-  background-image: url('../../../../../components/RichTextEditor/assets/toolbar/italic.png');
+  background-image: url('./assets/toolbar/italic.png');
 }
 .theme-dark .rte-root .toolbar-underline {
-  background-image: url('../../../../../components/RichTextEditor/assets/toolbar/underline.png');
+  background-image: url('./assets/toolbar/underline.png');
 }
 .theme-dark .rte-root .toolbar-strikeThrough {
-  background-image: url('../../../../../components/RichTextEditor/assets/toolbar/strikethrough.png');
+  background-image: url('./assets/toolbar/strikethrough.png');
 }
 .theme-dark .rte-root .toolbar-superscript {
-  background-image: url('../../../../../components/RichTextEditor/assets/toolbar/superscript.png');
+  background-image: url('./assets/toolbar/superscript.png');
 }
 .theme-dark .rte-root .toolbar-subscript {
-  background-image: url('../../../../../components/RichTextEditor/assets/toolbar/subscript.png');
+  background-image: url('./assets/toolbar/subscript.png');
 }
 .theme-dark .rte-root .toolbar-clear {
-  background-image: url('../../../../../components/RichTextEditor/assets/toolbar/clear.png');
+  background-image: url('./assets/toolbar/clear.png');
 }
 .theme-dark .rte-root .toolbar-resize {
-  background-image: url('../../../../../components/RichTextEditor/assets/toolbar/resize.png');
+  background-image: url('./assets/toolbar/resize.png');
 }
 .theme-dark .rte-root .toolbar-textcolor {
-  background-image: url('../../../../../components/RichTextEditor/assets/toolbar/textcolor.png');
+  background-image: url('./assets/toolbar/textcolor.png');
 }
 .theme-dark .rte-root .toolbar-backgroundcolor {
-  background-image: url('../../../../../components/RichTextEditor/assets/toolbar/backgroundcolor.png');
+  background-image: url('./assets/toolbar/backgroundcolor.png');
 }
