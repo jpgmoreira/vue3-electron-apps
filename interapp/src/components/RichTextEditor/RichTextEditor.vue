@@ -1,9 +1,15 @@
 <script lang="ts" setup>
+  /**
+   * Here in this component I used the amazing strategy of separating the domains into composables.
+   * I should have had this idea much earlier in this project.
+   */
   import { useTemplateRef } from 'vue';
   import { useContextMenu } from './useContextMenu';
+  import { usePaste } from './usePaste';
   const contextRef = useTemplateRef('context-menu');
-  const { context, hideContext, contextStyle, contextCut, contextCopy, contextPaste, openContext } =
+  const { context, hideContext, contextStyle, contextCut, contextCopy, openContext } =
     useContextMenu(contextRef);
+  const { manualPaste, contextPaste } = usePaste();
 </script>
 
 <template>
@@ -18,6 +24,7 @@
       spellcheck="false"
       contenteditable="true"
       @mousedown.right.prevent="openContext"
+      @paste="manualPaste"
     ></div>
   </div>
 </template>

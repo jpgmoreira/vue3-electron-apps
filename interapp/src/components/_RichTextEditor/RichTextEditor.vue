@@ -31,38 +31,12 @@
   // --- Variables: ---
 
   const rteRef = useTemplateRef('rte');
-  const isCtxVisible = ref(false);
-  const ctxStyle = reactive({
-    left: '',
-    right: '',
-    top: '',
-    bottom: '',
-  });
 
   const isToolbarVisible = ref(false);
-
-  // Class to identify spans that were styled inside of this component.
-  // This is needed to allow pasting styled content that was styled
-  //   inside of this component only. Styled content from outside
-  //   will have its styles dropped.
-  // Remember that all text styles are applied to span elements only,
-  //  that's why I treat only span elements.
-  const styledSpanClass = 'xrte';
 
   // Current image selected for resizing.
   // There will be at most once with this class at a time.
   const selectedImageClass = 'selected-image';
-
-  const allowedSpanStyles = Object.freeze([
-    'font-weight',
-    'font-style',
-    'font-size',
-    'text-decoration',
-    'text-decoration-line',
-    'color',
-    'background-color',
-    'vertical-align',
-  ]);
 
   // --- Functions: ---
 
@@ -182,90 +156,6 @@
     si.forEach((element) => element.classList.remove(selectedImageClass));
   }
 
-  function openCtx(e: MouseEvent) {
-    const rte = rteRef.value;
-    if (!rte) return;
-    const rect = rte.getBoundingClientRect();
-    const rl = rect.left,
-      rr = rect.right,
-      rt = rect.top,
-      rb = rect.bottom,
-      cx = e.clientX,
-      cy = e.clientY;
-    const ctxWidth = 100,
-      ctxHeight = 100;
-    Object.assign(ctxStyle, {
-      left: '',
-      right: '',
-      top: '',
-      bottom: '',
-    });
-    if (rb - cy < ctxHeight) {
-      ctxStyle.bottom = rb - cy + 'px';
-    } else {
-      ctxStyle.top = cy - rt + 'px';
-    }
-    if (rr - cx < ctxWidth) {
-      ctxStyle.right = rr - cx + 'px';
-    } else {
-      ctxStyle.left = cx - rl + 'px';
-    }
-    isCtxVisible.value = true;
-  }
-
-  // --- Context menu interactions: ---
-
-  function contextMenuCopy() {
-    document.execCommand('copy');
-    isCtxVisible.value = false;
-  }
-
-  async function contextMenuPaste() {
-    isCtxVisible.value = false;
-    try {
-      const clipboardItems = await navigator.clipboard.read();
-      const dataTransfer = new DataTransfer();
-      let html = '';
-      let plainText = '';
-      for (const item of clipboardItems) {
-        for (const type of item.types) {
-          const blob = await item.getType(type);
-          // 1. If it is an image:
-          if (type.startsWith('image/')) {
-            const file = new File([blob], 'pasted-image', { type });
-            dataTransfer.items.add(file);
-            continue;
-          }
-          // 2. If it is HTML:
-          if (type === 'text/html') {
-            html = await blob.text();
-            dataTransfer.setData('text/html', html);
-            continue;
-          }
-          // 3. If it is plain text:
-          if (type === 'text/plain') {
-            plainText = await blob.text();
-            dataTransfer.setData('text/plain', plainText);
-            continue;
-          }
-        }
-      }
-      // Fallback for plain text:
-      if (!plainText) {
-        const txt = await navigator.clipboard.readText();
-        if (txt) dataTransfer.setData('text/plain', txt);
-      }
-      handlePaste(dataTransfer);
-    } catch (err) {
-      console.warn('Clipboard read failed:', err);
-    }
-  }
-
-  function contextMenuCut() {
-    document.execCommand('cut');
-    isCtxVisible.value = false;
-  }
-
   // --- Drop: ---
 
   function drop(e: DragEvent) {
@@ -291,128 +181,6 @@
   }
 
   // --- Paste: ---
-
-  function paste(e: ClipboardEvent) {
-    e.preventDefault();
-    const data = e.clipboardData;
-    if (!data) return;
-    handlePaste(data);
-  }
-
-  function handlePaste(data: DataTransfer) {
-    // 1. Check if pasting an image from the clipboard:
-    const items = data.items;
-    if (items && items.length && items[0].kind === 'file' && items[0].type.startsWith('image/')) {
-      const file = items[0].getAsFile();
-      if (!file) return;
-      console.log('-> paste an image from the clipboard.');
-      const reader = new FileReader();
-      reader.onload = (fileEvent) => {
-        const result = fileEvent.target?.result;
-        if (typeof result !== 'string') return;
-        document.execCommand('insertImage', false, result);
-      };
-      reader.readAsDataURL(file);
-      return;
-    }
-    // 2. Check if pasting HTML content.
-    const html = data.getData('text/html').trim();
-    if (html) {
-      console.log('-> paste as html');
-      const cleaned = cleanPastedHTML(html);
-      setTimeout(() => {
-        document.execCommand('insertHTML', false, cleaned);
-      }, 0);
-      return;
-    }
-    // 3. Paste as plaintext:
-    const text = data.getData('text/plain').trim();
-    if (text) {
-      console.log('-> paste as plaintext');
-      setTimeout(() => {
-        document.execCommand('insertText', false, text);
-      }, 0);
-    }
-  }
-
-  function cleanPastedHTML(html: string): string {
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(html, 'text/html');
-    sanitizeNode(doc.body);
-    return doc.body.innerHTML;
-  }
-
-  function cleanSpanStyle(el: HTMLSpanElement) {
-    const style = el.getAttribute('style');
-    if (style) {
-      const styleMap = style
-        .split(';')
-        .map((s) => s.trim())
-        .filter(Boolean);
-      const filtered = styleMap.filter((s) => {
-        const prop = s.split(':')[0].trim();
-        return allowedSpanStyles.includes(prop);
-      });
-      if (filtered.length > 0) {
-        el.setAttribute('style', filtered.join('; ') + ';');
-      } else {
-        el.removeAttribute('style');
-      }
-    }
-  }
-
-  /**
-   * Sanitizes pasted HTML.
-   * Remember that styled content pasted from outside of the editor
-   *   will have their styles removed.
-   */
-  function sanitizeNode(node: Node) {
-    const allowedAttributes = ['src', 'class', 'width'];
-    const allowedClasses = [styledSpanClass];
-    if (node.nodeType === Node.ELEMENT_NODE) {
-      const el = node as HTMLElement;
-
-      // --- Attributes: ---
-      for (const attr of el.attributes) {
-        const name = attr.name.toLowerCase();
-        // Allow pasting only allowed styles for spans that came from inside the RTE.
-        if (name === 'style' && el.tagName === 'SPAN' && el.classList.contains(styledSpanClass)) {
-          cleanSpanStyle(el);
-          continue;
-        }
-        if (!allowedAttributes.includes(name)) {
-          el.removeAttribute(name);
-        }
-      }
-
-      // --- Classes: ---
-      if (el.hasAttribute('class')) {
-        const finalClasses = el.classList.value
-          .split(/\s+/)
-          .filter((cls) => allowedClasses.includes(cls));
-        if (finalClasses.length > 0) {
-          el.className = finalClasses.join(' ');
-        } else {
-          el.removeAttribute('class');
-        }
-      }
-
-      // --- Images: ---
-      if (el.tagName === 'IMG') {
-        try {
-          const url = new URL((el as HTMLImageElement).src);
-          if (url.protocol.startsWith('http')) {
-            el.remove();
-            return;
-          }
-        } catch {
-          el.remove();
-          return;
-        }
-      }
-    }
-    node.childNodes.forEach(sanitizeNode);
-  }
 
   // --- Add identifier class to all spans before cut and copy: ---
 

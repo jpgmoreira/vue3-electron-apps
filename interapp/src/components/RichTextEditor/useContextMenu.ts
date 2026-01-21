@@ -31,7 +31,6 @@ export function useContextMenu(contextRef: Ref<HTMLElement | null>) {
   function contextCopy() {
     document.execCommand('copy');
   }
-  function contextPaste() {}
   return {
     context,
     contextStyle,
@@ -39,6 +38,5 @@ export function useContextMenu(contextRef: Ref<HTMLElement | null>) {
     hideContext,
     contextCut,
     contextCopy,
-    contextPaste,
   };
 }
