@@ -16,11 +16,9 @@
 @import './components/multiselect.css';
 @import './components/linechart.css';
 @import './components/selectionlist.css';
+
 @import './components/explorer/contextmenu.css';
 @import './components/explorer/explorer.css';
-@import './components/richTextEditor/colorpicker.css';
-@import './components/richTextEditor/richTextEditor.css';
-@import './components/richTextEditor/toolbar.css';
 
 @import './pages/login.css';
 @import './pages/settings.css';
