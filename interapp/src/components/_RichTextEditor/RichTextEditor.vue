@@ -126,59 +126,6 @@
     return content;
   }
 
-  // --- Other user events: ---
-
-  function keydown(e: KeyboardEvent) {
-    // Allowed keyboard hotkeys:
-    // - CTRL + c: Copy.
-    // - CTRL + v: Paste.
-    // - CTRL + x: Cut.
-    // - CTRL + z: Undo.
-    // - CTRL + y: Redo.
-    // - CTRL + b: Toggle bold.
-    // - CTRL + i: Toggle italic.
-    // - CTRL + u: Toggle underline.
-    // - CTRL + a: Select all.
-    // - CTRL + s: Toggle strikethrough.
-    // - CTRL + <arrow_keys>: Jump whole words.
-    // - CTRL + SHIFT + <arrow_keys>: Jump whole words selecting.
-    // - CTRL + SHIFT + v: Paste as plaintext.
-    const key = e.key.toLowerCase();
-    if (e.ctrlKey) {
-      switch (key) {
-        case 'c':
-        case 'v':
-        case 'z':
-        case 'y':
-        case 'b':
-        case 'i':
-        case 'u':
-        case 'a':
-        case 'arrowup':
-        case 'arrowdown':
-        case 'arrowleft':
-        case 'arrowright':
-          break;
-        case 's':
-          document.execCommand('strikeThrough');
-          break;
-        case 'x':
-          document.execCommand('cut');
-          break;
-        default:
-          e.preventDefault();
-      }
-    } else {
-      if (key === 'tab') {
-        e.preventDefault();
-        document.execCommand('insertHtml', false, '&nbsp;'.repeat(8));
-      } else if (key === ' ') {
-        e.preventDefault();
-        document.execCommand('insertHtml', false, '&nbsp;');
-      }
-    }
-  }
-
   // -- Toolbar events: ---
 
   function undo() {
@@ -243,12 +190,7 @@
 
 <template>
   <div class="rte-root">
-    <div v-if="isCtxVisible" :style="ctxStyle" class="context-menu">
-      <div @mousedown.prevent="contextMenuCut">Cut</div>
-      <div @mousedown.prevent="contextMenuCopy">Copy</div>
-      <div @mousedown.prevent="contextMenuPaste">Paste</div>
-    </div>
-    <div @focus="focus" @blur="blur" @keydown="keydown"></div>
+    <div @focus="focus" @blur="blur"></div>
     <Toolbar
       v-if="isToolbarVisible"
       @undo="undo"

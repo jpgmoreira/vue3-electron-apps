@@ -8,6 +8,7 @@
   import { usePaste } from './usePaste';
   import { useDrop } from './useDrop';
   import { useEvents } from './useEvents';
+  import { useKeyDown } from './useKeyDown';
 
   const props = defineProps({
     initial: {
@@ -26,6 +27,7 @@
   const { manualPaste, contextPaste, addClassToSpans } = usePaste(editorRef);
   const { drop } = useDrop();
   const { click, wheel, clearSelectedImage } = useEvents(editorRef);
+  const { keydown } = useKeyDown();
 
   /**
    * Refreshes content based on the "initial" prop.
@@ -72,6 +74,7 @@
       @cut="addClassToSpans"
       @click="click"
       @wheel="wheel"
+      @keydown="keydown"
     ></div>
   </div>
 </template>
