@@ -16,6 +16,8 @@
 
   type ToolboxType = '' | 'resize' | 'backgroundcolor' | 'textcolor';
 
+  // Here we emit simple toolbar actions and also actions that
+  // contain some parameter.
   const emit = defineEmits<{
     (e: SimpleToolbarAction): void;
     (e: 'resizeText', size: string): void;
