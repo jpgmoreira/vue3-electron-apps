@@ -298,21 +298,13 @@
       <div @mousedown.prevent="contextMenuPaste">Paste</div>
     </div>
     <div
-      ref="rte"
-      class="rte"
-      spellcheck="false"
-      contenteditable="true"
       @focus="focus"
       @blur="blur"
       @click="click"
-      @copy="addClassToSpans"
-      @cut="addClassToSpans"
       @keydown="keydown"
       @mousedown.right.prevent="openCtx"
       @mousedown.left="isCtxVisible = false"
       @wheel="wheel"
-      @paste="paste"
-      @drop="drop"
     ></div>
     <Toolbar
       v-if="isToolbarVisible"

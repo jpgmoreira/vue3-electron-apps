@@ -21,7 +21,7 @@
 
   const { context, hideContext, contextStyle, contextCut, contextCopy, openContext } =
     useContextMenu(contextRef);
-  const { manualPaste, contextPaste } = usePaste();
+  const { manualPaste, contextPaste, addClassToSpans } = usePaste(editorRef);
   const { drop } = useDrop();
 
   /**
@@ -53,6 +53,8 @@
       @mousedown.right.prevent="openContext"
       @paste="manualPaste"
       @drop="drop"
+      @copy="addClassToSpans"
+      @cut="addClassToSpans"
     ></div>
   </div>
 </template>

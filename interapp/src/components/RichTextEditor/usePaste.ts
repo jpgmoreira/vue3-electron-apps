@@ -1,4 +1,6 @@
-export function usePaste() {
+import { Ref } from 'vue';
+
+export function usePaste(editorRef: Ref<HTMLElement | null>) {
   /**
    * Class to identify spans that were copied from inside of the editor.
    * Remember that all text styles are applied to SPAN tags only.
@@ -199,8 +201,21 @@ export function usePaste() {
     }
   }
 
+  /**
+   * This class is used to identify spans that came from inside of the RTE,
+   * to keep only the styles of these spans when you paste content.
+   */
+  function addClassToSpans() {
+    if (!editorRef.value) throw new Error('Editor not set!');
+    const allSpans = editorRef.value.querySelectorAll('span');
+    allSpans.forEach((span) => {
+      span.classList.add(styledSpanClass);
+    });
+  }
+
   return {
     manualPaste,
     contextPaste,
+    addClassToSpans,
   };
 }
