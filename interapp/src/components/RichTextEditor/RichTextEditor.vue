@@ -77,7 +77,11 @@
     clearSelectedImage();
   }
 
-  // written by ChatGTP and tested.
+  /**
+   * Written by ChatGPT and tested.
+   * Returns a simplified version of an RTE's contents as a HTML string, by reducing
+   *   the amount of HTML bloat that happens in a contenteditable element.
+   */
   function normalizeLines(rte: HTMLElement): string {
     const lines: string[] = [];
     let currentLine: string[] = [];
@@ -541,6 +545,7 @@
 
   onMounted(() => {
     document.execCommand('styleWithCSS');
+    refresh();
   });
 </script>
 
@@ -556,7 +561,6 @@
       class="rte"
       spellcheck="false"
       contenteditable="true"
-      v-html="props.initial"
       @focus="focus"
       @blur="blur"
       @click="click"
