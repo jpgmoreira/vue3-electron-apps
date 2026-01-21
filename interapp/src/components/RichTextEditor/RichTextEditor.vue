@@ -9,6 +9,7 @@
   import { useDrop } from './useDrop';
   import { useEvents } from './useEvents';
   import { useKeyDown } from './useKeyDown';
+  import { useGetContent } from './useGetContent';
 
   const props = defineProps({
     initial: {
@@ -25,9 +26,10 @@
   const { context, contextStyle, hideContext, contextCut, contextCopy, openContext } =
     useContextMenu(contextRef);
   const { manualPaste, contextPaste, addClassToSpans } = usePaste(editorRef);
-  const { drop } = useDrop();
   const { click, wheel, clearSelectedImage } = useEvents(editorRef);
+  const { getContent } = useGetContent(editorRef);
   const { keydown } = useKeyDown();
+  const { drop } = useDrop();
 
   /**
    * Refreshes content based on the "initial" prop.
@@ -44,6 +46,11 @@
       hideContext();
     }
   }
+
+  defineExpose({
+    refresh, // Refreshes content based on the "initial" prop.
+    getContent,
+  });
 
   onMounted(() => {
     document.execCommand('styleWithCSS');
