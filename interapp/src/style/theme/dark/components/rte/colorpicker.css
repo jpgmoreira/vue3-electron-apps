@@ -1,0 +1,19 @@
+.theme-dark .color-picker {
+  background-color: #e4e4e4;
+  border: 1px solid #9c9c9c;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3px;
+  padding: 3px;
+}
+
+.theme-dark .color-box {
+  width: 26px;
+  height: 26px;
+  cursor: pointer;
+  border: 1px solid rgba(0, 0, 0, 0.3);
+}
+
+.theme-dark .color-box:hover {
+  outline: 2px solid rgba(30, 144, 255, 0.9);
+}
