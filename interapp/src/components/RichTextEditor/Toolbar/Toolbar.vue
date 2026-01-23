@@ -1,75 +1,58 @@
 <script lang="ts" setup>
   import { ref } from 'vue';
   import ColorPicker from './ColorPicker.vue';
+  import { useToolbar } from './useToolbar';
 
   type Menu = null | 'textcolor' | 'backgroundcolor';
 
-  // Which menu is currently active for showing the color picker:
   const activeMenu = ref<Menu>(null);
 
-  // Toolbar actions that do not have parameters:
-  type SimpleToolbarAction =
-    | 'undo'
-    | 'redo'
-    | 'bold'
-    | 'italic'
-    | 'underline'
-    | 'strikeThrough'
-    | 'superscript'
-    | 'subscript'
-    | 'clear'
-    | 'increase-font-size'
-    | 'reduce-font-size';
+  const {
+    undo,
+    redo,
+    bold,
+    italic,
+    underline,
+    strikeThrough,
+    superscript,
+    subscript,
+    clear,
+    increaseFontSize,
+    decreaseFontSize,
+    changeTextColor,
+    changeBackgroundColor,
+  } = useToolbar();
 
-  const emit = defineEmits<{
-    (e: SimpleToolbarAction): void;
-
-    // Toolbar actions that have parameters:
-    (e: 'textColor', color: string): void;
-    (e: 'backgroundColor', color: string): void;
-  }>();
-
-  function emitColorEvent(color: string) {
-    if (!activeMenu.value) throw new Error('No active menu set!');
+  function colorEvent(color: string) {
     if (activeMenu.value === 'textcolor') {
-      emit('textColor', color);
+      changeTextColor(color);
     } else if (activeMenu.value === 'backgroundcolor') {
-      emit('backgroundColor', color);
+      changeBackgroundColor(color);
     }
   }
 
   function toggleMenu(menu: Menu) {
-    if (menu === activeMenu.value) {
-      activeMenu.value = null;
-    } else {
-      activeMenu.value = menu;
-    }
+    activeMenu.value = activeMenu.value === menu ? null : menu;
   }
 </script>
 
 <template>
   <div class="toolbar">
     <div class="btn-container">
-      <div class="toolbar-btn toolbar-undo" @mousedown.prevent="emit('undo')"></div>
-      <div class="toolbar-btn toolbar-redo" @mousedown.prevent="emit('redo')"></div>
-      <div class="toolbar-btn toolbar-bold" @mousedown.prevent="emit('bold')"></div>
-      <div class="toolbar-btn toolbar-italic" @mousedown.prevent="emit('italic')"></div>
-      <div class="toolbar-btn toolbar-underline" @mousedown.prevent="emit('underline')"></div>
-      <div
-        class="toolbar-btn toolbar-strikeThrough"
-        @mousedown.prevent="emit('strikeThrough')"
-      ></div>
-      <div class="toolbar-btn toolbar-superscript" @mousedown.prevent="emit('superscript')"></div>
-      <div class="toolbar-btn toolbar-subscript" @mousedown.prevent="emit('subscript')"></div>
-      <div class="toolbar-btn toolbar-clear" @mousedown.prevent="emit('clear')"></div>
+      <div class="toolbar-btn toolbar-undo" @mousedown.prevent="undo"></div>
+      <div class="toolbar-btn toolbar-redo" @mousedown.prevent="redo"></div>
+      <div class="toolbar-btn toolbar-bold" @mousedown.prevent="bold"></div>
+      <div class="toolbar-btn toolbar-italic" @mousedown.prevent="italic"></div>
+      <div class="toolbar-btn toolbar-underline" @mousedown.prevent="underline"></div>
+      <div class="toolbar-btn toolbar-strikeThrough" @mousedown.prevent="strikeThrough"></div>
+      <div class="toolbar-btn toolbar-superscript" @mousedown.prevent="superscript"></div>
+      <div class="toolbar-btn toolbar-subscript" @mousedown.prevent="subscript"></div>
+      <div class="toolbar-btn toolbar-clear" @mousedown.prevent="clear"></div>
       <div
         class="toolbar-btn toolbar-increase-font-size"
-        @mousedown.prevent="emit('increase-font-size')"
+        @mousedown.prevent="increaseFontSize"
       ></div>
-      <div
-        class="toolbar-btn toolbar-reduce-font-size"
-        @mousedown.prevent="emit('reduce-font-size')"
-      ></div>
+      <div class="toolbar-btn toolbar-reduce-font-size" @mousedown.prevent="decreaseFontSize"></div>
       <div
         class="toolbar-btn toolbar-textcolor"
         :class="{ active: activeMenu === 'textcolor' }"
@@ -81,7 +64,8 @@
         @mousedown.prevent="toggleMenu('backgroundcolor')"
       ></div>
     </div>
-    <ColorPicker v-if="activeMenu" @select="emitColorEvent" />
+
+    <ColorPicker v-if="activeMenu" @select="colorEvent" />
   </div>
 </template>
 
