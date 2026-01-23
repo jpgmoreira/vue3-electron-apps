@@ -4,19 +4,69 @@
   import { useEditorStore } from '@renderer/store/editor';
   import { useRouter } from 'vue-router';
   import { useToastStore } from '@interapp/store/toast';
-  import { cloneDeep, randomId } from '@interapp/utils/utils';
+  import { arrayRemove, cloneDeep, randomId } from '@interapp/utils/utils';
   import { Card, getEmptyCard } from '@common/schemas/card';
   import MediaInput from '@interapp/components/MediaInput/renderer/MediaInput.vue';
   import { MediaFile } from '@interapp/types/mediaFile';
+  import { useTagsStore } from '@renderer/store/tags';
+  import { MultiselectOption } from '@interapp/components/Multiselect.vue';
+  import { TagsMap } from '@common/schemas/tags';
+  import Multiselect from '@interapp/components/Multiselect.vue';
 
   type RTEField = 'front' | 'back' | 'extra';
   const router = useRouter();
   const editorStore = useEditorStore();
   const toastStore = useToastStore();
+  const tagsStore = useTagsStore();
   const card = ref<Card>(getEmptyCard(randomId()));
   if (editorStore.card) card.value = cloneDeep(editorStore.card);
 
-  // --- RTE ---:
+  // --- Tags: ---
+
+  const allTags = ref<TagsMap>(tagsStore.tags);
+  const tagsOptions = computed(() => {
+    const entries = Object.entries(allTags.value);
+    const result: MultiselectOption[] = [];
+    for (const [tag, count] of entries) {
+      if (tag === 'audio' && !card.value.tags.includes('audio')) {
+        // Audio tag cannot be manually added.
+        continue;
+      }
+      const option: MultiselectOption = {
+        text: `${tag} (${count})`,
+        value: tag,
+      };
+      if (tag === 'audio') {
+        option.class = 'audio non-closeable';
+      }
+      result.push(option);
+    }
+    return result;
+  });
+
+  function selectTag(tag: string) {
+    card.value.tags.push(tag);
+  }
+
+  function deselectTag(tag: string) {
+    if (tag === 'audio') return;
+    arrayRemove(card.value.tags, tag);
+    if (allTags.value[tag] === 0) {
+      delete allTags.value[tag];
+    }
+  }
+
+  function manuallyCreateTag(name: string) {
+    if (name === 'audio') {
+      toastStore.showToast('Cannot manually create the "audio" tag!', 'info');
+      return;
+    }
+    if (name in allTags.value) return;
+    allTags.value[name] = 0;
+    card.value.tags.push(name);
+  }
+
+  // --- RTE: ---
 
   const rteRefs = ref({
     front: useTemplateRef('front'),
@@ -77,15 +127,15 @@
         toastStore.showToast('Cannot have two media files with the same name!', 'info');
         continue;
       }
-      // if (file.type.includes('audio')) {
-      //   const tag = 'audio';
-      //   if (!(tag in allTags.value)) {
-      //     allTags.value[tag] = 0;
-      //   }
-      //   if (!card.value.tags.includes(tag)) {
-      //     card.value.tags.push(tag);
-      //   }
-      // }
+      if (file.type.includes('audio')) {
+        const tag = 'audio';
+        if (!(tag in allTags.value)) {
+          allTags.value[tag] = 0;
+        }
+        if (!card.value.tags.includes(tag)) {
+          card.value.tags.push(tag);
+        }
+      }
       card.value.media.push(file);
     }
   }
@@ -148,5 +198,17 @@
         <div class="text-sm">(Click or drop files here)</div>
       </div>
     </div>
+    <hr />
+    <Multiselect
+      :options="tagsOptions"
+      :selected="card.tags"
+      placeholder="Tags"
+      direction="up"
+      create
+      close
+      @select-option="selectTag"
+      @deselect-option="deselectTag"
+      @create-option="manuallyCreateTag"
+    />
   </div>
 </template>
