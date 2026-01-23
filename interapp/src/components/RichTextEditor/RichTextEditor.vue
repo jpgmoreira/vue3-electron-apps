@@ -10,6 +10,7 @@
   import { useEvents } from './useEvents';
   import { useKeyDown } from './useKeyDown';
   import { useGetContent } from './useGetContent';
+  import Toolbar from './Toolbar/Toolbar.vue';
 
   const props = defineProps({
     initial: {
@@ -69,6 +70,7 @@
       <div @click="contextCopy">Copy</div>
       <div @click="contextPaste">Paste</div>
     </div>
+    <Toolbar />
     <div
       ref="editor"
       class="editor"
