@@ -38,6 +38,7 @@
 
 <template>
   <div class="toolbar">
+    <ColorPicker v-if="activeMenu" @select="colorEvent" />
     <div class="btn-container">
       <div class="toolbar-btn toolbar-undo" @mousedown.prevent="undo"></div>
       <div class="toolbar-btn toolbar-redo" @mousedown.prevent="redo"></div>
@@ -64,8 +65,6 @@
         @mousedown.prevent="toggleMenu('backgroundcolor')"
       ></div>
     </div>
-
-    <ColorPicker v-if="activeMenu" @select="colorEvent" />
   </div>
 </template>
 

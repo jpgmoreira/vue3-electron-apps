@@ -1,14 +1,14 @@
 .theme-dark .toolbar {
-  display: flex;
-  flex-direction: column;
-  background: #f3f3f3;
-  border: 1px solid #c8c8c8;
-  border-radius: 6px;
   width: fit-content;
+  margin-left: auto;
+  display: flex;
 }
 
 .theme-dark .toolbar .btn-container {
   display: flex;
+  background: #f3f3f3;
+  border: 1px solid #c8c8c8;
+  border-radius: 6px;
   flex-wrap: wrap;
 }
 

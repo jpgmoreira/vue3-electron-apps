@@ -9,11 +9,11 @@
 }
 
 .theme-dark .rte .toolbar-container {
-  height: 0px;
   position: sticky;
   bottom: 0;
-  left: 0;
+  height: 0;
 }
+
 .theme-dark .rte .toolbar {
   visibility: hidden;
   transform: translateY(-100%);
