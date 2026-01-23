@@ -8,4 +8,5 @@ export enum InvokeChannels {
   createFolder = 'create-folder',
   createSession = 'create-session',
   updateFilters = 'update-filters',
+  createCard = 'create-card',
 }

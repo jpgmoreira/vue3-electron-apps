@@ -4,7 +4,7 @@
   import { useEditorStore } from '@renderer/store/editor';
   import { useRouter } from 'vue-router';
   import { useToastStore } from '@interapp/store/toast';
-  import { arrayRemove, cloneDeep, randomId } from '@interapp/utils/utils';
+  import { arrayRemove, cloneDeep, randomId, toRawDeep } from '@interapp/utils/utils';
   import { Card, CardFrequency, getEmptyCard } from '@common/schemas/card';
   import MediaInput from '@interapp/components/MediaInput/renderer/MediaInput.vue';
   import { MediaFile } from '@interapp/types/mediaFile';
@@ -15,8 +15,10 @@
   import { useSessionsStore } from '@renderer/store/sessions';
   import SelectionList from '@interapp/components/SelectionList.vue';
   import { FREQUENCY_OPTIONS } from '@renderer/helpers/options';
+  import { InvokeChannels } from '@preload/channels/invoke';
 
   type RTEField = 'front' | 'back' | 'extra';
+
   const router = useRouter();
   const editorStore = useEditorStore();
   const toastStore = useToastStore();
@@ -25,9 +27,11 @@
   const card = ref<Card>(getEmptyCard(randomId()));
   if (editorStore.card) card.value = cloneDeep(editorStore.card);
 
+  const isCreate = !Boolean(editorStore.card);
+
   // --- Tags: ---
 
-  const allTags = ref<TagsMap>(tagsStore.tags);
+  const allTags = ref<TagsMap>(cloneDeep(tagsStore.tags));
   const tagsOptions = computed(() => {
     const entries = Object.entries(allTags.value);
     const result: MultiselectOption[] = [];
@@ -183,7 +187,22 @@
     return undefined;
   });
 
+  // --- Operations: ---
+
   function cancel() {
+    router.back();
+  }
+
+  async function addCard() {
+    if (!card.value.front) {
+      toastStore.showToast('A card must at least have a front field!', 'info');
+      return;
+    }
+    if (!card.value.sessions.length) {
+      toastStore.showToast('A card must be on at least one session!', 'info');
+      return;
+    }
+    await window.api.invoke(InvokeChannels.createCard, toRawDeep(card.value));
     router.back();
   }
 </script>
@@ -280,8 +299,10 @@
           v-tooltip="allowReversedTooltip"
         />
       </div>
-      <button type="button" class="btn-primary">Add</button>
-      <button type="button" class="btn-warning">Cancel</button>
+      <template v-if="isCreate">
+        <button type="button" class="btn-primary" @click="addCard">Add</button>
+        <button type="button" class="btn-warning" @click="cancel">Cancel</button>
+      </template>
     </footer>
   </div>
 </template>
