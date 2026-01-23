@@ -14,6 +14,7 @@ import { explorerManager } from '@interapp/components/Explorer/main/instances/in
 import { Node } from '@interapp/components/Explorer/common/tree';
 import { Filters } from '@common/schemas/filters';
 import { TagsMap } from '@common/schemas/tags';
+import { SessionsMap } from '@common/schemas/session';
 
 export async function loadStartupData(): Promise<StartupData> {
   const currProfile = profileManager.getCurrProfile();
@@ -21,6 +22,7 @@ export async function loadStartupData(): Promise<StartupData> {
   let ui: UISettings | null = null;
   let filters: Filters | null = null;
   let tags: TagsMap | null = null;
+  let sessions: SessionsMap | null = null;
   if (currProfile) {
     uiManager.loadProfile(currProfile.id);
     nodeCounterManager.loadProfile(currProfile.id);
@@ -36,6 +38,7 @@ export async function loadStartupData(): Promise<StartupData> {
     ui = uiManager.getUISettings();
     filters = filtersManager.getFilters();
     tags = tagsManager.getTags();
+    sessions = sessionsManager.getSessionsMap();
   }
   return {
     currProfile,
@@ -43,5 +46,6 @@ export async function loadStartupData(): Promise<StartupData> {
     ui,
     filters,
     tags,
+    sessions,
   };
 }

@@ -1,5 +1,6 @@
 import { Filters } from './filters';
 import { Profile, ProfileRegistry } from './profile';
+import { SessionsMap } from './session';
 import { TagsMap } from './tags';
 import { UISettings } from './ui';
 
@@ -9,4 +10,5 @@ export type StartupData = {
   ui: UISettings | null;
   filters: Filters | null;
   tags: TagsMap | null;
+  sessions: SessionsMap | null;
 };

@@ -12,12 +12,15 @@
   import { MultiselectOption } from '@interapp/components/Multiselect.vue';
   import { TagsMap } from '@common/schemas/tags';
   import Multiselect from '@interapp/components/Multiselect.vue';
+  import { SessionsMap } from '@common/schemas/session';
+  import { useSessionsStore } from '@renderer/store/sessions';
 
   type RTEField = 'front' | 'back' | 'extra';
   const router = useRouter();
   const editorStore = useEditorStore();
   const toastStore = useToastStore();
   const tagsStore = useTagsStore();
+  const sessionsStore = useSessionsStore();
   const card = ref<Card>(getEmptyCard(randomId()));
   if (editorStore.card) card.value = cloneDeep(editorStore.card);
 
@@ -64,6 +67,23 @@
     if (name in allTags.value) return;
     allTags.value[name] = 0;
     card.value.tags.push(name);
+  }
+
+  // --- Sessions: ---
+
+  const sessionsOptions = computed(() =>
+    Object.values(sessionsStore.sessions).map((value) => ({
+      text: `${value.name} (${value.count})`,
+      value: value.id,
+    }))
+  );
+
+  function selectSession(sessionId: string) {
+    card.value.sessions.push(sessionId);
+  }
+
+  function deselectSession(sessionId: string) {
+    arrayRemove(card.value.sessions, sessionId);
   }
 
   // --- RTE: ---
@@ -209,6 +229,15 @@
       @select-option="selectTag"
       @deselect-option="deselectTag"
       @create-option="manuallyCreateTag"
+    />
+    <Multiselect
+      :options="sessionsOptions"
+      :selected="card.sessions"
+      placeholder="Sessions"
+      direction="up"
+      close
+      @select-option="selectSession"
+      @deselect-option="deselectSession"
     />
   </div>
 </template>
