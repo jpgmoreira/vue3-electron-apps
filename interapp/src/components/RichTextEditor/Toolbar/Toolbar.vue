@@ -18,7 +18,7 @@
     subscript,
     clear,
     increaseFontSize,
-    decreaseFontSize,
+    reduceFontSize,
     changeTextColor,
     changeBackgroundColor,
   } = useToolbar();
@@ -53,7 +53,7 @@
         class="toolbar-btn toolbar-increase-font-size"
         @mousedown.prevent="increaseFontSize"
       ></div>
-      <div class="toolbar-btn toolbar-reduce-font-size" @mousedown.prevent="decreaseFontSize"></div>
+      <div class="toolbar-btn toolbar-reduce-font-size" @mousedown.prevent="reduceFontSize"></div>
       <div
         class="toolbar-btn toolbar-textcolor"
         :class="{ active: activeMenu === 'textcolor' }"

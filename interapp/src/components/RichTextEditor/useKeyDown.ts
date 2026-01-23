@@ -40,15 +40,15 @@ export function useKeyDown() {
           break;
         default:
           e.preventDefault();
+          return;
       }
-    } else {
-      if (key === 'tab') {
-        e.preventDefault();
-        document.execCommand('insertHtml', false, '&nbsp;'.repeat(8));
-      } else if (key === ' ') {
-        e.preventDefault();
-        document.execCommand('insertHtml', false, '&nbsp;');
-      }
+    }
+    if (key === ' ') {
+      e.preventDefault();
+      document.execCommand('insertHtml', false, '&nbsp;');
+    } else if (key === 'tab') {
+      e.preventDefault();
+      document.execCommand('insertHtml', false, '&nbsp;'.repeat(8));
     }
   }
   return { keydown };

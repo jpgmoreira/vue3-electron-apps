@@ -36,7 +36,7 @@ export function useToolbar() {
     document.execCommand('fontSize', false, next);
   }
 
-  function decreaseFontSize() {
+  function reduceFontSize() {
     const current = Number(document.queryCommandValue('fontSize')) || 3;
     const next = Math.max(1, current - 1).toString();
     document.execCommand('fontSize', false, next);
@@ -76,7 +76,7 @@ export function useToolbar() {
     superscript,
     subscript,
     increaseFontSize,
-    decreaseFontSize,
+    reduceFontSize,
     clear,
     changeTextColor,
     changeBackgroundColor,
