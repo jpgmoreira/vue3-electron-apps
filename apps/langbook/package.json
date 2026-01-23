@@ -34,6 +34,7 @@
   "dependencies": {
     "@electron-toolkit/preload": "^3.0.2",
     "@electron-toolkit/utils": "^4.0.0",
+    "floating-vue": "^5.2.2",
     "pinia": "^3.0.3",
     "sqlite": "^5.1.1",
     "sqlite3": "^5.1.7",
