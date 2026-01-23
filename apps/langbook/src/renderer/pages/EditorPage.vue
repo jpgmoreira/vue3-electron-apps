@@ -3,13 +3,21 @@
   import RichTextEditor from '@interapp/components/RichTextEditor/RichTextEditor.vue';
   import { useEditorStore } from '@renderer/store/editor';
   import { useRouter } from 'vue-router';
+  import { useToastStore } from '@interapp/store/toast';
   import { cloneDeep, randomId } from '@interapp/utils/utils';
   import { Card, getEmptyCard } from '@common/schemas/card';
+  import MediaInput from '@interapp/components/MediaInput/renderer/MediaInput.vue';
+  import { MediaFile } from '@interapp/types/mediaFile';
+
   type RTEField = 'front' | 'back' | 'extra';
   const router = useRouter();
   const editorStore = useEditorStore();
+  const toastStore = useToastStore();
   const card = ref<Card>(getEmptyCard(randomId()));
   if (editorStore.card) card.value = cloneDeep(editorStore.card);
+
+  // --- RTE ---:
+
   const rteRefs = ref({
     front: useTemplateRef('front'),
     back: useTemplateRef('back'),
@@ -45,6 +53,51 @@
     });
   }
 
+  // --- Media: ---
+
+  const mediaRef = useTemplateRef('media');
+  const hasMedia = computed(() => card.value.media.length > 0);
+
+  function mediaClick() {
+    if (!mediaRef.value) throw new Error('Media input not initialized!');
+    mediaRef.value.triggerInput();
+  }
+  function mediaDrop(e: DragEvent) {
+    if (!mediaRef.value) throw new Error('Media input not initialized!');
+    mediaRef.value.drop(e);
+  }
+
+  function addMedia(items: MediaFile[]) {
+    for (const file of items) {
+      if (!file.type.includes('audio') && !file.type.includes('image')) {
+        toastStore.showToast('Only images and audio can be added as media!', 'info');
+        continue;
+      }
+      if (card.value.media.some((f) => f.name.trim() === file.name.trim())) {
+        toastStore.showToast('Cannot have two media files with the same name!', 'info');
+        continue;
+      }
+      // if (file.type.includes('audio')) {
+      //   const tag = 'audio';
+      //   if (!(tag in allTags.value)) {
+      //     allTags.value[tag] = 0;
+      //   }
+      //   if (!card.value.tags.includes(tag)) {
+      //     card.value.tags.push(tag);
+      //   }
+      // }
+      card.value.media.push(file);
+    }
+  }
+  function removeMedia(item: MediaFile) {
+    card.value.media = card.value.media.filter((i) => i !== item);
+    if (card.value.media.filter((m) => m.type.includes('audio')).length === 0) {
+      card.value.tags = card.value.tags.filter((t) => t !== 'audio');
+    }
+  }
+
+  // --- Others: ---
+
   function cancel() {
     router.back();
   }
@@ -76,5 +129,24 @@
       @blur="rteFocus.extra = false"
     />
     <div v-else class="rte-placeholder" @mousedown.prevent="setRteFocus('extra')">EXTRA</div>
+    <div class="media-input-container relative">
+      <MediaInput
+        ref="media"
+        :items="card.media"
+        :class="{ 'opacity-0': !hasMedia }"
+        @add="addMedia"
+        @remove="removeMedia"
+      />
+      <div
+        v-if="!hasMedia"
+        class="media-placeholder absolute inset-0 flex flex-col"
+        @click="mediaClick"
+        @drop="mediaDrop"
+        @dragover.prevent
+      >
+        <div>Media</div>
+        <div class="text-sm">(Click or drop files here)</div>
+      </div>
+    </div>
   </div>
 </template>

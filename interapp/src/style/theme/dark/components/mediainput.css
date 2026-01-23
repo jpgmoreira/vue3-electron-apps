@@ -1,0 +1,42 @@
+.theme-dark .media-input-root {
+  background-color: #292a2b;
+  border: 1px solid #464b53;
+  display: flex;
+}
+
+.theme-dark .media-input {
+  display: none;
+}
+
+.theme-dark .media-item-parent {
+  padding: 3px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3px;
+  flex-grow: 1;
+  align-content: flex-start;
+}
+
+.theme-dark .media-item {
+  align-items: center;
+  font-size: 0.9rem;
+  border: 1px solid #464b53;
+  padding: 0 3px;
+}
+
+.theme-dark .media-name {
+  white-space: nowrap;
+}
+
+.theme-dark .media-item-remove {
+  z-index: 1;
+  font-size: 1.1rem;
+  margin-left: 5px;
+  color: #ff7578;
+  position: relative;
+}
+
+.theme-dark .media-item-remove:hover {
+  color: #f80b0f;
+  outline: 4px solid rgb(30, 144, 255, 0.6);
+}

@@ -1,4 +1,4 @@
-import { MediaFile } from './mediaFile';
+import { MediaFile } from '@interapp/types/mediaFile';
 
 export type CardFrequency = 'low' | 'normal' | 'high';
 
