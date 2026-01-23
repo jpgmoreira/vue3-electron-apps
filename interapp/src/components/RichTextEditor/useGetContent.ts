@@ -66,7 +66,7 @@ export function useGetContent(editorRef: Ref<HTMLElement | null>) {
             // DIV with content -> use the div's innerHTML as a line
             lines.push(divInner);
           }
-        } else if (el.innerHTML) {
+        } else {
           // Inline elements (img, span, b, etc.) stay in the current line
           // use outerHTML to preserve attributes
           currentLine.push(el.outerHTML);

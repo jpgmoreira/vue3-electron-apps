@@ -20,6 +20,11 @@
     },
   });
 
+  const emit = defineEmits<{
+    (e: 'input'): void;
+    (e: 'blur'): void;
+  }>();
+
   const contextRef = useTemplateRef('context-menu');
   const editorRef = useTemplateRef('editor');
   const rteRef = useTemplateRef('rte');
@@ -49,6 +54,7 @@
     if (!rteRef.value.contains(e.target as Node)) {
       clearSelectedImage();
       hideContext();
+      emit('blur');
     }
   }
 
@@ -88,6 +94,7 @@
       @click="click"
       @wheel="wheel"
       @keydown="keydown"
+      @input="emit('input')"
     ></div>
     <div class="toolbar-container">
       <Toolbar />
