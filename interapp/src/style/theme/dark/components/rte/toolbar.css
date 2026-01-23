@@ -1,0 +1,13 @@
+.theme-dark .toolbar {
+  background-color: #e4e4e4;
+  border: 1px solid #9c9c9c;
+  display: flex;
+}
+
+.theme-dark .toolbar-btn {
+  width: 32px;
+  height: 32px;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}

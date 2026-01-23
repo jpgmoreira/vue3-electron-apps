@@ -2,6 +2,7 @@
   import { ref, useTemplateRef } from 'vue';
   import RichTextEditor from '@interapp/components/RichTextEditor/RichTextEditor.vue';
   import ColorPicker from '@interapp/components/RichTextEditor/ColorPicker/ColorPicker.vue';
+  import Toolbar from '@interapp/components/RichTextEditor/Toolbar/Toolbar.vue';
   import { useRouter } from 'vue-router';
   const router = useRouter();
   const editor = useTemplateRef('editor');
@@ -22,6 +23,7 @@
     <button type="button" class="btn-primary" @click="updateContent">Update content</button>
     <div>
       <ColorPicker />
+      <Toolbar />
     </div>
     <div style="border: 1px solid red" v-html="content"></div>
   </div>

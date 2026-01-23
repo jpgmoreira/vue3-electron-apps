@@ -22,6 +22,7 @@
 
 @import './components/rte/rte.css';
 @import './components/rte/colorpicker.css';
+@import './components/rte/toolbar.css';
 
 @import './pages/login.css';
 @import './pages/settings.css';
