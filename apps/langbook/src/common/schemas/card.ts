@@ -10,9 +10,26 @@ export type Card = {
   media: MediaFile[];
   allowReversed: boolean;
   createdAt: number;
-  lastReviewedAt: number;
+  lastReviewedAt: number | null;
   sessions: string[];
   tags: string[];
   frequency: CardFrequency;
   bucket: boolean;
 };
+
+export function getEmptyCard(id: string): Card {
+  return {
+    id,
+    front: '',
+    back: '',
+    extra: '',
+    media: [],
+    allowReversed: false,
+    createdAt: Date.now(),
+    lastReviewedAt: null,
+    sessions: [],
+    tags: [],
+    frequency: 'normal',
+    bucket: false,
+  };
+}

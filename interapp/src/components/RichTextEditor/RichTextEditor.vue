@@ -40,6 +40,10 @@
     editorRef.value.innerHTML = props.initial;
   }
 
+  function focus() {
+    editorRef.value?.focus();
+  }
+
   function documentClick(e: MouseEvent) {
     if (!rteRef.value) throw new Error('RTE not set!');
     if (!rteRef.value.contains(e.target as Node)) {
@@ -51,6 +55,7 @@
   defineExpose({
     refresh, // Refreshes content based on the "initial" prop.
     getContent,
+    focus,
   });
 
   onMounted(() => {
