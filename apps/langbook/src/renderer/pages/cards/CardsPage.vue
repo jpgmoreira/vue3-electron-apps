@@ -15,7 +15,7 @@
   import { useRouter } from 'vue-router';
   import { MultiselectOption } from '@interapp/components/Multiselect.vue';
   import SelectionList from '@interapp/components/SelectionList.vue';
-  import { FREQUENCY_OPTIONS, YES_OR_NO_OPTIONS } from './options';
+  import { FREQUENCY_OPTIONS, YES_OR_NO_OPTIONS } from '../../helpers/options';
   import { CardFrequency } from '@common/schemas/card';
   import { useEditorStore } from '@renderer/store/editor';
   const uiStore = useUIStore();

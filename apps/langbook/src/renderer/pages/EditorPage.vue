@@ -5,15 +5,16 @@
   import { useRouter } from 'vue-router';
   import { useToastStore } from '@interapp/store/toast';
   import { arrayRemove, cloneDeep, randomId } from '@interapp/utils/utils';
-  import { Card, getEmptyCard } from '@common/schemas/card';
+  import { Card, CardFrequency, getEmptyCard } from '@common/schemas/card';
   import MediaInput from '@interapp/components/MediaInput/renderer/MediaInput.vue';
   import { MediaFile } from '@interapp/types/mediaFile';
   import { useTagsStore } from '@renderer/store/tags';
   import { MultiselectOption } from '@interapp/components/Multiselect.vue';
   import { TagsMap } from '@common/schemas/tags';
   import Multiselect from '@interapp/components/Multiselect.vue';
-  import { SessionsMap } from '@common/schemas/session';
   import { useSessionsStore } from '@renderer/store/sessions';
+  import SelectionList from '@interapp/components/SelectionList.vue';
+  import { FREQUENCY_OPTIONS } from '@renderer/helpers/options';
 
   type RTEField = 'front' | 'back' | 'extra';
   const router = useRouter();
@@ -109,6 +110,9 @@
     const content = ref.getContent();
     card.value[field] = content;
     rteFocus.value[field] = true;
+    if (field === 'back' && !content) {
+      card.value.allowReversed = false;
+    }
   }
   function clearFocus() {
     rteFocus.value.front = false;
@@ -168,13 +172,24 @@
 
   // --- Others: ---
 
+  function toggleFrequency(freq: CardFrequency) {
+    card.value.frequency = freq;
+  }
+
+  const allowReversedTooltip = computed(() => {
+    if (!card.value.back) {
+      return 'Back field must not be empty';
+    }
+    return undefined;
+  });
+
   function cancel() {
     router.back();
   }
 </script>
 
 <template>
-  <div class="editor-page flex flex-col gap-1 p-1">
+  <div class="editor-page flex flex-col gap-1 p-1 min-h-screen">
     <RichTextEditor
       ref="front"
       v-if="rteShow.front"
@@ -239,5 +254,34 @@
       @select-option="selectSession"
       @deselect-option="deselectSession"
     />
+    <div class="flex items-center justify-around">
+      <div class="flex gap-1">
+        <div>Frequency:</div>
+        <SelectionList
+          :options="[...FREQUENCY_OPTIONS]"
+          :selected="[card.frequency]"
+          @toggle="toggleFrequency"
+        />
+      </div>
+      <div class="flex items-center gap-1">
+        <label for="bucket-input">Review bucket:</label>
+        <input type="checkbox" name="bucket-input" id="bucket-input" v-model="card.bucket" />
+      </div>
+    </div>
+    <footer class="mt-auto flex justify-around">
+      <div class="flex items-center gap-1">
+        <label for="allow-reversed">Allow reversed:</label>
+        <input
+          type="checkbox"
+          name="allow-reversed"
+          id="allow-reversed"
+          v-model="card.allowReversed"
+          :disabled="!card.back"
+          v-tooltip="allowReversedTooltip"
+        />
+      </div>
+      <button type="button" class="btn-primary">Add</button>
+      <button type="button" class="btn-warning">Cancel</button>
+    </footer>
   </div>
 </template>

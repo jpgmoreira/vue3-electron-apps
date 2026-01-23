@@ -9,6 +9,7 @@
 @import './elements/checkbox.css';
 @import './elements/alert.css';
 @import './elements/resizer.css';
+@import './elements/label.css';
 
 @import './components/modal.css';
 @import './components/toast.css';
