@@ -48,28 +48,37 @@
 </script>
 
 <template>
-  <div class="toolbar-container">
-    <div class="toolbar">
-      <div class="toolbar-btn toolbar-undo" @click="emit('undo')"></div>
-      <div class="toolbar-btn toolbar-redo" @click="emit('redo')"></div>
-      <div class="toolbar-btn toolbar-bold" @click="emit('bold')"></div>
-      <div class="toolbar-btn toolbar-italic" @click="emit('italic')"></div>
-      <div class="toolbar-btn toolbar-underline" @click="emit('underline')"></div>
-      <div class="toolbar-btn toolbar-strikeThrough" @click="emit('strikeThrough')"></div>
-      <div class="toolbar-btn toolbar-superscript" @click="emit('superscript')"></div>
-      <div class="toolbar-btn toolbar-subscript" @click="emit('subscript')"></div>
-      <div class="toolbar-btn toolbar-clear" @click="emit('clear')"></div>
-      <div class="toolbar-btn toolbar-increase-font-size" @click="emit('increase-font-size')"></div>
-      <div class="toolbar-btn toolbar-reduce-font-size" @click="emit('reduce-font-size')"></div>
+  <div class="toolbar">
+    <div class="btn-container">
+      <div class="toolbar-btn toolbar-undo" @mousedown.prevent="emit('undo')"></div>
+      <div class="toolbar-btn toolbar-redo" @mousedown.prevent="emit('redo')"></div>
+      <div class="toolbar-btn toolbar-bold" @mousedown.prevent="emit('bold')"></div>
+      <div class="toolbar-btn toolbar-italic" @mousedown.prevent="emit('italic')"></div>
+      <div class="toolbar-btn toolbar-underline" @mousedown.prevent="emit('underline')"></div>
+      <div
+        class="toolbar-btn toolbar-strikeThrough"
+        @mousedown.prevent="emit('strikeThrough')"
+      ></div>
+      <div class="toolbar-btn toolbar-superscript" @mousedown.prevent="emit('superscript')"></div>
+      <div class="toolbar-btn toolbar-subscript" @mousedown.prevent="emit('subscript')"></div>
+      <div class="toolbar-btn toolbar-clear" @mousedown.prevent="emit('clear')"></div>
+      <div
+        class="toolbar-btn toolbar-increase-font-size"
+        @mousedown.prevent="emit('increase-font-size')"
+      ></div>
+      <div
+        class="toolbar-btn toolbar-reduce-font-size"
+        @mousedown.prevent="emit('reduce-font-size')"
+      ></div>
       <div
         class="toolbar-btn toolbar-textcolor"
         :class="{ active: activeMenu === 'textcolor' }"
-        @click="toggleMenu('textcolor')"
+        @mousedown.prevent="toggleMenu('textcolor')"
       ></div>
       <div
         class="toolbar-btn toolbar-backgroundcolor"
         :class="{ active: activeMenu === 'backgroundcolor' }"
-        @click="toggleMenu('backgroundcolor')"
+        @mousedown.prevent="toggleMenu('backgroundcolor')"
       ></div>
     </div>
     <ColorPicker v-if="activeMenu" @select="emitColorEvent" />

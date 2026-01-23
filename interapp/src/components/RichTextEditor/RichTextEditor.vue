@@ -70,7 +70,6 @@
       <div @click="contextCopy">Copy</div>
       <div @click="contextPaste">Paste</div>
     </div>
-    <Toolbar />
     <div
       ref="editor"
       class="editor"
@@ -85,6 +84,9 @@
       @wheel="wheel"
       @keydown="keydown"
     ></div>
+    <div class="toolbar-container">
+      <Toolbar />
+    </div>
   </div>
 </template>
 
