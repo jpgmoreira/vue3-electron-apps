@@ -1,7 +1,4 @@
 .theme-dark .color-picker {
-  background: #f3f3f3;
-  border: 1px solid #c8c8c8;
-  border-radius: 6px;
   display: flex;
   flex-wrap: wrap;
   gap: 2px;

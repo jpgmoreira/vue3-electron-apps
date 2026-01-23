@@ -1,4 +1,12 @@
 <script lang="ts" setup>
+  import { ref } from 'vue';
+  import ColorPicker from './ColorPicker.vue';
+
+  type Menu = null | 'textcolor' | 'backgroundcolor';
+
+  // Which menu is currently active for showing the color picker:
+  const activeMenu = ref<Menu>(null);
+
   // Toolbar actions that do not have parameters:
   type SimpleToolbarAction =
     | 'undo'
@@ -17,27 +25,54 @@
     (e: SimpleToolbarAction): void;
 
     // Toolbar actions that have parameters:
-    (e: 'resizeText', size: string): void;
     (e: 'textColor', color: string): void;
     (e: 'backgroundColor', color: string): void;
   }>();
+
+  function emitColorEvent(color: string) {
+    if (!activeMenu.value) throw new Error('No active menu set!');
+    if (activeMenu.value === 'textcolor') {
+      emit('textColor', color);
+    } else if (activeMenu.value === 'backgroundcolor') {
+      emit('backgroundColor', color);
+    }
+  }
+
+  function toggleMenu(menu: Menu) {
+    if (menu === activeMenu.value) {
+      activeMenu.value = null;
+    } else {
+      activeMenu.value = menu;
+    }
+  }
 </script>
 
 <template>
-  <div class="toolbar">
-    <div class="toolbar-btn toolbar-undo" @click="emit('undo')"></div>
-    <div class="toolbar-btn toolbar-redo" @emit="emit('redo')"></div>
-    <div class="toolbar-btn toolbar-bold" @emit="emit('bold')"></div>
-    <div class="toolbar-btn toolbar-italic" @emit="emit('italic')"></div>
-    <div class="toolbar-btn toolbar-underline" @emit="emit('underline')"></div>
-    <div class="toolbar-btn toolbar-strikeThrough" @emit="emit('strikeThrough')"></div>
-    <div class="toolbar-btn toolbar-superscript" @emit="emit('superscript')"></div>
-    <div class="toolbar-btn toolbar-subscript" @emit="emit('subscript')"></div>
-    <div class="toolbar-btn toolbar-clear" @emit="emit('clear')"></div>
-    <div class="toolbar-btn toolbar-increase-font-size" @emit="emit('increase-font-size')"></div>
-    <div class="toolbar-btn toolbar-reduce-font-size" @emit="emit('reduce-font-size')"></div>
-    <div class="toolbar-btn toolbar-textcolor"></div>
-    <div class="toolbar-btn toolbar-backgroundcolor"></div>
+  <div class="toolbar-container">
+    <div class="toolbar">
+      <div class="toolbar-btn toolbar-undo" @click="emit('undo')"></div>
+      <div class="toolbar-btn toolbar-redo" @click="emit('redo')"></div>
+      <div class="toolbar-btn toolbar-bold" @click="emit('bold')"></div>
+      <div class="toolbar-btn toolbar-italic" @click="emit('italic')"></div>
+      <div class="toolbar-btn toolbar-underline" @click="emit('underline')"></div>
+      <div class="toolbar-btn toolbar-strikeThrough" @click="emit('strikeThrough')"></div>
+      <div class="toolbar-btn toolbar-superscript" @click="emit('superscript')"></div>
+      <div class="toolbar-btn toolbar-subscript" @click="emit('subscript')"></div>
+      <div class="toolbar-btn toolbar-clear" @click="emit('clear')"></div>
+      <div class="toolbar-btn toolbar-increase-font-size" @click="emit('increase-font-size')"></div>
+      <div class="toolbar-btn toolbar-reduce-font-size" @click="emit('reduce-font-size')"></div>
+      <div
+        class="toolbar-btn toolbar-textcolor"
+        :class="{ active: activeMenu === 'textcolor' }"
+        @click="toggleMenu('textcolor')"
+      ></div>
+      <div
+        class="toolbar-btn toolbar-backgroundcolor"
+        :class="{ active: activeMenu === 'backgroundcolor' }"
+        @click="toggleMenu('backgroundcolor')"
+      ></div>
+    </div>
+    <ColorPicker v-if="activeMenu" @select="emitColorEvent" />
   </div>
 </template>
 
