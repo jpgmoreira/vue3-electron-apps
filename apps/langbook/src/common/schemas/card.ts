@@ -15,6 +15,24 @@ export type Card = {
   tags: string[];
   frequency: CardFrequency;
   bucket: boolean;
+  height: number;
+};
+
+// How cards are stored in the sqlite DB.
+export type DBCard = {
+  id: string;
+  front: string;
+  back: string;
+  extra: string;
+  media: string;
+  allowReversed: boolean;
+  createdAt: number;
+  lastReviewedAt: number | null;
+  sessions: string;
+  tags: string;
+  frequency: string;
+  bucket: boolean;
+  height: number;
 };
 
 export function getEmptyCard(id: string): Card {
@@ -31,5 +49,6 @@ export function getEmptyCard(id: string): Card {
     tags: [],
     frequency: 'normal',
     bucket: false,
+    height: 0,
   };
 }

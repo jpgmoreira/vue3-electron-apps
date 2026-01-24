@@ -6,6 +6,7 @@ import {
   sessionsManager,
   filtersManager,
   tagsManager,
+  cardsManager,
 } from './instances';
 import { UISettings } from '@common/schemas/ui';
 import path from 'path';
@@ -28,6 +29,7 @@ export async function loadStartupData(): Promise<StartupData> {
     nodeCounterManager.loadProfile(currProfile.id);
     sessionsManager.loadProfile(currProfile.id);
     filtersManager.loadProfile(currProfile.id);
+    await cardsManager.loadProfile(currProfile.id);
     const treePath = path.join(DATA_DIR, 'profileData', currProfile.id, 'tree.json');
     explorerManager.loadTree(treePath);
     explorerManager.registerDeleteCallback(async (node: Node) => {

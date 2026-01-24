@@ -1,0 +1,60 @@
+import { EventEmitter } from '@interapp/events/eventEmitter';
+import { CommonEvents } from '@interapp/events/commonEvents';
+import { CardsDbManager } from './cardsDbManager';
+import { Card } from '@common/schemas/card';
+import { FiltersManager } from '../filtersManager';
+import { CardsMediaManager } from './cardsMediaManager';
+
+export class CardsManager {
+  private dbManager: CardsDbManager;
+  private mediaManager: CardsMediaManager;
+  private filtersManager: FiltersManager;
+  private profileId: string | null = null;
+
+  // Maps card ids to actual card objects:
+  private cardsMap: Record<string, Card> = {};
+
+  // All cards that satisfy the current filters:
+  private filtered: Card[] = [];
+
+  constructor(
+    emitter: EventEmitter,
+    dbManager: CardsDbManager,
+    mediaManager: CardsMediaManager,
+    filtersManager: FiltersManager
+  ) {
+    emitter.on(CommonEvents.clearProfileData, () => this.clear);
+    this.dbManager = dbManager;
+    this.filtersManager = filtersManager;
+    this.mediaManager = mediaManager;
+  }
+
+  public async loadProfile(profileId: string) {
+    this.profileId = profileId;
+    await this.dbManager.loadProfile(profileId);
+    const cards = await this.dbManager.loadAllCards();
+    for (const card of cards) {
+      this.cardsMap[card.id] = card;
+    }
+    this.filter();
+  }
+
+  public filter() {
+    const cards = Object.values(this.cardsMap);
+    this.filtered = cards.filter((c) => this.filtersManager.satisfyCurrentFilters(c));
+  }
+
+  public async createCard(card: Card) {
+    if (!this.profileId) throw new Error('Profile not initialized!');
+    this.mediaManager.processCardMedia(card, this.profileId);
+    await this.dbManager.insertCard(card);
+    this.filter();
+  }
+
+  public clear() {
+    this.profileId = null;
+    this.dbManager.clear();
+    this.cardsMap = {};
+    this.filtered = [];
+  }
+}
