@@ -26,5 +26,8 @@ export const cardsManager = new CardsManager(
   emitter,
   cardsDbManager,
   cardsMediaManager,
-  filtersManager
+  filtersManager,
+  profileManager,
+  sessionsManager,
+  tagsManager
 );

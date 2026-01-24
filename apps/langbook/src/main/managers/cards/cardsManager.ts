@@ -4,11 +4,17 @@ import { CardsDbManager } from './cardsDbManager';
 import { Card } from '@common/schemas/card';
 import { FiltersManager } from '../filtersManager';
 import { CardsMediaManager } from './cardsMediaManager';
+import { ProfileManager } from '../profileManager';
+import { SessionsManager } from '../sessionsManager';
+import { TagsManager } from '../tagsManager';
 
 export class CardsManager {
   private dbManager: CardsDbManager;
   private mediaManager: CardsMediaManager;
   private filtersManager: FiltersManager;
+  private profileManager: ProfileManager;
+  private sessionsManager: SessionsManager;
+  private tagsManager: TagsManager;
   private profileId: string | null = null;
 
   // Maps card ids to actual card objects:
@@ -21,12 +27,18 @@ export class CardsManager {
     emitter: EventEmitter,
     dbManager: CardsDbManager,
     mediaManager: CardsMediaManager,
-    filtersManager: FiltersManager
+    filtersManager: FiltersManager,
+    profileManager: ProfileManager,
+    sessionsManager: SessionsManager,
+    tagsManager: TagsManager
   ) {
     emitter.on(CommonEvents.clearProfileData, () => this.clear);
     this.dbManager = dbManager;
     this.filtersManager = filtersManager;
     this.mediaManager = mediaManager;
+    this.profileManager = profileManager;
+    this.sessionsManager = sessionsManager;
+    this.tagsManager = tagsManager;
   }
 
   public async loadProfile(profileId: string) {
@@ -48,6 +60,10 @@ export class CardsManager {
     if (!this.profileId) throw new Error('Profile not initialized!');
     this.mediaManager.processCardMedia(card, this.profileId);
     await this.dbManager.insertCard(card);
+    this.profileManager.addCards(1);
+    this.sessionsManager.cardCreated(card);
+    this.tagsManager.cardCreated(card);
+    this.cardsMap[card.id] = card;
     this.filter();
   }
 

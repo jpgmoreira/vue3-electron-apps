@@ -5,6 +5,7 @@ import { CommonEvents } from '@interapp/events/commonEvents';
 import { getEmptySession, SessionsMap, Session } from '@common/schemas/session';
 import { buildId, cloneDeep } from '@interapp/utils/utils';
 import path from 'path';
+import { Card } from '@common/schemas/card';
 
 export class SessionsManager {
   private _proxy: FileProxy<SessionsMap> | null = null;
@@ -38,6 +39,13 @@ export class SessionsManager {
     const newSession = getEmptySession(id, name, now);
     this.proxy[id] = newSession;
     return newSession;
+  }
+
+  public cardCreated(card: Card) {
+    if (!this.proxy) throw new Error('Sessions not initialized!');
+    for (const session of card.sessions) {
+      this.proxy[session].count++;
+    }
   }
 
   public clear() {
