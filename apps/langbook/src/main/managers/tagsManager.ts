@@ -35,7 +35,7 @@ export class TagsManager {
   }
 
   public getTags() {
-    return cloneDeep(this.target);
+    return cloneDeep(this.target || {});
   }
 
   public cardDeleted(card: Card) {

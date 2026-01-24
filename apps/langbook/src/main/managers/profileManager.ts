@@ -7,7 +7,7 @@ import {
 } from '@common/schemas/profile';
 import { GenericResponseDTO } from '@interapp/dto/genericResponseDTO';
 import { FileProxy } from '@interapp/utils/fileProxy';
-import { buildId } from '@interapp/utils/utils';
+import { buildId, cloneDeep } from '@interapp/utils/utils';
 import { DATA_DIR } from '@main/constants';
 import path from 'path';
 import fs from 'fs';
@@ -43,11 +43,11 @@ export class ProfileManager {
   }
 
   public getCurrProfile() {
-    return this.currProfileProxy?.target || null;
+    return cloneDeep(this.currProfileProxy?.target || null);
   }
 
   public getProfileRegistry() {
-    return this.registryProxy!.target;
+    return cloneDeep(this.registryProxy!.target);
   }
 
   private validateProfileName(name: string): GenericResponseDTO {

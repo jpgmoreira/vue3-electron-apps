@@ -40,7 +40,7 @@ export const router = createRouter({
 });
 
 router.afterEach((to) => {
-  const skip = ['/', '/login', '/editor', '/flashcards'];
+  const skip = ['/', '/login', '/editor', '/flashcards', '/settings'];
   if (!skip.includes(to.path)) {
     useUIStore().updateSettings({ page: to.path });
   }

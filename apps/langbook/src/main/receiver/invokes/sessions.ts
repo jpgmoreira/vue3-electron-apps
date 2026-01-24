@@ -1,7 +1,7 @@
 import { ipcMain, IpcMainInvokeEvent } from 'electron';
 import { InvokeChannels } from '@preload/channels/invoke';
 import { nodeCounterManager, sessionsManager, profileManager } from '@main/startup/instances';
-import { Session } from '@common/schemas/session';
+import { Session, SessionsMap } from '@common/schemas/session';
 
 ipcMain.handle(InvokeChannels.createFolder, (_: IpcMainInvokeEvent): number => {
   const number = nodeCounterManager.getCounter().nextDir;
@@ -15,4 +15,8 @@ ipcMain.handle(InvokeChannels.createSession, (_: IpcMainInvokeEvent): Session =>
   nodeCounterManager.increment('file');
   profileManager.addSessions(1);
   return session;
+});
+
+ipcMain.handle(InvokeChannels.refetchSessions, (): SessionsMap => {
+  return sessionsManager.getSessionsMap();
 });

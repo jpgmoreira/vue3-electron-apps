@@ -28,7 +28,7 @@ export class SessionsManager {
   }
 
   public getSessionsMap() {
-    return cloneDeep(this.target);
+    return cloneDeep(this.target || {});
   }
 
   public createSession(n: number): Session {

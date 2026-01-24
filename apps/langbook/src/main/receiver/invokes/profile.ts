@@ -5,6 +5,7 @@ import { profileManager } from '@main/startup/instances';
 import { loadStartupData } from '@main/startup/startup';
 import { GenericResponseDTO } from '@interapp/dto/genericResponseDTO';
 import { sleep } from '@interapp/utils/utils';
+import { ProfileRegistry } from '@common/schemas/profile';
 
 ipcMain.handle(
   InvokeChannels.createProfile,
@@ -57,4 +58,8 @@ ipcMain.handle(InvokeChannels.login, async (_, profileId: string): Promise<AuthR
 
 ipcMain.handle(InvokeChannels.logout, () => {
   profileManager.logout();
+});
+
+ipcMain.handle(InvokeChannels.refetchProfile, (): ProfileRegistry => {
+  return profileManager.getProfileRegistry();
 });

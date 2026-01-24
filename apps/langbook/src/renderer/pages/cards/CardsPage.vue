@@ -18,10 +18,12 @@
   import { FREQUENCY_OPTIONS, YES_OR_NO_OPTIONS } from '../../helpers/options';
   import { CardFrequency } from '@common/schemas/card';
   import { useEditorStore } from '@renderer/store/editor';
+  import { useProfileStore } from '@renderer/store/profile';
   const uiStore = useUIStore();
   const tagsStore = useTagsStore();
   const filtersStore = useFiltersStore();
   const editorStore = useEditorStore();
+  const profileStore = useProfileStore();
   const router = useRouter();
   const resizing = ref(false);
   const filtering = ref(false);
@@ -68,6 +70,7 @@
     } else {
       const session = await window.api.invoke<Session>(InvokeChannels.createSession);
       callback(session.id, session.name);
+      profileStore.refetch();
     }
   }
   function windowMouseMove(e: MouseEvent) {

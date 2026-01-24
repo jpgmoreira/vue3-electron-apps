@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import { getEmptyProfileRegistry, type Profile } from '@common/schemas/profile';
+import { getEmptyProfileRegistry, ProfileRegistry, type Profile } from '@common/schemas/profile';
 import { StartupData } from '@common/schemas/startup';
 import { AuthResponseDTO } from '@common/dto/authResponseDTO';
 import { InvokeChannels } from '@preload/channels/invoke';
@@ -57,6 +57,10 @@ export const useProfileStore = defineStore('profile', {
       eventEmitter.emit(CommonEvents.clearProfileData);
       this.currProfile = null;
       await window.api.invoke(InvokeChannels.logout);
+    },
+    async refetch() {
+      const registry = await window.api.invoke<ProfileRegistry>(InvokeChannels.refetchProfile);
+      this.registry = registry;
     },
   },
 });

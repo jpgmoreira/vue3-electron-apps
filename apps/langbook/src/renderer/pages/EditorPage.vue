@@ -16,6 +16,7 @@
   import SelectionList from '@interapp/components/SelectionList.vue';
   import { FREQUENCY_OPTIONS } from '@renderer/helpers/options';
   import { InvokeChannels } from '@preload/channels/invoke';
+  import { useProfileStore } from '@renderer/store/profile';
 
   type RTEField = 'front' | 'back' | 'extra';
 
@@ -24,6 +25,7 @@
   const toastStore = useToastStore();
   const tagsStore = useTagsStore();
   const sessionsStore = useSessionsStore();
+  const profileStore = useProfileStore();
   const card = ref<Card>(getEmptyCard(randomId()));
   if (editorStore.card) card.value = cloneDeep(editorStore.card);
 
@@ -203,6 +205,9 @@
       return;
     }
     await window.api.invoke(InvokeChannels.createCard, toRawDeep(card.value));
+    await tagsStore.refetch();
+    await sessionsStore.refetch();
+    await profileStore.refetch();
     router.back();
   }
 </script>

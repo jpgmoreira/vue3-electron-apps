@@ -46,6 +46,8 @@
           <thead class="sticky top-0">
             <tr>
               <th>Profile</th>
+              <th>Cards</th>
+              <th>Sessions</th>
               <th>Created at</th>
               <th>Last access</th>
             </tr>
@@ -58,6 +60,8 @@
               :class="{ selected: selected === record }"
             >
               <td>{{ record.name }}</td>
+              <td>{{ record.nCards }}</td>
+              <td>{{ record.nSessions }}</td>
               <td>{{ parseTimestamp(record.createdAt) }}</td>
               <td>{{ parseTimestamp(record.lastAccess) }}</td>
             </tr>
