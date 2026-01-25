@@ -25,12 +25,12 @@ export async function loadStartupData(): Promise<StartupData> {
   let tags: TagsMap | null = null;
   let sessions: SessionsMap | null = null;
   if (currProfile) {
+    // The order of initialization below is important.
     uiManager.loadProfile(currProfile.id);
     nodeCounterManager.loadProfile(currProfile.id);
     sessionsManager.loadProfile(currProfile.id);
     filtersManager.loadProfile(currProfile.id);
     tagsManager.loadProfile(currProfile.id);
-    await cardsManager.loadProfile(currProfile.id);
     const treePath = path.join(DATA_DIR, 'profileData', currProfile.id, 'tree.json');
     explorerManager.loadTree(treePath);
     explorerManager.registerDeleteCallback(async (node: Node) => {
@@ -38,6 +38,7 @@ export async function loadStartupData(): Promise<StartupData> {
         // TODO: delete callback here.
       }
     });
+    await cardsManager.loadProfile(currProfile.id);
     ui = uiManager.getUISettings();
     filters = filtersManager.getFilters();
     tags = tagsManager.getTags();

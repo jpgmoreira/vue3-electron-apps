@@ -56,6 +56,13 @@ export class CardsManager {
   public filter() {
     const cards = Object.values(this.cardsMap);
     this.filtered = cards.filter((c) => this.filtersManager.satisfyCurrentFilters(c));
+    let scrollTop = 0,
+      position = 1;
+    for (const card of this.filtered) {
+      card.ui = { scrollTop, position };
+      scrollTop += card.height;
+      position++;
+    }
   }
 
   public async createCard(card: Card) {
