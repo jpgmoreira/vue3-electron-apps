@@ -63,6 +63,10 @@
     return Object.keys(sessionsStore.sessions).length > 0;
   });
 
+  const hasCards = computed(() => {
+    return cards.value.page.length > 0;
+  });
+
   const addCardBtnTooltip = computed(() => {
     return hasSessions.value ? undefined : 'Must create a session first.';
   });
@@ -145,8 +149,11 @@
       <div class="custom-resizer" @mousedown="resizing = true"></div>
       <div class="grow relative" style="border: 1px solid orchid">
         <div class="flex flex-col absolute inset-0" style="border: 1px solid lightgreen">
-          <div class="grow">
-            <CardsView :page="cards.page" />
+          <div class="grow relative">
+            <div v-if="hasCards">
+              <CardsView :page="cards.page" />
+            </div>
+            <div v-else class="absolute-center message-xl">No cards</div>
           </div>
           <div v-if="uiStore.showFilters" class="filters-container flex flex-col px-2 py-1.5 gap-1">
             <div>Filters:</div>
