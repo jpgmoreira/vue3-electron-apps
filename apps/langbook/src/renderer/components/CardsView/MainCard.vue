@@ -3,6 +3,7 @@
   import { useMediaStore } from '@renderer/store/media';
   import type { Card } from '@common/schemas/card';
   import type { MediaFile } from '@interapp/types/mediaFile';
+  import { parseTimestamp } from '@interapp/utils/dateUtils';
   const store = useMediaStore();
   const cardRef = useTemplateRef('card-ref');
   const props = defineProps<{
@@ -27,19 +28,29 @@
 </script>
 
 <template>
-  <div class="main-card flex flex-col whitespace-nowrap" ref="card-ref" :class="card.frequency">
-    <div v-html="store.processRteImages(card.id, card.front)" class="mx-1 field"></div>
-    <div v-if="card.back" v-html="store.processRteImages(card.id, card.back)" class="mx-1"></div>
-    <div v-if="card.extra" v-html="store.processRteImages(card.id, card.extra)" class="mx-1"></div>
-    <div v-if="card.media.length" class="flex">
-      <button
-        type="button"
-        v-for="media in card.media"
-        class="media-button m-1"
-        :class="mediaButtonClass(media.type)"
-        @click="mediaClick(media)"
-        v-tooltip="media.name"
-      ></button>
+  <div class="main-card flex flex-col whitespace-nowrap" ref="card-ref">
+    <div class="card-header flex justify-between">
+      <div>{{ card.ui.position }}</div>
+      <div>Created at: {{ parseTimestamp(card.createdAt) }}</div>
+    </div>
+    <div class="card-content" :class="card.frequency">
+      <div v-html="store.processRteImages(card.id, card.front)" class="mx-1 field"></div>
+      <div v-if="card.back" v-html="store.processRteImages(card.id, card.back)" class="mx-1"></div>
+      <div
+        v-if="card.extra"
+        v-html="store.processRteImages(card.id, card.extra)"
+        class="mx-1"
+      ></div>
+      <div v-if="card.media.length" class="flex">
+        <button
+          type="button"
+          v-for="media in card.media"
+          class="media-button m-1"
+          :class="mediaButtonClass(media.type)"
+          @click="mediaClick(media)"
+          v-tooltip="media.name"
+        ></button>
+      </div>
     </div>
   </div>
 </template>

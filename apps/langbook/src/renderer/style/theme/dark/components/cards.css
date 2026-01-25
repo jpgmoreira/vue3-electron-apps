@@ -1,32 +1,24 @@
 .theme-dark .main-card {
-  border: 1px solid #424446;
-  background-color: #292a2b;
-  z-index: 1;
+  margin: 0 6px;
+}
+.theme-dark .main-card .card-header {
+  opacity: 40%;
+  line-height: 1;
+  padding-top: 17px;
+  padding-bottom: 2px;
+  font-size: 14px;
 }
 
-.theme-dark .main-card img {
-  max-width: none;
-  max-height: none;
-}
-
-.theme-dark .main-card > div + div {
-  background-image: repeating-linear-gradient(to right, #424446 0 10px, transparent 10px 15px);
-  background-size: 100% 1px;
-  background-repeat: repeat-x;
-  background-position: top left;
-}
-
-.theme-dark .main-card > div {
+.theme-dark .main-card .card-content > div {
   padding: 3px 0;
 }
 
 /* --- chatgpt: --- */
-.theme-dark .main-card {
+.theme-dark .main-card .card-content {
   border: 1px solid #3a3b3c;
   background: linear-gradient(180deg, #2b2c2d, #232425);
   border-radius: 10px;
   padding: 8px;
-  margin: 0 6px;
   box-shadow: 0 3px 8px rgba(0, 0, 0, 0.35);
   transition:
     transform 0.2s ease,
@@ -35,43 +27,43 @@
     background-color 0.25s ease;
 }
 
-.theme-dark .main-card:hover {
+.theme-dark .main-card .card-content:hover {
   transform: translateY(-1px);
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.45);
   border-color: #4c4d4f;
 }
 
-.theme-dark .main-card.high {
+.theme-dark .main-card .card-content.high {
   border-color: #2e7d4f;
   background: linear-gradient(180deg, #233128, #1d2923);
   box-shadow: 0 3px 10px rgba(40, 150, 90, 0.17);
 }
 
-.theme-dark .main-card.high:hover {
+.theme-dark .main-card .card-content.high:hover {
   border-color: #39a460;
   box-shadow: 0 6px 18px rgba(60, 180, 110, 0.27);
 }
 
-.theme-dark .main-card.low {
+.theme-dark .main-card .card-content.low {
   border-color: #6a3b3b;
   background: linear-gradient(180deg, #332929, #292222);
   opacity: 0.78;
   box-shadow: 0 3px 10px rgba(150, 50, 50, 0.12);
 }
 
-.theme-dark .main-card.low:hover {
+.theme-dark .main-card .card-content.low:hover {
   border-color: #8a4747;
   opacity: 0.9;
   box-shadow: 0 6px 18px rgba(170, 60, 60, 0.18);
 }
 
-.theme-dark .main-card img {
+.theme-dark .main-card .card-content img {
   max-width: none;
   max-height: none;
   border-radius: 6px;
 }
 
-.theme-dark .main-card > div + div {
+.theme-dark .main-card .card-content > div + div {
   background-image: repeating-linear-gradient(to right, #424446 0 10px, transparent 10px 15px);
   background-size: 100% 1px;
   background-repeat: no-repeat;
