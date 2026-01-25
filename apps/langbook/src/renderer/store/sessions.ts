@@ -17,6 +17,17 @@ export const useSessionsStore = defineStore('sessions', {
       const sessions = await window.api.invoke<SessionsMap>(InvokeChannels.refetchSessions);
       this.sessions = sessions;
     },
+    getMostRecentSession() {
+      const sessions = Object.values(this.sessions);
+      if (!sessions.length) return null;
+      let result = sessions[0];
+      for (const session of sessions) {
+        if (session.createdAt > result.createdAt) {
+          result = session;
+        }
+      }
+      return result;
+    },
     clear() {
       this.sessions = {};
     },

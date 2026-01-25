@@ -35,6 +35,7 @@
   const resizing = ref(false);
   const filtering = ref(false);
   const explorerWidth = ref(uiStore.settings.explorerWidth);
+  const hasLoaded = ref(false);
 
   const cards = ref<GetCardsPageResponseDTO>({
     page: [],
@@ -122,7 +123,8 @@
     resizing.value = false;
   }
   onMounted(async () => {
-    fetchPage(0);
+    await fetchPage(0);
+    hasLoaded.value = true;
     window.addEventListener('mouseup', windowMouseUp);
     window.addEventListener('mousemove', windowMouseMove);
   });
@@ -153,7 +155,7 @@
             <div v-if="hasCards">
               <CardsView :page="cards.page" />
             </div>
-            <div v-else class="absolute-center message-xl">No cards</div>
+            <div v-else-if="hasLoaded" class="absolute-center message-xl">No cards</div>
           </div>
           <div v-if="uiStore.showFilters" class="filters-container flex flex-col px-2 py-1.5 gap-1">
             <div>Filters:</div>

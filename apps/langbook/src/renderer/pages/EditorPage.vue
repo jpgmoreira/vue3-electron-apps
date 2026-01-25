@@ -85,6 +85,11 @@
     }))
   );
 
+  const mostRecentSession = sessionsStore.getMostRecentSession();
+  if (mostRecentSession) {
+    card.value.sessions.push(mostRecentSession.id);
+  }
+
   function selectSession(sessionId: string) {
     card.value.sessions.push(sessionId);
   }

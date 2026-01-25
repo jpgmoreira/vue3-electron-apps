@@ -55,7 +55,9 @@ export class CardsManager {
 
   public filter() {
     const cards = Object.values(this.cardsMap);
-    this.filtered = cards.filter((c) => this.filtersManager.satisfyCurrentFilters(c));
+    this.filtered = cards
+      .filter((c) => this.filtersManager.satisfyCurrentFilters(c))
+      .sort((a, b) => a.createdAt - b.createdAt);
     let scrollTop = 0,
       position = 1;
     for (const card of this.filtered) {
