@@ -68,6 +68,7 @@
       callback: DeleteNodeCallback
     ): void;
     (e: 'node-click', node: Node, keys: ModifierKeys): void;
+    (e: 'file-selection-changed'): void;
     (e: 'scroll', scrollTop: number): void;
   }>();
 
@@ -381,6 +382,9 @@
   }
 
   function updateTree(newTree: TreeSnapshot) {
+    if (tree.value && tree.value.nSelectedFiles !== newTree.nSelectedFiles) {
+      emit('file-selection-changed');
+    }
     tree.value = newTree;
   }
 

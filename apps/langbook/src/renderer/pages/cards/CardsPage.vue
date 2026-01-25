@@ -84,6 +84,9 @@
   function explorerScroll(scrollTop: number) {
     uiStore.updateSettings({ explorerScrollTop: scrollTop });
   }
+  function explorerSelectionChanged() {
+    filtersStore.setDirty(true);
+  }
   async function beforeCreateNode(type: NodeType, callback: CreateNodeCallback) {
     if (type === 'dir') {
       const number = await window.api.invoke<number>(InvokeChannels.createFolder);
@@ -131,6 +134,7 @@
           :initial-scroll-top="initialExplorerScroll"
           @scroll="explorerScroll"
           @before-create-node="beforeCreateNode"
+          @file-selection-changed="explorerSelectionChanged"
         />
       </div>
       <div class="custom-resizer" @mousedown="resizing = true"></div>
