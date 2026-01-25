@@ -21,11 +21,13 @@
   import { useProfileStore } from '@renderer/store/profile';
   import { GetCardsPageResponseDTO } from '@common/dto/getCardsPageResponseDTO';
   import CardsView from '@renderer/components/CardsView/CardsView.vue';
+  import { useSessionsStore } from '@renderer/store/sessions';
 
   const uiStore = useUIStore();
   const tagsStore = useTagsStore();
   const filtersStore = useFiltersStore();
   const editorStore = useEditorStore();
+  const sessionsStore = useSessionsStore();
   const profileStore = useProfileStore();
 
   const router = useRouter();
@@ -57,6 +59,14 @@
     return result;
   });
 
+  const hasSessions = computed(() => {
+    return Object.keys(sessionsStore.sessions).length > 0;
+  });
+
+  const addCardBtnTooltip = computed(() => {
+    return hasSessions.value ? undefined : 'Must create a session first.';
+  });
+
   function goAddCard() {
     editorStore.clear();
     router.push('/editor');
@@ -82,8 +92,9 @@
       callback(id, name);
     } else {
       const session = await window.api.invoke<Session>(InvokeChannels.createSession);
-      callback(session.id, session.name);
-      profileStore.refetch();
+      await callback(session.id, session.name);
+      await profileStore.refetch();
+      await sessionsStore.refetch();
     }
   }
   function windowMouseMove(e: MouseEvent) {
@@ -185,7 +196,13 @@
             <button type="button" class="btn-primary" @click="filtersStore.clickedClear">
               Clear
             </button>
-            <button type="button" class="btn-primary whitespace-nowrap" @click="goAddCard">
+            <button
+              type="button"
+              class="btn-primary whitespace-nowrap"
+              @click="goAddCard"
+              :disabled="!hasSessions"
+              v-tooltip="addCardBtnTooltip"
+            >
               Add card
             </button>
           </footer>
