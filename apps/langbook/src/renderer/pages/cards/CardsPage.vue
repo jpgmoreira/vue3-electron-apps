@@ -16,7 +16,7 @@
   import { MultiselectOption } from '@interapp/components/Multiselect.vue';
   import SelectionList from '@interapp/components/SelectionList.vue';
   import { FREQUENCY_OPTIONS, YES_OR_NO_OPTIONS } from '../../helpers/options';
-  import { Card, CardFrequency } from '@common/schemas/card';
+  import { CardFrequency } from '@common/schemas/card';
   import { useEditorStore } from '@renderer/store/editor';
   import { useProfileStore } from '@renderer/store/profile';
   import { GetCardsPageResponseDTO } from '@common/dto/getCardsPageResponseDTO';
@@ -41,7 +41,7 @@
     totalHeight: 0,
   });
 
-  const initialExplorerScroll = uiStore.settings.explorerScrollTop;
+  const initialExplorerScrollTop = uiStore.settings.explorerScrollTop;
 
   const tagsOptions = computed(() => {
     const entries = Object.entries(tagsStore.tags);
@@ -71,12 +71,17 @@
     editorStore.clear();
     router.push('/editor');
   }
+
+  async function fetchPage(scrollTop: number) {
+    cards.value = await window.api.invoke(InvokeChannels.getCardsPage, scrollTop);
+  }
+
   async function filterClick() {
     if (!filtersStore.dirty) return;
     filtering.value = true;
     try {
       await filtersStore.updateFilters();
-      // TODO: filter...
+      fetchPage(0);
     } finally {
       filtering.value = false;
     }
@@ -113,7 +118,7 @@
     resizing.value = false;
   }
   onMounted(async () => {
-    cards.value = await window.api.invoke<GetCardsPageResponseDTO>(InvokeChannels.getCardsPage, 0);
+    fetchPage(0);
     window.addEventListener('mouseup', windowMouseUp);
     window.addEventListener('mousemove', windowMouseMove);
   });
@@ -131,7 +136,7 @@
         <Explorer
           file-icon
           checkbox
-          :initial-scroll-top="initialExplorerScroll"
+          :initial-scroll-top="initialExplorerScrollTop"
           @scroll="explorerScroll"
           @before-create-node="beforeCreateNode"
           @file-selection-changed="explorerSelectionChanged"
