@@ -16,19 +16,31 @@
   import { MultiselectOption } from '@interapp/components/Multiselect.vue';
   import SelectionList from '@interapp/components/SelectionList.vue';
   import { FREQUENCY_OPTIONS, YES_OR_NO_OPTIONS } from '../../helpers/options';
-  import { CardFrequency } from '@common/schemas/card';
+  import { Card, CardFrequency } from '@common/schemas/card';
   import { useEditorStore } from '@renderer/store/editor';
   import { useProfileStore } from '@renderer/store/profile';
+  import { GetCardsPageResponseDTO } from '@common/dto/getCardsPageResponseDTO';
+  import CardsView from '@renderer/components/CardsView/CardsView.vue';
+
   const uiStore = useUIStore();
   const tagsStore = useTagsStore();
   const filtersStore = useFiltersStore();
   const editorStore = useEditorStore();
   const profileStore = useProfileStore();
+
   const router = useRouter();
+
   const resizing = ref(false);
   const filtering = ref(false);
   const explorerWidth = ref(uiStore.settings.explorerWidth);
+
+  const cards = ref<GetCardsPageResponseDTO>({
+    page: [],
+    totalHeight: 0,
+  });
+
   const initialExplorerScroll = uiStore.settings.explorerScrollTop;
+
   const tagsOptions = computed(() => {
     const entries = Object.entries(tagsStore.tags);
     const result: MultiselectOption[] = [];
@@ -44,6 +56,7 @@
     }
     return result;
   });
+
   function goAddCard() {
     editorStore.clear();
     router.push('/editor');
@@ -86,6 +99,7 @@
     resizing.value = false;
   }
   onMounted(async () => {
+    cards.value = await window.api.invoke<GetCardsPageResponseDTO>(InvokeChannels.getCardsPage, 0);
     window.addEventListener('mouseup', windowMouseUp);
     window.addEventListener('mousemove', windowMouseMove);
   });
@@ -111,7 +125,9 @@
       <div class="custom-resizer" @mousedown="resizing = true"></div>
       <div class="grow relative" style="border: 1px solid orchid">
         <div class="flex flex-col absolute inset-0" style="border: 1px solid lightgreen">
-          <div class="grow"></div>
+          <div class="grow">
+            <CardsView :page="cards.page" />
+          </div>
           <div v-if="uiStore.showFilters" class="filters-container flex flex-col px-2 py-1.5 gap-1">
             <div>Filters:</div>
             <Multiselect

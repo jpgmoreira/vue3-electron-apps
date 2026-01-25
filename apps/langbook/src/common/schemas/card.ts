@@ -16,6 +16,11 @@ export type Card = {
   frequency: CardFrequency;
   bucket: boolean;
   height: number;
+  // UI properties not stored in the database:
+  ui: {
+    scrollTop: number;
+    position: number;
+  };
 };
 
 // How cards are stored in the sqlite DB.
@@ -50,5 +55,9 @@ export function getEmptyCard(id: string): Card {
     frequency: 'normal',
     bucket: false,
     height: 0,
+    ui: {
+      scrollTop: 0,
+      position: 0,
+    },
   };
 }

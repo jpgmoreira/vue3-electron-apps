@@ -7,6 +7,8 @@ import { CardsMediaManager } from './cardsMediaManager';
 import { ProfileManager } from '../profileManager';
 import { SessionsManager } from '../sessionsManager';
 import { TagsManager } from '../tagsManager';
+import { GetCardsPageResponseDTO } from '@common/dto/getCardsPageResponseDTO';
+import { CARDS_PAGE_SIZE } from '@common/constants';
 
 export class CardsManager {
   private dbManager: CardsDbManager;
@@ -65,6 +67,21 @@ export class CardsManager {
     this.tagsManager.cardCreated(card);
     this.cardsMap[card.id] = card;
     this.filter();
+  }
+
+  public getCardsPage(scrollTop: number): GetCardsPageResponseDTO {
+    const page: Card[] = [];
+    let totalHeight = 0;
+    for (const card of this.filtered) {
+      totalHeight += card.height;
+      if (card.ui.scrollTop >= scrollTop && page.length < CARDS_PAGE_SIZE) {
+        page.push(card);
+      }
+    }
+    return {
+      page,
+      totalHeight,
+    };
   }
 
   public clear() {
