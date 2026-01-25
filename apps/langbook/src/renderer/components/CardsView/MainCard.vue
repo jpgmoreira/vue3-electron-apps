@@ -28,9 +28,10 @@
 </script>
 
 <template>
-  <div class="main-card flex flex-col whitespace-nowrap" ref="card-ref">
+  <div class="main-card flex flex-col" ref="card-ref">
     <div class="card-header flex justify-between">
       <div>{{ card.ui.position }}</div>
+      <div v-if="card.bucket">(Review bucket)</div>
       <div>Created at: {{ parseTimestamp(card.createdAt) }}</div>
     </div>
     <div class="card-content" :class="card.frequency">
