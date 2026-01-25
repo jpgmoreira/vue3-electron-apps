@@ -32,7 +32,8 @@ export class CardsDbManager {
       sessions TEXT NOT NULL,
       tags TEXT NOT NULL,
       frequency TEXT NOT NULL,
-      bucket BOOLEAN NOT NULL DEFAULT FALSE
+      bucket BOOLEAN NOT NULL DEFAULT FALSE,
+      height INTEGER NOT NULL
     );
   `);
   }
@@ -69,10 +70,10 @@ export class CardsDbManager {
     await this.db.run(
       `
       INSERT INTO cards (
-        id, front, back, extra, media, allowReversed,
-        createdAt, lastReviewedAt, sessions, tags, frequency, bucket
+        id, front, back, extra, media, allowReversed, createdAt,
+        lastReviewedAt, sessions, tags, frequency, bucket, height
       )
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `,
       [
         serialized.id,
@@ -87,6 +88,7 @@ export class CardsDbManager {
         serialized.tags,
         serialized.frequency,
         serialized.bucket,
+        serialized.height,
       ]
     );
   }
