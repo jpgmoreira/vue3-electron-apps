@@ -24,14 +24,16 @@ export async function loadStartupData(): Promise<StartupData> {
   let filters: Filters | null = null;
   let tags: TagsMap | null = null;
   let sessions: SessionsMap | null = null;
+  let mediaDir: string | null = null;
   if (currProfile) {
+    const profileDir = path.resolve(DATA_DIR, 'profileData', currProfile.id);
     // The order of initialization below is important.
     uiManager.loadProfile(currProfile.id);
     nodeCounterManager.loadProfile(currProfile.id);
     sessionsManager.loadProfile(currProfile.id);
     filtersManager.loadProfile(currProfile.id);
     tagsManager.loadProfile(currProfile.id);
-    const treePath = path.join(DATA_DIR, 'profileData', currProfile.id, 'tree.json');
+    const treePath = path.join(profileDir, 'tree.json');
     explorerManager.loadTree(treePath);
     explorerManager.registerDeleteCallback(async (node: Node) => {
       if (node.type === 'file') {
@@ -43,6 +45,7 @@ export async function loadStartupData(): Promise<StartupData> {
     filters = filtersManager.getFilters();
     tags = tagsManager.getTags();
     sessions = sessionsManager.getSessionsMap();
+    mediaDir = path.resolve(profileDir, 'media');
   }
   return {
     currProfile,
@@ -51,5 +54,6 @@ export async function loadStartupData(): Promise<StartupData> {
     filters,
     tags,
     sessions,
+    mediaDir,
   };
 }

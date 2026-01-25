@@ -1,4 +1,6 @@
 @import './components/explorer.css';
+@import './components/cards.css';
+@import './components/mediabutton.css';
 
 @import './pages/cardsPage.css';
 @import './pages/editorPage.css';

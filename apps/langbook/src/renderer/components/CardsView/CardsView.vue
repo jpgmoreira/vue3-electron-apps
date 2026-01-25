@@ -1,5 +1,6 @@
 <script lang="ts" setup>
   import { Card } from '@common/schemas/card';
+  import MainCard from './MainCard.vue';
   const props = defineProps<{
     page: Card[];
   }>();
@@ -8,7 +9,7 @@
 <template>
   <div>
     <div v-for="card in page" :key="card.id">
-      <div>{{ card.front }}</div>
+      <MainCard :card="card" />
     </div>
   </div>
 </template>
