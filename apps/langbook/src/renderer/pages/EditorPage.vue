@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-  import { ref, useTemplateRef, computed } from 'vue';
+  import { ref, useTemplateRef, computed, nextTick } from 'vue';
   import RichTextEditor from '@interapp/components/RichTextEditor/RichTextEditor.vue';
   import { useEditorStore } from '@renderer/store/editor';
   import { useRouter } from 'vue-router';
@@ -17,6 +17,7 @@
   import { FREQUENCY_OPTIONS } from '@renderer/helpers/options';
   import { InvokeChannels } from '@preload/channels/invoke';
   import { useProfileStore } from '@renderer/store/profile';
+  import MainCard from '@renderer/components/CardsView/MainCard.vue';
 
   const router = useRouter();
   const editorStore = useEditorStore();
@@ -26,6 +27,8 @@
   const profileStore = useProfileStore();
   const card = ref<Card>(getEmptyCard(randomId()));
   if (editorStore.card) card.value = cloneDeep(editorStore.card);
+
+  const cardRef = useTemplateRef('card-ref');
 
   const isCreate = !Boolean(editorStore.card);
 
@@ -176,6 +179,10 @@
       toastStore.showToast('A card must be on at least one session!', 'info');
       return;
     }
+    if (!cardRef.value) throw new Error('Card ref is not defined!');
+    await nextTick();
+    const height = cardRef.value.getHeight();
+    card.value.height = height;
     await window.api.invoke(InvokeChannels.createCard, toRawDeep(card.value));
     await tagsStore.refetch();
     await sessionsStore.refetch();
@@ -186,6 +193,7 @@
 
 <template>
   <div class="editor-page flex flex-col gap-1 p-1 min-h-screen">
+    <MainCard :card="card" ref="card-ref" class="dummy-card" />
     <div class="card-field">
       <div class="card-label">Front</div>
       <RichTextEditor ref="front" :initial="card.front" />
@@ -256,3 +264,13 @@
     </footer>
   </div>
 </template>
+
+<style scoped>
+  /* Used to compute the card's height: */
+  .dummy-card {
+    visibility: hidden;
+    position: absolute;
+    left: -9999px;
+    top: -9999px;
+  }
+</style>
