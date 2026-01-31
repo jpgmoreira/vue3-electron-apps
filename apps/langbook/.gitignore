@@ -1,1 +1,3 @@
 langbook-data
+src/scripts/*
+!src/scripts/*.py
