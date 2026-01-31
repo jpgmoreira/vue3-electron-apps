@@ -3,7 +3,9 @@
   import MainCard from './MainCard.vue';
   import { MediaFile } from '@interapp/types/mediaFile';
   import { useMediaStore } from '@renderer/store/media';
+  import { useUIStore } from '@renderer/store/ui';
   const mediaStore = useMediaStore();
+  const uiStore = useUIStore();
   const props = defineProps<{
     page: Card[];
   }>();
@@ -13,6 +15,7 @@
       const audio = new Audio(mediaPath);
       audio.play();
     } else if (media.type.startsWith('image')) {
+      uiStore.showMediaModal(cardId, media);
     }
   }
 </script>

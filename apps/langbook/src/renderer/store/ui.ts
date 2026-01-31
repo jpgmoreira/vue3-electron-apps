@@ -3,6 +3,7 @@ import { getEmptyUISettings, UISettings } from '@common/schemas/ui';
 import { InvokeChannels } from '@preload/channels/invoke';
 import { toRawDeep } from '@interapp/utils/utils';
 import { StartupData } from '@common/schemas/startup';
+import { MediaFile } from '@interapp/types/mediaFile';
 
 export const useUIStore = defineStore('ui', {
   state: () => ({
@@ -10,6 +11,11 @@ export const useUIStore = defineStore('ui', {
     settings: getEmptyUISettings(),
     // Not persisted:
     showFilters: true,
+    mediaModal: {
+      visible: false,
+      cardId: null as string | null,
+      media: null as MediaFile | null,
+    },
     // Internal:
     timer: undefined as ReturnType<typeof setTimeout> | undefined,
   }),
@@ -29,8 +35,20 @@ export const useUIStore = defineStore('ui', {
     toggleShowFilters() {
       this.showFilters = !this.showFilters;
     },
+    showMediaModal(cardId: string, media: MediaFile) {
+      this.mediaModal.visible = true;
+      this.mediaModal.cardId = cardId;
+      this.mediaModal.media = media;
+    },
+    hideMediaModal() {
+      this.mediaModal.visible = false;
+      this.mediaModal.cardId = null;
+      this.mediaModal.media = null;
+    },
     clear() {
       this.settings = getEmptyUISettings();
+      this.showFilters = true;
+      this.hideMediaModal();
     },
   },
 });
