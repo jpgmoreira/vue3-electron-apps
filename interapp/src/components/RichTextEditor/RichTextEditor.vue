@@ -62,6 +62,7 @@
     refresh, // Refreshes content based on the "initial" prop.
     getContent,
     focus,
+    drop,
   });
 
   onMounted(() => {

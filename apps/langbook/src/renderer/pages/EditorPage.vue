@@ -138,6 +138,15 @@
     });
   }
 
+  function rteDrop(field: RTEField, event: DragEvent) {
+    clearFocus();
+    rteFocus.value[field] = true;
+    nextTick(() => {
+      rteRefs.value[field]?.focus();
+      rteRefs.value[field]?.drop(event);
+    });
+  }
+
   // --- Media: ---
 
   const mediaRef = useTemplateRef('media');
@@ -224,25 +233,49 @@
       v-if="rteShow.front"
       :initial="card.front"
       @input="rteInput('front')"
-      @blur="rteFocus.front = false"
+      @blur="clearFocus"
     />
-    <div v-else class="rte-placeholder" @mousedown.prevent="setRteFocus('front')">FRONT</div>
+    <div
+      v-else
+      class="rte-placeholder"
+      @mousedown.prevent="setRteFocus('front')"
+      @dragover.prevent
+      @drop="rteDrop('front', $event)"
+    >
+      FRONT
+    </div>
     <RichTextEditor
       ref="back"
       v-if="rteShow.back"
       :initial="card.back"
       @input="rteInput('back')"
-      @blur="rteFocus.back = false"
+      @blur="clearFocus"
     />
-    <div v-else class="rte-placeholder" @mousedown.prevent="setRteFocus('back')">BACK</div>
+    <div
+      v-else
+      class="rte-placeholder"
+      @mousedown.prevent="setRteFocus('back')"
+      @dragover.prevent
+      @drop="rteDrop('back', $event)"
+    >
+      BACK
+    </div>
     <RichTextEditor
       ref="extra"
       v-if="rteShow.extra"
       :initial="card.extra"
       @input="rteInput('extra')"
-      @blur="rteFocus.extra = false"
+      @blur="clearFocus"
     />
-    <div v-else class="rte-placeholder" @mousedown.prevent="setRteFocus('extra')">EXTRA</div>
+    <div
+      v-else
+      class="rte-placeholder"
+      @mousedown.prevent="setRteFocus('extra')"
+      @dragover.prevent
+      @drop="rteDrop('extra', $event)"
+    >
+      EXTRA
+    </div>
     <div class="media-input-container relative">
       <MediaInput
         ref="media"
