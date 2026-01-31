@@ -137,7 +137,10 @@
       <div class="grow relative">
         <div class="flex flex-col absolute inset-0">
           <CardsView ref="cards-view" />
-          <div v-if="uiStore.showFilters" class="filters-container flex flex-col px-2 py-1.5 gap-1">
+          <div
+            v-if="uiStore.showFilters"
+            class="filters-container flex flex-col px-2 py-1.5 gap-1 z-10"
+          >
             <div>Filters:</div>
             <Multiselect
               :options="tagsOptions"

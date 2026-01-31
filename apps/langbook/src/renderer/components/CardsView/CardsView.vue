@@ -14,16 +14,23 @@
   const totalHeight = ref(0);
   const isFetching = ref(false);
   const scrollTimer = ref<ReturnType<typeof setTimeout> | undefined>(undefined);
+  const fetchSeq = ref(0);
   const scrollRef = useTemplateRef('scroll-ref');
   async function fetchCards(scrollTop: number) {
     isFetching.value = true;
-    const data = await window.api.invoke<GetCardsPageResponseDTO>(
-      InvokeChannels.getCardsPage,
-      scrollTop
-    );
-    cards.value = data.page;
-    totalHeight.value = data.totalHeight;
-    isFetching.value = false;
+    try {
+      fetchSeq.value++;
+      const seq = fetchSeq.value;
+      const data = await window.api.invoke<GetCardsPageResponseDTO>(
+        InvokeChannels.getCardsPage,
+        scrollTop
+      );
+      if (seq !== fetchSeq.value) return;
+      cards.value = data.page;
+      totalHeight.value = data.totalHeight;
+    } finally {
+      isFetching.value = false;
+    }
   }
   function onScroll() {
     clearTimeout(scrollTimer.value);
@@ -58,22 +65,19 @@
 
 <template>
   <div class="grow relative">
-    <div
-      v-if="cards.length"
-      ref="scroll-ref"
-      class="absolute inset-0 overflow-auto pb-48"
-      @scroll="onScroll"
-    >
-      <div :style="{ height: `${totalHeight}px` }"></div>
-      <div
-        v-for="card in cards"
-        :key="card.id"
-        class="absolute left-0 w-full"
-        :style="{ top: `${card.ui.scrollTop}px` }"
-      >
-        <MainCard :card="card" @media-click="mediaClick" />
+    <div ref="scroll-ref" class="absolute inset-0 overflow-auto pb-48" @scroll="onScroll">
+      <div v-if="cards.length">
+        <div :style="{ height: `${totalHeight}px` }"></div>
+        <div
+          v-for="card in cards"
+          :key="card.id"
+          class="absolute left-0 w-full"
+          :style="{ top: `${card.ui.scrollTop}px` }"
+        >
+          <MainCard :card="card" @media-click="mediaClick" />
+        </div>
       </div>
+      <div v-else class="absolute-center message-xl z-0">No cards</div>
     </div>
-    <div v-else class="absolute-center message-xl">No cards</div>
   </div>
 </template>
