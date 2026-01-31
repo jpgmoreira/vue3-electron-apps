@@ -91,7 +91,7 @@
 </script>
 
 <template>
-  <div v-if="props.visible && anySectionVisible" class="fixed context-menu" :style="style">
+  <div v-if="props.visible && anySectionVisible" class="custom-context-menu" :style="style">
     <!-- Root context -->
     <div v-if="props.type === 'root'">
       <div v-if="rootSections.create">

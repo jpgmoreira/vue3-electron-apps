@@ -10,6 +10,7 @@
 @import './elements/alert.css';
 @import './elements/resizer.css';
 @import './elements/label.css';
+@import './elements/contextmenu.css';
 
 @import './components/modal.css';
 @import './components/toast.css';
@@ -19,7 +20,6 @@
 @import './components/selectionlist.css';
 @import './components/mediainput.css';
 
-@import './components/explorer/contextmenu.css';
 @import './components/explorer/explorer.css';
 
 @import './components/rte/rte.css';

@@ -87,10 +87,15 @@
 
 <template>
   <div class="rte" ref="rte" @click="hideContext" @wheel="hideContext">
-    <div v-if="context.visible" ref="context-menu" :style="contextStyle" class="context-menu">
-      <div @click="contextCut">Cut</div>
-      <div @click="contextCopy">Copy</div>
-      <div @click="contextPaste">Paste</div>
+    <div
+      v-if="context.visible"
+      ref="context-menu"
+      :style="contextStyle"
+      class="custom-context-menu"
+    >
+      <div class="item" @click="contextCut">Cut</div>
+      <div class="item" @click="contextCopy">Copy</div>
+      <div class="item" @click="contextPaste">Paste</div>
     </div>
     <div
       ref="editor"

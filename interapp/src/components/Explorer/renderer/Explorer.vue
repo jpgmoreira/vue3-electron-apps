@@ -508,7 +508,6 @@
     @mouseleave="containerMouseLeave"
   >
     <ContextMenu
-      class="z-[3]"
       :tree="tree"
       :n-selected-folders="nSelectedFolders"
       :n-open-dirs="tree?.nOpenDirs || 0"
