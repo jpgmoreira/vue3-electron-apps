@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-  import { computed, onBeforeUnmount, onMounted, ref, useTemplateRef } from 'vue';
+  import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
   import { NodeType } from '@interapp/components/Explorer/common/tree';
   import { useUIStore } from '@renderer/store/ui';
   import { useTagsStore } from '@renderer/store/tags';
