@@ -2,80 +2,64 @@ import sqlite3
 import json
 import time
 import uuid
+import os
 
-def generate_id():
-    return uuid.uuid4().hex[:16]
 
-def main():
-    n = int(input("Number of cards to generate: "))
+def generate_session_id():
+    return "session_" + uuid.uuid4().hex
 
-    # Generate a single session ID for all cards
-    session_id = f"session_{generate_id()}"
 
-    print(f"Generating {n} cards...")
-    print(f"Session ID: {session_id}")
+def create_cards(count, db_path="cards.sqlite"):
+    conn = sqlite3.connect(db_path)
+    cursor = conn.cursor()
 
-    # Create SQLite database
-    conn = sqlite3.connect("cards.sqlite")
-    cur = conn.cursor()
-
-    # Create table exactly matching your app's format
-    cur.execute("""
-        CREATE TABLE IF NOT EXISTS cards (
-            id TEXT PRIMARY KEY,
-            front TEXT,
-            back TEXT,
-            extra TEXT,
-            media TEXT,
-            allowReversed TEXT,
-            createdAt TEXT,
-            lastReviewedAt TEXT,
-            sessions TEXT,
-            tags TEXT,
-            frequency TEXT,
-            bucket TEXT,
-            height TEXT
-        )
+    # Schema you provided
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS cards (
+      id TEXT PRIMARY KEY,
+      front TEXT NOT NULL,
+      back TEXT NOT NULL DEFAULT '',
+      extra TEXT NOT NULL DEFAULT '',
+      media TEXT NOT NULL,
+      allowReversed BOOLEAN NOT NULL DEFAULT FALSE,
+      createdAt INTEGER NOT NULL,
+      lastReviewedAt INTEGER,
+      sessions TEXT NOT NULL,
+      tags TEXT NOT NULL,
+      frequency TEXT NOT NULL,
+      bucket BOOLEAN NOT NULL DEFAULT FALSE,
+      height INTEGER NOT NULL
+    );
     """)
 
+    session_id = generate_session_id()
     now = int(time.time() * 1000)
 
-    for i in range(1, n + 1):
-        card_id = generate_id()
-
+    for i in range(1, count + 1):
+        card_id = uuid.uuid4().hex
         front = f"front{i}"
         back = f"back{i}"
         extra = f"extra{i}"
 
-        sessions_value = json.dumps([session_id])
-        tags_value = "[]"
-
-        cur.execute("""
-            INSERT INTO cards
-            (id, front, back, extra, media, allowReversed, createdAt, lastReviewedAt,
-             sessions, tags, frequency, bucket, height)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-        """, (
-            card_id,
-            front,
-            back,
-            extra,
-            "[]",            # media
-            "0",             # allowReversed
-            str(now),
-            None,            # lastReviewedAt
-            sessions_value,
-            tags_value,
-            "normal",
-            "0",             # bucket
-            "141"
-        ))
+        cursor.execute(
+            """
+            INSERT INTO cards (
+                id, front, back, extra, media, allowReversed, createdAt,
+                lastReviewedAt, sessions, tags, frequency, bucket, height
+            )
+            VALUES (?, ?, ?, ?, '[]', 0, ?, NULL, ?, '[]', 'normal', 0, 141)
+        """,
+            (card_id, front, back, extra, now, json.dumps([session_id])),
+        )
 
     conn.commit()
     conn.close()
 
-    print("\n✔ Database created: cards.sqlite")
-    print(f"✔ Session used: {session_id}")
+    return db_path, session_id
+
 
 if __name__ == "__main__":
-    main()
+    n = int(input("How many cards to generate? "))
+    db_path, session_id = create_cards(n)
+    print(f"Database created: {os.path.abspath(db_path)}")
+    print("Session ID:", session_id)

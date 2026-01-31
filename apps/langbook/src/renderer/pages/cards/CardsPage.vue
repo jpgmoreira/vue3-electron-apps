@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-  import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
+  import { computed, onBeforeUnmount, onMounted, ref, useTemplateRef } from 'vue';
   import { NodeType } from '@interapp/components/Explorer/common/tree';
   import { useUIStore } from '@renderer/store/ui';
   import { useTagsStore } from '@renderer/store/tags';
@@ -16,10 +16,8 @@
   import { MultiselectOption } from '@interapp/components/Multiselect.vue';
   import SelectionList from '@interapp/components/SelectionList.vue';
   import { FREQUENCY_OPTIONS, YES_OR_NO_OPTIONS } from '../../helpers/options';
-  import { CardFrequency } from '@common/schemas/card';
   import { useEditorStore } from '@renderer/store/editor';
   import { useProfileStore } from '@renderer/store/profile';
-  import { GetCardsPageResponseDTO } from '@common/dto/getCardsPageResponseDTO';
   import CardsView from '@renderer/components/CardsView/CardsView.vue';
   import { useSessionsStore } from '@renderer/store/sessions';
 
@@ -35,12 +33,8 @@
   const resizing = ref(false);
   const filtering = ref(false);
   const explorerWidth = ref(uiStore.settings.explorerWidth);
-  const hasLoaded = ref(false);
 
-  const cards = ref<GetCardsPageResponseDTO>({
-    page: [],
-    totalHeight: 0,
-  });
+  const cardsViewRef = useTemplateRef('cards-view');
 
   const initialExplorerScrollTop = uiStore.settings.explorerScrollTop;
 
@@ -64,10 +58,6 @@
     return Object.keys(sessionsStore.sessions).length > 0;
   });
 
-  const hasCards = computed(() => {
-    return cards.value.page.length > 0;
-  });
-
   const addCardBtnTooltip = computed(() => {
     return hasSessions.value ? undefined : 'Must create a session first.';
   });
@@ -77,16 +67,13 @@
     router.push('/editor');
   }
 
-  async function fetchPage(scrollTop: number) {
-    cards.value = await window.api.invoke(InvokeChannels.getCardsPage, scrollTop);
-  }
-
   async function filterClick() {
     if (!filtersStore.dirty) return;
     filtering.value = true;
     try {
       await filtersStore.updateFilters();
-      fetchPage(0);
+      uiStore.setCardsScrollTop(0);
+      cardsViewRef.value?.fetchCards(0);
     } finally {
       filtering.value = false;
     }
@@ -123,8 +110,6 @@
     resizing.value = false;
   }
   onMounted(async () => {
-    await fetchPage(0);
-    hasLoaded.value = true;
     window.addEventListener('mouseup', windowMouseUp);
     window.addEventListener('mousemove', windowMouseMove);
   });
@@ -151,10 +136,7 @@
       <div class="custom-resizer" @mousedown="resizing = true"></div>
       <div class="grow relative">
         <div class="flex flex-col absolute inset-0">
-          <div class="grow relative overflow-auto pb-48">
-            <CardsView v-if="hasCards" :page="cards.page" />
-            <div v-else-if="hasLoaded" class="absolute-center message-xl">No cards</div>
-          </div>
+          <CardsView ref="cards-view" />
           <div v-if="uiStore.showFilters" class="filters-container flex flex-col px-2 py-1.5 gap-1">
             <div>Filters:</div>
             <Multiselect
