@@ -149,7 +149,7 @@
         />
       </div>
       <div class="custom-resizer" @mousedown="resizing = true"></div>
-      <div class="grow relative" style="border: 1px solid orchid">
+      <div class="grow relative">
         <div class="flex flex-col absolute inset-0">
           <div class="grow relative overflow-auto pb-48">
             <div v-if="hasCards">

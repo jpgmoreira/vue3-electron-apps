@@ -59,10 +59,10 @@
 </template>
 
 <style scoped>
-  :deep(.main-card img) {
+  .main-card :deep(img) {
     display: inline-block;
   }
-  :deep(.main-card span) {
+  .main-card :deep(span) {
     color: inherit;
   }
 </style>
