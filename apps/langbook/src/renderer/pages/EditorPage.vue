@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-  import { ref, useTemplateRef, nextTick, computed } from 'vue';
+  import { ref, useTemplateRef, computed } from 'vue';
   import RichTextEditor from '@interapp/components/RichTextEditor/RichTextEditor.vue';
   import { useEditorStore } from '@renderer/store/editor';
   import { useRouter } from 'vue-router';
@@ -17,8 +17,6 @@
   import { FREQUENCY_OPTIONS } from '@renderer/helpers/options';
   import { InvokeChannels } from '@preload/channels/invoke';
   import { useProfileStore } from '@renderer/store/profile';
-
-  type RTEField = 'front' | 'back' | 'extra';
 
   const router = useRouter();
   const editorStore = useEditorStore();
@@ -100,66 +98,23 @@
 
   // --- RTE: ---
 
+  type RTEField = 'front' | 'back' | 'extra';
+
   const rteRefs = ref({
     front: useTemplateRef('front'),
     back: useTemplateRef('back'),
     extra: useTemplateRef('extra'),
   });
-  const rteFocus = ref({
-    front: false,
-    back: false,
-    extra: false,
-  });
-  const rteShow = computed(() => ({
-    front: card.value.front || rteFocus.value.front,
-    back: card.value.back || rteFocus.value.back,
-    extra: card.value.extra || rteFocus.value.extra,
-  }));
-  function rteInput(field: RTEField) {
-    const ref = rteRefs.value[field];
-    if (!ref) throw new Error('Invalid RTE ref!');
-    const content = ref.getContent();
-    card.value[field] = content;
-    rteFocus.value[field] = true;
-    if (field === 'back' && !content) {
+
+  function refreshContent(field: RTEField) {
+    if (!rteRefs.value[field]) throw new Error('RTE ref not set!');
+    card.value[field] = rteRefs.value[field].getContent();
+    if (field === 'back' && !card.value.back) {
       card.value.allowReversed = false;
     }
   }
-  function clearFocus() {
-    rteFocus.value.front = false;
-    rteFocus.value.back = false;
-    rteFocus.value.extra = false;
-  }
-  function setRteFocus(field: RTEField) {
-    clearFocus();
-    rteFocus.value[field] = true;
-    nextTick(() => {
-      rteRefs.value[field]?.focus();
-    });
-  }
-
-  function rteDrop(field: RTEField, event: DragEvent) {
-    clearFocus();
-    rteFocus.value[field] = true;
-    nextTick(() => {
-      rteRefs.value[field]?.focus();
-      rteRefs.value[field]?.drop(event);
-    });
-  }
 
   // --- Media: ---
-
-  const mediaRef = useTemplateRef('media');
-  const hasMedia = computed(() => card.value.media.length > 0);
-
-  function mediaClick() {
-    if (!mediaRef.value) throw new Error('Media input not initialized!');
-    mediaRef.value.triggerInput();
-  }
-  function mediaDrop(e: DragEvent) {
-    if (!mediaRef.value) throw new Error('Media input not initialized!');
-    mediaRef.value.drop(e);
-  }
 
   function addMedia(items: MediaFile[]) {
     for (const file of items) {
@@ -210,6 +165,9 @@
   }
 
   async function addCard() {
+    refreshContent('front');
+    refreshContent('back');
+    refreshContent('extra');
     if (!card.value.front) {
       toastStore.showToast('A card must at least have a front field!', 'info');
       return;
@@ -228,72 +186,21 @@
 
 <template>
   <div class="editor-page flex flex-col gap-1 p-1 min-h-screen">
-    <RichTextEditor
-      ref="front"
-      v-if="rteShow.front"
-      :initial="card.front"
-      @input="rteInput('front')"
-      @blur="rteFocus.front = false"
-    />
-    <div
-      v-else
-      class="rte-placeholder"
-      @mousedown.prevent="setRteFocus('front')"
-      @dragover.prevent
-      @drop="rteDrop('front', $event)"
-    >
-      FRONT
+    <div class="card-field">
+      <div class="card-label">Front</div>
+      <RichTextEditor ref="front" :initial="card.front" />
     </div>
-    <RichTextEditor
-      ref="back"
-      v-if="rteShow.back"
-      :initial="card.back"
-      @input="rteInput('back')"
-      @blur="rteFocus.back = false"
-    />
-    <div
-      v-else
-      class="rte-placeholder"
-      @mousedown.prevent="setRteFocus('back')"
-      @dragover.prevent
-      @drop="rteDrop('back', $event)"
-    >
-      BACK
+    <div class="card-field">
+      <div class="card-label">Back</div>
+      <RichTextEditor ref="back" :initial="card.back" @blur="refreshContent('back')" />
     </div>
-    <RichTextEditor
-      ref="extra"
-      v-if="rteShow.extra"
-      :initial="card.extra"
-      @input="rteInput('extra')"
-      @blur="rteFocus.extra = false"
-    />
-    <div
-      v-else
-      class="rte-placeholder"
-      @mousedown.prevent="setRteFocus('extra')"
-      @dragover.prevent
-      @drop="rteDrop('extra', $event)"
-    >
-      EXTRA
+    <div class="card-field">
+      <div class="card-label">Extra</div>
+      <RichTextEditor ref="extra" :initial="card.extra" />
     </div>
-    <div class="media-input-container relative">
-      <MediaInput
-        ref="media"
-        :items="card.media"
-        :class="{ 'opacity-0': !hasMedia }"
-        @add="addMedia"
-        @remove="removeMedia"
-      />
-      <div
-        v-if="!hasMedia"
-        class="media-placeholder absolute inset-0 flex flex-col"
-        @click="mediaClick"
-        @drop="mediaDrop"
-        @dragover.prevent
-      >
-        <div>Media</div>
-        <div class="text-sm">(Click or drop files here)</div>
-      </div>
+    <div class="card-field">
+      <div class="card-label">Media (click or drop)</div>
+      <MediaInput :items="card.media" @add="addMedia" @remove="removeMedia" />
     </div>
     <hr />
     <Multiselect

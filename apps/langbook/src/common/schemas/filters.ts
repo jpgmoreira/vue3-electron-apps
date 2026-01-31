@@ -1,6 +1,7 @@
-import type { Mode } from '@interapp/components/Multiselect.vue';
 import type { YesOrNo } from '@interapp/types/yesOrNo';
 import { CardFrequency } from './card';
+
+type Mode = 'all' | 'any';
 
 export type Filters = {
   text: string;

@@ -46,7 +46,11 @@
   }
 
   function focus() {
-    editorRef.value?.focus();
+    const el = editorRef.value;
+    if (!el) throw new Error('RTE ref not defined!');
+    el.focus();
+    document.execCommand('selectAll', false, undefined);
+    document.getSelection()?.collapseToEnd();
   }
 
   function blur() {
@@ -55,7 +59,7 @@
     emit('blur');
   }
 
-  function windowClick(e: MouseEvent) {
+  function windowMouseDown(e: MouseEvent) {
     if (!rteRef.value) throw new Error('RTE not set!');
     if (!rteRef.value.contains(e.target as Node)) {
       blur();
@@ -71,12 +75,12 @@
 
   onMounted(() => {
     document.execCommand('styleWithCSS');
-    window.addEventListener('click', windowClick);
+    window.addEventListener('mousedown', windowMouseDown);
     window.addEventListener('blur', blur);
     refresh();
   });
   onBeforeUnmount(() => {
-    window.removeEventListener('click', windowClick);
+    window.removeEventListener('mousedown', windowMouseDown);
     window.removeEventListener('blur', blur);
   });
 </script>
@@ -95,7 +99,10 @@
       contenteditable="true"
       @mousedown.right.prevent="openContext"
       @paste="manualPaste"
-      @drop="drop"
+      @drop="
+        focus();
+        drop($event);
+      "
       @copy="addClassToSpans"
       @cut="addClassToSpans"
       @click="click"

@@ -64,7 +64,7 @@
    */
   import { toLocaleNumber, clamp } from '@interapp/utils/utils';
   import { computed, reactive, useTemplateRef, ref, watch } from 'vue';
-  export type Mode = 'all' | 'any';
+  type Mode = 'all' | 'any';
   export type MultiselectOption = {
     text: string;
     value: string;

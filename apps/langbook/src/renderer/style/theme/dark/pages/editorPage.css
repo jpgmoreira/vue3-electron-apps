@@ -1,24 +1,25 @@
-.theme-dark .editor-page .rte-placeholder,
-.theme-dark .editor-page .media-placeholder {
-  background-color: #2c2d30;
-  user-select: none;
-  font-size: 18px;
-  font-weight: bold;
-  opacity: 0.7;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.theme-dark .editor-page .rte-placeholder,
 .theme-dark .editor-page .rte .editor {
   min-height: 150px;
 }
 
 .theme-dark .editor-page .media-input-root {
-  min-height: 120px;
+  min-height: 100px;
 }
 
 .theme-dark .editor-page hr {
   border-color: #60656e;
+}
+
+.theme-dark .editor-page .card-field {
+  position: relative;
+}
+
+.theme-dark .editor-page .card-label {
+  position: absolute;
+  top: 1px;
+  right: 4px;
+  font-size: 13px;
+  opacity: 0.45;
+  pointer-events: none;
+  user-select: none;
 }
