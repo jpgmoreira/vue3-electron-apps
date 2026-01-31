@@ -79,14 +79,17 @@ export class CardsManager {
   }
 
   public getCardsPage(scrollTop: number): GetCardsPageResponseDTO {
-    const page: Card[] = [];
+    let anchor = 0;
     let totalHeight = 0;
-    for (const card of this.filtered) {
+    for (let i = 0; i < this.filtered.length; i++) {
+      const card = this.filtered[i];
       totalHeight += card.height;
-      if (card.ui.scrollTop >= scrollTop && page.length < CARDS_PAGE_SIZE) {
-        page.push(card);
+      if (!anchor && totalHeight >= scrollTop) {
+        anchor = i;
       }
     }
+    const first = Math.max(0, anchor - Math.floor(CARDS_PAGE_SIZE / 2));
+    const page = this.filtered.slice(first, first + CARDS_PAGE_SIZE);
     return {
       page,
       totalHeight,

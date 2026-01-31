@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-  import { onMounted, ref, useTemplateRef } from 'vue';
+  import { onMounted, ref, useTemplateRef, nextTick } from 'vue';
   import MainCard from './MainCard.vue';
   import { MediaFile } from '@interapp/types/mediaFile';
   import { useMediaStore } from '@renderer/store/media';
@@ -49,7 +49,10 @@
     fetchCards,
   });
   onMounted(async () => {
-    fetchCards(initialScrollTop);
+    await fetchCards(initialScrollTop);
+    await nextTick();
+    if (!scrollRef.value) throw new Error('No scroll ref!');
+    scrollRef.value.scrollTop = initialScrollTop;
   });
 </script>
 
