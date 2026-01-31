@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-  import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
+  import { computed, onBeforeUnmount, onMounted, ref, useTemplateRef } from 'vue';
   import { NodeType } from '@interapp/components/Explorer/common/tree';
   import { useUIStore } from '@renderer/store/ui';
   import { useTagsStore } from '@renderer/store/tags';
@@ -152,9 +152,7 @@
       <div class="grow relative">
         <div class="flex flex-col absolute inset-0">
           <div class="grow relative overflow-auto pb-48">
-            <div v-if="hasCards">
-              <CardsView :page="cards.page" />
-            </div>
+            <CardsView v-if="hasCards" :page="cards.page" />
             <div v-else-if="hasLoaded" class="absolute-center message-xl">No cards</div>
           </div>
           <div v-if="uiStore.showFilters" class="filters-container flex flex-col px-2 py-1.5 gap-1">

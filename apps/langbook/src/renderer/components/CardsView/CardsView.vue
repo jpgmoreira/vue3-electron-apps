@@ -7,7 +7,7 @@
 </script>
 
 <template>
-  <div>
+  <div class="overflow-auto pb-48">
     <div v-for="card in page" :key="card.id">
       <MainCard :card="card" />
     </div>
