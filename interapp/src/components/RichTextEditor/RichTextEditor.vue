@@ -49,7 +49,8 @@
     editorRef.value?.focus();
   }
 
-  function documentClick(e: MouseEvent) {
+  function windowClick(e: MouseEvent) {
+    console.log('window click');
     if (!rteRef.value) throw new Error('RTE not set!');
     if (!rteRef.value.contains(e.target as Node)) {
       clearSelectedImage();
@@ -67,11 +68,11 @@
 
   onMounted(() => {
     document.execCommand('styleWithCSS');
-    document.addEventListener('click', documentClick);
+    window.addEventListener('mousedown', windowClick);
     refresh();
   });
   onBeforeUnmount(() => {
-    document.removeEventListener('click', documentClick);
+    window.removeEventListener('mousedown', windowClick);
   });
 </script>
 
@@ -107,10 +108,10 @@
   .context-menu {
     position: fixed;
   }
-  :deep(.editor img) {
+  .editor :deep(img) {
     display: inline-block;
   }
-  :deep(.editor span) {
+  .editor :deep(span) {
     color: inherit;
   }
 </style>
