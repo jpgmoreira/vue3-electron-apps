@@ -233,7 +233,7 @@
       v-if="rteShow.front"
       :initial="card.front"
       @input="rteInput('front')"
-      @blur="clearFocus"
+      @blur="rteFocus.front = false"
     />
     <div
       v-else
@@ -249,7 +249,7 @@
       v-if="rteShow.back"
       :initial="card.back"
       @input="rteInput('back')"
-      @blur="clearFocus"
+      @blur="rteFocus.back = false"
     />
     <div
       v-else
@@ -265,7 +265,7 @@
       v-if="rteShow.extra"
       :initial="card.extra"
       @input="rteInput('extra')"
-      @blur="clearFocus"
+      @blur="rteFocus.extra = false"
     />
     <div
       v-else

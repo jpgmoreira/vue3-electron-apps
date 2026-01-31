@@ -49,13 +49,16 @@
     editorRef.value?.focus();
   }
 
+  function blur() {
+    clearSelectedImage();
+    hideContext();
+    emit('blur');
+  }
+
   function windowClick(e: MouseEvent) {
-    console.log('window click');
     if (!rteRef.value) throw new Error('RTE not set!');
     if (!rteRef.value.contains(e.target as Node)) {
-      clearSelectedImage();
-      hideContext();
-      emit('blur');
+      blur();
     }
   }
 
@@ -68,11 +71,13 @@
 
   onMounted(() => {
     document.execCommand('styleWithCSS');
-    window.addEventListener('mousedown', windowClick);
+    window.addEventListener('click', windowClick);
+    window.addEventListener('blur', blur);
     refresh();
   });
   onBeforeUnmount(() => {
-    window.removeEventListener('mousedown', windowClick);
+    window.removeEventListener('click', windowClick);
+    window.removeEventListener('blur', blur);
   });
 </script>
 
