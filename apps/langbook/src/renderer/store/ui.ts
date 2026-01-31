@@ -11,6 +11,7 @@ export const useUIStore = defineStore('ui', {
     settings: getEmptyUISettings(),
     // Not persisted:
     showFilters: true,
+    cardsScrollTop: 0,
     mediaModal: {
       visible: false,
       cardId: null as string | null,
@@ -39,6 +40,9 @@ export const useUIStore = defineStore('ui', {
       this.mediaModal.visible = true;
       this.mediaModal.cardId = cardId;
       this.mediaModal.media = media;
+    },
+    setCardsScrollTop(value: number) {
+      this.cardsScrollTop = value;
     },
     hideMediaModal() {
       this.mediaModal.visible = false;
