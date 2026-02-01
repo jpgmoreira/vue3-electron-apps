@@ -2,7 +2,6 @@
   import { onMounted, ref, reactive, useTemplateRef, nextTick } from 'vue';
   import MainCard from './MainCard.vue';
   import { MediaFile } from '@interapp/types/mediaFile';
-  import { useMediaStore } from '@renderer/store/media';
   import { useUIStore } from '@renderer/store/ui';
   import { Card } from '@common/schemas/card';
   import { InvokeChannels } from '@preload/channels/invoke';
@@ -12,7 +11,6 @@
   import { useRouter } from 'vue-router';
 
   const editorStore = useEditorStore();
-  const mediaStore = useMediaStore();
   const uiStore = useUIStore();
   const initialScrollTop = uiStore.cardsScrollTop;
   const cards = ref<Card[]>([]);
@@ -103,8 +101,7 @@
   }
   function mediaClick(cardId: string, media: MediaFile) {
     if (media.type.startsWith('audio')) {
-      const mediaPath = mediaStore.resolveMediaPath(cardId, media.path);
-      const audio = new Audio(mediaPath);
+      const audio = new Audio(media.path);
       audio.play();
     } else if (media.type.startsWith('image')) {
       uiStore.showMediaModal(cardId, media);

@@ -69,7 +69,7 @@ export class CardsManager {
 
   public async createCard(card: Card) {
     if (!this.profileId) throw new Error('Profile not initialized!');
-    this.mediaManager.processCardMedia(card, this.profileId);
+    this.mediaManager.cardWasCreated(card, this.profileId);
     await this.dbManager.insertCard(card);
     this.profileManager.addCards(1);
     this.sessionsManager.cardWasCreated(card);
@@ -110,9 +110,10 @@ export class CardsManager {
   }
 
   public async updateCard(card: Card) {
+    if (!this.profileId) throw new Error('Profile id not initialized!');
     const oldCard = this.cardsMap[card.id];
     if (!oldCard) throw new Error('Card not found!');
-    this.mediaManager.cardWasUpdated(oldCard, card);
+    this.mediaManager.cardWasUpdated(oldCard, card, this.profileId);
     await this.dbManager.updateCard(card);
     this.sessionsManager.cardWasUpdated(oldCard, card);
     this.tagsManager.cardWasUpdated(oldCard, card);

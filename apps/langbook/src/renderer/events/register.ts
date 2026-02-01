@@ -6,7 +6,6 @@ import { useUIStore } from '@renderer/store/ui';
 import { useFiltersStore } from '@renderer/store/filters';
 import { useSessionsStore } from '@renderer/store/sessions';
 import { useTagsStore } from '@renderer/store/tags';
-import { useMediaStore } from '@renderer/store/media';
 
 eventEmitter.on(CommonEvents.loadInitialData, (data: StartupData) => {
   useProfileStore().initFromStartupData(data);
@@ -14,7 +13,6 @@ eventEmitter.on(CommonEvents.loadInitialData, (data: StartupData) => {
   useUIStore().initFromStartupData(data);
   useSessionsStore().initFromStartupData(data);
   useTagsStore().initFromStartupData(data);
-  useMediaStore().initFromStartupData(data);
 });
 
 eventEmitter.on(CommonEvents.clearProfileData, () => {
@@ -22,5 +20,4 @@ eventEmitter.on(CommonEvents.clearProfileData, () => {
   useFiltersStore().clear();
   useTagsStore().clear();
   useSessionsStore().clear();
-  useMediaStore().clear();
 });
