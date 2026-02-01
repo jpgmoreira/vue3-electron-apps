@@ -4,7 +4,7 @@
   import { useEditorStore } from '@renderer/store/editor';
   import { useRouter } from 'vue-router';
   import { useToastStore } from '@interapp/store/toast';
-  import { arrayRemove, cloneDeep, randomId, toRawDeep } from '@interapp/utils/utils';
+  import { arrayRemove, cloneDeep, randomId } from '@interapp/utils/utils';
   import { Card, CardFrequency, getEmptyCard } from '@common/schemas/card';
   import MediaInput from '@interapp/components/MediaInput/renderer/MediaInput.vue';
   import { MediaFile } from '@interapp/types/mediaFile';
@@ -165,7 +165,7 @@
     router.back();
   }
 
-  async function addCard() {
+  async function upsertCard(channel: InvokeChannels) {
     refreshContent('front');
     refreshContent('back');
     refreshContent('extra');
@@ -181,7 +181,7 @@
     await nextTick();
     const height = cardRef.value.getHeight();
     card.value.height = height;
-    await window.api.invoke(InvokeChannels.createCard, toRawDeep(card.value));
+    await window.api.invoke(channel, cloneDeep(card.value));
     await tagsStore.refetch();
     await sessionsStore.refetch();
     await profileStore.refetch();
@@ -200,14 +200,6 @@
     await tagsStore.refetch();
     await filtersStore.refetch();
     // TODO: Update also flashcards store.
-    router.back();
-  }
-
-  async function save() {
-    if (!card.value) throw new Error('Card not set!');
-    await window.api.invoke(InvokeChannels.updateCard, cloneDeep(card.value));
-    await sessionsStore.refetch();
-    await tagsStore.refetch();
     router.back();
   }
 </script>
@@ -279,12 +271,16 @@
       </div>
       <template v-if="isCreate">
         <button type="button" class="btn-warning" @click="cancel">Cancel</button>
-        <button type="button" class="btn-primary" @click="addCard">Add</button>
+        <button type="button" class="btn-primary" @click="upsertCard(InvokeChannels.createCard)">
+          Add
+        </button>
       </template>
       <template v-else>
         <button type="button" class="btn-danger" @click="deleteClick">Delete</button>
         <button type="button" class="btn-warning" @click="cancel">Cancel</button>
-        <button type="button" class="btn-primary" @click="save">Save</button>
+        <button type="button" class="btn-primary" @click="upsertCard(InvokeChannels.updateCard)">
+          Save
+        </button>
       </template>
     </footer>
   </div>
