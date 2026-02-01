@@ -100,7 +100,7 @@ export function usePaste(editorRef: Ref<HTMLElement | null>) {
    * Only SPAN tags copied from inside the editor will keep their styles.
    */
   function sanitizeNode(node: Node) {
-    const allowedAttributes = ['src', 'class', 'width'];
+    const allowedAttributes = ['src', 'class', 'width', 'data-base'];
     const allowedClasses = [styledSpanClass];
     if (node.nodeType === Node.ELEMENT_NODE) {
       const el = node as HTMLElement;
