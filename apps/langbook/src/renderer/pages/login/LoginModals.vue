@@ -6,6 +6,7 @@
   import { useToastStore } from '@interapp/store/toast';
   import { APP_NAME } from '@common/constants';
   import { useRouter } from 'vue-router';
+  import { sleep } from '@interapp/utils/utils';
   export type ModalType = 'create' | 'rename' | 'delete' | null;
   defineExpose({ show });
   const profileStore = useProfileStore();
@@ -31,9 +32,15 @@
       }
     });
   }
+  function clear() {
+    visible.value = null;
+    text.value = '';
+    record.value = null;
+    isDeleting.value = false;
+  }
   function close() {
     if (isDeleting.value) return;
-    visible.value = null;
+    clear();
   }
   async function create() {
     const name = text.value.trim();
@@ -41,7 +48,7 @@
     if (result.status === 'error') {
       toastStore.showToast(result.message, 'error');
     } else if (result.status === 'success') {
-      visible.value = null;
+      clear();
       document.title = `${name}@${APP_NAME}`;
       router.replace('/cards');
     }
@@ -54,20 +61,24 @@
     if (result.status === 'error') {
       toastStore.showToast(result.message!, 'error');
     } else {
-      visible.value = null;
+      clear();
     }
   }
-  async function _delete() {
+  async function doDelete() {
     if (!record.value) throw new Error('No record selected!');
     const profileId = record.value.id;
     isDeleting.value = true;
-    const result = await profileStore.deleteProfile(profileId);
-    if (result.status === 'error') {
-      toastStore.showToast(result.message!, 'error');
+    try {
+      await sleep(1000);
+      const result = await profileStore.deleteProfile(profileId);
+      if (result.status === 'error') {
+        toastStore.showToast(result.message!, 'error');
+      } else {
+        toastStore.showToast('Profile deleted!', 'success');
+      }
+    } finally {
+      clear();
     }
-    isDeleting.value = false;
-    visible.value = null;
-    record.value = null;
   }
 </script>
 
@@ -130,7 +141,7 @@
     </template>
     <template #footer>
       <div class="flex justify-between">
-        <button type="button" class="btn-danger" @click="_delete" :disabled="isDeleting">
+        <button type="button" class="btn-danger" @click="doDelete" :disabled="isDeleting">
           Delete
         </button>
         <button type="button" class="btn-warning" @click="close" :disabled="isDeleting">

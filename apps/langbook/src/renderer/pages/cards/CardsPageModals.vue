@@ -3,6 +3,7 @@
   import { ref, computed } from 'vue';
   import Modal from '@interapp/components/Modal.vue';
   import { DeleteNodeCallback } from '@interapp/components/Explorer/renderer/Explorer.vue';
+  import { sleep } from '@interapp/utils/utils';
 
   export type ModalType = 'single' | 'multiple' | null;
   const visible = ref<ModalType>(null);
@@ -39,6 +40,7 @@
     visible.value = 'multiple';
   }
   function close() {
+    if (isDeleting.value) return;
     clear();
   }
   function clear() {
@@ -49,7 +51,16 @@
     deleteFiles.value = 0;
     deleteFolders.value = 0;
   }
-  async function doDelete() {}
+  async function doDelete() {
+    if (!callback.value) throw new Error('Delete callback not set!');
+    isDeleting.value = true;
+    try {
+      await sleep(1000);
+      await callback.value();
+    } finally {
+      clear();
+    }
+  }
   defineExpose({
     showDeleteMultiple,
     showDeleteSingle,
