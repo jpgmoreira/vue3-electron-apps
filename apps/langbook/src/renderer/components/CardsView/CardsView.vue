@@ -8,6 +8,10 @@
   import { InvokeChannels } from '@preload/channels/invoke';
   import { GetCardsPageResponseDTO } from '@common/dto/getCardsPageResponseDTO';
   import DeleteCardModal from '../DeleteCardModal.vue';
+  import { useEditorStore } from '@renderer/store/editor';
+  import { useRouter } from 'vue-router';
+
+  const editorStore = useEditorStore();
   const mediaStore = useMediaStore();
   const uiStore = useUIStore();
   const initialScrollTop = uiStore.cardsScrollTop;
@@ -17,6 +21,8 @@
   const scrollTimer = ref<ReturnType<typeof setTimeout> | undefined>(undefined);
   const fetchSeq = ref(0);
   const scrollRef = useTemplateRef('scroll-ref');
+
+  const router = useRouter();
 
   const emit = defineEmits<{
     (e: 'deleted'): void;
@@ -57,6 +63,12 @@
     const modal = deleteCardModalRef.value;
     if (!modal) throw new Error('Modal not set!');
     modal.show(contextCard.value);
+  }
+
+  function onEditClick() {
+    if (!contextCard.value) throw new Error('Context card not set!');
+    editorStore.setCard(contextCard.value);
+    router.push('/editor');
   }
 
   async function fetchCards(scrollTop: number) {
@@ -117,7 +129,7 @@
       class="custom-context-menu"
       :style="contextStyle"
     >
-      <div class="item">Edit</div>
+      <div class="item" @click="onEditClick">Edit</div>
       <div class="item danger" @click="onDeleteClick">Delete</div>
     </div>
     <div ref="scroll-ref" class="absolute inset-0 overflow-auto pb-48" @scroll="onScroll">
