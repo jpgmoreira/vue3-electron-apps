@@ -73,7 +73,7 @@
       const result = await profileStore.deleteProfile(profileId);
       if (result.status === 'error') {
         toastStore.showToast(result.message!, 'error');
-      } else {
+      } else if (result.status === 'success') {
         toastStore.showToast('Profile deleted!', 'success');
       }
     } finally {
