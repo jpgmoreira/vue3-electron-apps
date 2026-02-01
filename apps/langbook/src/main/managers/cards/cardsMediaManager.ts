@@ -37,6 +37,7 @@ export class CardsMediaManager {
       const ext = path.extname(media.name) ? '' : extFromMime(media.type);
       const mediaFile = `${media.name}${ext}`;
       const newPath = path.join(mediaDir, mediaFile);
+      ensureDirExists(mediaDir);
       fs.copyFileSync(media.path, newPath);
       media.path = mediaFile; // Store only file name in media folder.
     }
@@ -91,6 +92,7 @@ export class CardsMediaManager {
 
   private saveBuffer(mediaDir: string, buffer: Buffer, name: string) {
     const fPath = path.join(mediaDir, name);
+    ensureDirExists(mediaDir);
     fs.writeFileSync(fPath, buffer);
   }
 
@@ -139,7 +141,6 @@ export class CardsMediaManager {
 
   public async processCardMedia(card: Card, profileId: string) {
     const mediaDir = path.join(DATA_DIR, 'profileData', profileId, 'media', card.id);
-    ensureDirExists(mediaDir);
     this.processMediaInput(card, mediaDir);
     this.processRteImages(card, mediaDir);
   }
