@@ -15,6 +15,7 @@ export const useMediaStore = defineStore('media', {
       this.mediaDir = null;
     },
     resolveMediaPath(cardId: string, mediaPath: string) {
+      // Resolves the path to a media file from the media input.
       if (!this.mediaDir) throw new Error('Media dir not set!');
       const base = this.mediaDir.replace(/\\/g, '/');
       const prefix = base.startsWith('/') ? 'safe-file://' : 'safe-file:///';
@@ -22,6 +23,8 @@ export const useMediaStore = defineStore('media', {
       return `${prefix}${base}/${cardId}/${encodedFile}`;
     },
     processRteImages(cardId: string, html: string) {
+      // Returns the processed HTML that contains the resolved path
+      // for all images from a RTE field.
       if (!html) return html;
       const div = document.createElement('div');
       div.innerHTML = html;

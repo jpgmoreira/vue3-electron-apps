@@ -258,8 +258,13 @@
         />
       </div>
       <template v-if="isCreate">
-        <button type="button" class="btn-primary" @click="addCard">Add</button>
         <button type="button" class="btn-warning" @click="cancel">Cancel</button>
+        <button type="button" class="btn-primary" @click="addCard">Add</button>
+      </template>
+      <template v-else>
+        <button type="button" class="btn-danger">Delete</button>
+        <button type="button" class="btn-warning" @click="cancel">Cancel</button>
+        <button type="button" class="btn-primary">Save</button>
       </template>
     </footer>
   </div>
