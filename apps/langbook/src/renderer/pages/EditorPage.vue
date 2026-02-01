@@ -18,17 +18,22 @@
   import { InvokeChannels } from '@preload/channels/invoke';
   import { useProfileStore } from '@renderer/store/profile';
   import MainCard from '@renderer/components/CardsView/MainCard.vue';
+  import DeleteCardModal from '@renderer/components/DeleteCardModal.vue';
+  import { useFiltersStore } from '@renderer/store/filters';
 
   const router = useRouter();
   const editorStore = useEditorStore();
   const toastStore = useToastStore();
   const tagsStore = useTagsStore();
   const sessionsStore = useSessionsStore();
+  const filtersStore = useFiltersStore();
   const profileStore = useProfileStore();
   const card = ref<Card>(getEmptyCard(randomId()));
   if (editorStore.card) card.value = cloneDeep(editorStore.card);
 
   const cardRef = useTemplateRef('card-ref');
+
+  const deleteModalRef = useTemplateRef('delete-modal');
 
   const isCreate = !Boolean(editorStore.card);
 
@@ -182,10 +187,25 @@
     await profileStore.refetch();
     router.back();
   }
+
+  function deleteClick() {
+    const modal = deleteModalRef.value;
+    if (!modal) throw new Error('Delete modal not set!');
+    modal.show(card.value);
+  }
+
+  async function cardDeleted() {
+    await profileStore.refetch();
+    await sessionsStore.refetch();
+    await tagsStore.refetch();
+    await filtersStore.refetch();
+    router.back();
+  }
 </script>
 
 <template>
   <div class="editor-page flex flex-col gap-1 p-1 min-h-screen">
+    <DeleteCardModal ref="delete-modal" @deleted="cardDeleted" />
     <MainCard :card="card" ref="card-ref" class="dummy-card" />
     <div class="card-field">
       <div class="card-label">Front</div>
@@ -253,7 +273,7 @@
         <button type="button" class="btn-primary" @click="addCard">Add</button>
       </template>
       <template v-else>
-        <button type="button" class="btn-danger">Delete</button>
+        <button type="button" class="btn-danger" @click="deleteClick">Delete</button>
         <button type="button" class="btn-warning" @click="cancel">Cancel</button>
         <button type="button" class="btn-primary">Save</button>
       </template>

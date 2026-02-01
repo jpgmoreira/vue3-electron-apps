@@ -96,15 +96,17 @@ export class CardsManager {
     };
   }
 
-  public async deleteCard(card: Card) {
+  public async deleteCard(cardId: string) {
     if (!this.profileId) throw new Error('Profile id not initialized!');
-    delete this.cardsMap[card.id];
-    this.filtered = this.filtered.filter((c) => c.id !== card.id);
+    const card = this.cardsMap[cardId];
+    if (!card) throw new Error('Card not found!');
+    delete this.cardsMap[cardId];
     this.profileManager.addCards(-1);
-    this.mediaManager.deleteMediaFolder(card.id, this.profileId);
-    await this.dbManager.deleteCard(card.id);
+    this.mediaManager.deleteMediaFolder(cardId, this.profileId);
+    await this.dbManager.deleteCard(cardId);
     this.sessionsManager.cardWasDeleted(card);
     this.tagsManager.cardWasDeleted(card);
+    this.filter();
   }
 
   public async sessionWasDeleted(sessionId: string) {
@@ -115,7 +117,7 @@ export class CardsManager {
       }
       card.sessions = card.sessions.filter((s) => s !== sessionId);
       if (card.sessions.length === 0) {
-        await this.deleteCard(card);
+        await this.deleteCard(card.id);
       } else {
         await this.dbManager.updateCard(card);
       }

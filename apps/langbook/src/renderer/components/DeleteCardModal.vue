@@ -1,9 +1,9 @@
 <script lang="ts" setup>
   import { Card } from '@common/schemas/card';
-  import { cloneDeep } from '@interapp/utils/utils';
   import { InvokeChannels } from '@preload/channels/invoke';
   import { ref } from 'vue';
   import Modal from '@interapp/components/Modal.vue';
+  import { sleep } from '@interapp/utils/utils';
 
   const emit = defineEmits<{
     (e: 'deleted'): void;
@@ -33,7 +33,8 @@
     if (!card.value) throw new Error('Card not set!');
     isDeleting.value = true;
     try {
-      await window.api.invoke(InvokeChannels.deleteCard, cloneDeep(card.value));
+      await sleep(1000);
+      await window.api.invoke(InvokeChannels.deleteCard, card.value.id);
       emit('deleted');
     } finally {
       clear();
