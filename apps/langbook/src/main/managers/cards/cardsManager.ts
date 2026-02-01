@@ -117,6 +117,8 @@ export class CardsManager {
     await this.dbManager.updateCard(card);
     this.sessionsManager.cardWasUpdated(oldCard, card);
     this.tagsManager.cardWasUpdated(oldCard, card);
+    this.cardsMap[card.id] = card;
+    this.filter();
   }
 
   public async sessionWasDeleted(sessionId: string) {
