@@ -24,7 +24,7 @@
     const files: MediaFile[] = [];
     for (const file of target.files) {
       const path = window.media.resolveFilePath(file);
-      files.push({ name: file.name, type: file.type, path });
+      files.push({ name: file.name, type: file.type, path, base: null });
     }
     target.value = ''; // Necessary. Comment this line and try to add a file, remove it, then add it again to see why.
     emit('add', files);
