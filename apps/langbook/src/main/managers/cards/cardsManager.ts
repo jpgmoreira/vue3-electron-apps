@@ -9,8 +9,6 @@ import { SessionsManager } from '../sessionsManager';
 import { TagsManager } from '../tagsManager';
 import { GetCardsPageResponseDTO } from '@common/dto/getCardsPageResponseDTO';
 import { CARDS_PAGE_SIZE } from '@common/constants';
-import path from 'path';
-import fs from 'fs';
 
 export class CardsManager {
   private dbManager: CardsDbManager;
