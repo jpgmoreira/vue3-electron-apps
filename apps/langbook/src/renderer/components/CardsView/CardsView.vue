@@ -22,6 +22,8 @@
   const fetchSeq = ref(0);
   const scrollRef = useTemplateRef('scroll-ref');
 
+  const hasLoaded = ref(false);
+
   const router = useRouter();
 
   const emit = defineEmits<{
@@ -114,6 +116,7 @@
   onMounted(async () => {
     await fetchCards(initialScrollTop);
     await nextTick();
+    hasLoaded.value = true;
     if (!scrollRef.value) throw new Error('No scroll ref!');
     scrollRef.value.scrollTop = initialScrollTop;
   });
@@ -148,7 +151,7 @@
           />
         </div>
       </div>
-      <div v-else class="absolute-center message-xl z-0">No cards</div>
+      <div v-else-if="hasLoaded" class="absolute-center message-xl z-0">No cards</div>
     </div>
   </div>
 </template>
