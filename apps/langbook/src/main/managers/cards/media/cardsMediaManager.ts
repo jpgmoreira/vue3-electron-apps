@@ -5,15 +5,27 @@ import { CARD_RTE_FIELDS } from '@common/schemas/card';
 import path from 'path';
 import fs from 'fs';
 import { ensureDirExists } from '@interapp/utils/fileUtils';
+import { saveRTEImage } from './helpers';
 
 export class CardsMediaManager {
-  public cardWasCreated(card: Card, profileId: string) {
+  public async cardWasCreated(card: Card, profileId: string) {
     const mediaDir = this.buildMediaDir(card.id, profileId);
     for (const media of card.media) {
       const fPath = path.join(mediaDir, media.name);
       media.base = media.name;
       ensureDirExists(mediaDir);
       fs.copyFileSync(media.path, fPath);
+    }
+    for (const field of CARD_RTE_FIELDS) {
+      const html = parse(card[field]);
+      const imgs = html.querySelectorAll('img');
+      for (const img of imgs) {
+        const src = img.getAttribute('src');
+        if (!src) throw new Error('Img without src!');
+        const base = await saveRTEImage(src, mediaDir);
+        img.setAttribute('data-base', base);
+      }
+      card[field] = html.toString();
     }
   }
 

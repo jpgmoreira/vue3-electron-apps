@@ -3,7 +3,7 @@ import { CommonEvents } from '@interapp/events/commonEvents';
 import { CardsDbManager } from './cardsDbManager';
 import { Card } from '@common/schemas/card';
 import { FiltersManager } from '../filtersManager';
-import { CardsMediaManager } from './cardsMediaManager';
+import { CardsMediaManager } from './media/cardsMediaManager';
 import { ProfileManager } from '../profileManager';
 import { SessionsManager } from '../sessionsManager';
 import { TagsManager } from '../tagsManager';
@@ -69,7 +69,7 @@ export class CardsManager {
 
   public async createCard(card: Card) {
     if (!this.profileId) throw new Error('Profile not initialized!');
-    this.mediaManager.cardWasCreated(card, this.profileId);
+    await this.mediaManager.cardWasCreated(card, this.profileId);
     await this.dbManager.insertCard(card);
     this.profileManager.addCards(1);
     this.sessionsManager.cardWasCreated(card);
