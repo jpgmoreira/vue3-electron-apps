@@ -154,13 +154,6 @@
     card.value.frequency = freq;
   }
 
-  const allowReversedTooltip = computed(() => {
-    if (!card.value.back) {
-      return 'Back field must not be empty';
-    }
-    return undefined;
-  });
-
   // --- Operations: ---
 
   function cancel() {
@@ -200,7 +193,7 @@
     </div>
     <div class="card-field">
       <div class="card-label">Back</div>
-      <RichTextEditor ref="back" :initial="card.back" @blur="refreshContent('back')" />
+      <RichTextEditor ref="back" :initial="card.back" />
     </div>
     <div class="card-field">
       <div class="card-label">Extra</div>
@@ -253,8 +246,6 @@
           name="allow-reversed"
           id="allow-reversed"
           v-model="card.allowReversed"
-          :disabled="!card.back"
-          v-tooltip="allowReversedTooltip"
         />
       </div>
       <template v-if="isCreate">

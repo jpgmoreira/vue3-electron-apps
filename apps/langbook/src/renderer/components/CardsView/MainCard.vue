@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-  import { useTemplateRef } from 'vue';
+  import { computed, useTemplateRef } from 'vue';
   import { useMediaStore } from '@renderer/store/media';
   import type { Card } from '@common/schemas/card';
   import type { MediaFile } from '@interapp/types/mediaFile';
@@ -11,6 +11,13 @@
     onMediaClick?: (cardId: string, media: MediaFile) => void;
   }>();
   defineExpose({ getHeight });
+  const processedFront = computed(() => store.processRteImages(props.card.id, props.card.front));
+  const processedBack = computed(() =>
+    props.card.back ? store.processRteImages(props.card.id, props.card.back) : null
+  );
+  const processedExtra = computed(() =>
+    props.card.extra ? store.processRteImages(props.card.id, props.card.extra) : null
+  );
   function mediaClick(media: MediaFile) {
     if (props.onMediaClick) {
       props.onMediaClick(props.card.id, media);
@@ -37,13 +44,9 @@
       <div>Created at: {{ parseTimestamp(card.createdAt) }}</div>
     </div>
     <div class="card-content" :class="card.frequency">
-      <div v-html="store.processRteImages(card.id, card.front)" class="mx-1 field"></div>
-      <div v-if="card.back" v-html="store.processRteImages(card.id, card.back)" class="mx-1"></div>
-      <div
-        v-if="card.extra"
-        v-html="store.processRteImages(card.id, card.extra)"
-        class="mx-1"
-      ></div>
+      <div v-html="processedFront" class="mx-1 field"></div>
+      <div v-if="processedBack" v-html="processedBack" class="mx-1"></div>
+      <div v-if="processedExtra" v-html="processedExtra" class="mx-1"></div>
       <div v-if="card.media.length" class="flex">
         <button
           type="button"
