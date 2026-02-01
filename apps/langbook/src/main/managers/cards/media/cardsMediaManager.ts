@@ -4,32 +4,70 @@ import { parse } from 'node-html-parser';
 import { CARD_RTE_FIELDS } from '@common/schemas/card';
 import path from 'path';
 import fs from 'fs';
-import { ensureDirExists } from '@interapp/utils/fileUtils';
+import { ensureDirExists, listFilesInDir } from '@interapp/utils/fileUtils';
 import { saveRTEImage } from './helpers';
+import { MediaFile } from '@interapp/types/mediaFile';
 
 export class CardsMediaManager {
+  private saveMedia(media: MediaFile, mediaDir: string) {
+    const fPath = path.join(mediaDir, media.name);
+    media.base = media.name;
+    ensureDirExists(mediaDir);
+    fs.copyFileSync(media.path, fPath);
+  }
+
+  private async saveRTEImage(img: HTMLElement, mediaDir: string) {
+    const src = img.getAttribute('src');
+    if (!src) throw new Error('Img without src!');
+    const base = await saveRTEImage(src, mediaDir);
+    img.setAttribute('data-base', base);
+  }
+
   public async cardWasCreated(card: Card, profileId: string) {
     const mediaDir = this.buildMediaDir(card.id, profileId);
     for (const media of card.media) {
-      const fPath = path.join(mediaDir, media.name);
-      media.base = media.name;
-      ensureDirExists(mediaDir);
-      fs.copyFileSync(media.path, fPath);
+      this.saveMedia(media, mediaDir);
     }
     for (const field of CARD_RTE_FIELDS) {
       const html = parse(card[field]);
       const imgs = html.querySelectorAll('img');
+      if (!imgs.length) continue;
       for (const img of imgs) {
-        const src = img.getAttribute('src');
-        if (!src) throw new Error('Img without src!');
-        const base = await saveRTEImage(src, mediaDir);
-        img.setAttribute('data-base', base);
+        const el = img as unknown as HTMLElement;
+        await this.saveRTEImage(el, mediaDir);
       }
       card[field] = html.toString();
     }
   }
 
-  public async cardWasUpdated(oldCard: Card, newCard: Card, profileId: string) {}
+  public async cardWasUpdated(card: Card, profileId: string) {
+    const allBases: string[] = [];
+    const mediaDir = this.buildMediaDir(card.id, profileId);
+    for (const media of card.media) {
+      if (!media.base) this.saveMedia(media, mediaDir);
+      allBases.push(media.base!);
+    }
+    for (const field of CARD_RTE_FIELDS) {
+      const html = parse(card[field]);
+      const imgs = html.querySelectorAll('img');
+      if (!imgs.length) continue;
+      for (const img of imgs) {
+        if (!img.hasAttribute('data-base')) {
+          const el = img as unknown as HTMLElement;
+          await this.saveRTEImage(el, mediaDir);
+        }
+        const base = img.getAttribute('data-base')!;
+        allBases.push(base);
+      }
+    }
+    const allOldFiles = listFilesInDir(mediaDir);
+    const allNewFiles = allBases.map((b) => path.resolve(mediaDir, b));
+    for (const file of allOldFiles) {
+      if (!allNewFiles.includes(file)) {
+        fs.unlinkSync(file);
+      }
+    }
+  }
 
   public deleteMediaFolder(cardId: string, profileId: string) {
     const mediaDir = this.buildMediaDir(cardId, profileId);
@@ -53,6 +91,7 @@ export class CardsMediaManager {
     for (const field of CARD_RTE_FIELDS) {
       const html = parse(card[field]);
       const imgs = html.querySelectorAll('img');
+      if (!imgs.length) continue;
       for (const img of imgs) {
         const base = img.getAttribute('data-base');
         if (!base) throw new Error('Image without data-base attribute!');

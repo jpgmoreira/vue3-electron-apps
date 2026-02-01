@@ -5,9 +5,16 @@ export function ensureDirExists(dir: string) {
   fs.mkdirSync(dir, { recursive: true });
 }
 
-export function isFileInsideDirectory(directoryPath: string, filePath: string): boolean {
-  const dir = path.resolve(directoryPath);
-  const file = path.resolve(filePath);
-  const relative = path.relative(dir, file);
-  return Boolean(relative && !relative.startsWith('..'));
+export function listFilesInDir(dir: string): string[] {
+  const results: string[] = [];
+  const list = fs.readdirSync(dir, { withFileTypes: true });
+  for (const entry of list) {
+    const fullPath = path.resolve(dir, entry.name);
+    if (entry.isDirectory()) {
+      results.push(...listFilesInDir(fullPath));
+    } else {
+      results.push(fullPath);
+    }
+  }
+  return results;
 }
