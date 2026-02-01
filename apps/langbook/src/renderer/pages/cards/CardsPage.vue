@@ -82,7 +82,8 @@
     }
   }
 
-  async function explorerDeletion() {
+  async function deletionHappened() {
+    // Used for both card and session deletions.
     await profileStore.refetch();
     await sessionsStore.refetch();
     await tagsStore.refetch();
@@ -145,7 +146,7 @@
 <template>
   <div class="cards-page flex flex-col h-screen overflow-hidden" :class="{ resizing }">
     <Header />
-    <CardsPageModals ref="modals" @deleted="explorerDeletion" />
+    <CardsPageModals ref="modals" @deleted="deletionHappened" />
     <div class="flex grow">
       <div :style="{ width: `${explorerWidth}px` }">
         <Explorer
@@ -162,7 +163,7 @@
       <div class="custom-resizer" @mousedown="resizing = true"></div>
       <div class="grow relative">
         <div class="flex flex-col absolute inset-0">
-          <CardsView ref="cards-view" />
+          <CardsView ref="cards-view" @deleted="deletionHappened" />
           <div
             v-if="uiStore.showFilters"
             class="filters-container flex flex-col px-2 py-1.5 gap-1 z-10"

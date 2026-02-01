@@ -14,3 +14,7 @@ ipcMain.handle(
     return cardsManager.getCardsPage(scrollTop);
   }
 );
+
+ipcMain.handle(InvokeChannels.deleteCard, async (_: IpcMainInvokeEvent, card: Card) => {
+  await cardsManager.deleteCard(card);
+});
