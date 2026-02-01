@@ -43,7 +43,7 @@ export class FiltersManager {
     Object.assign(this.proxy, filters);
   }
 
-  public tagDeleted(tag: string) {
+  public tagWasDeleted(tag: string) {
     this.guard(this.proxy);
     if (this.proxy.tags.includes(tag)) {
       this.proxy.tags = this.proxy.tags.filter((t) => t !== tag);

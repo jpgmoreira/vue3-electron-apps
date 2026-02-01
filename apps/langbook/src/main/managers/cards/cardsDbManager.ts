@@ -93,6 +93,40 @@ export class CardsDbManager {
     );
   }
 
+  public async updateCard(card: Card) {
+    if (!this.db) throw new Error('Db not initialized');
+    const serialized = this.serializeCard(card);
+    await this.db.run(
+      `
+      UPDATE cards SET
+        front = ?, back = ?, extra = ?, media = ?, allowReversed = ?,
+        createdAt = ?, lastReviewedAt = ?, sessions = ?, tags = ?,
+        frequency = ?, bucket = ?, height = ?
+      WHERE id = ?
+    `,
+      [
+        serialized.front,
+        serialized.back,
+        serialized.extra,
+        serialized.media,
+        serialized.allowReversed,
+        serialized.createdAt,
+        serialized.lastReviewedAt,
+        serialized.sessions,
+        serialized.tags,
+        serialized.frequency,
+        serialized.bucket,
+        serialized.height,
+        serialized.id,
+      ]
+    );
+  }
+
+  public async deleteCard(cardId: string) {
+    if (!this.db) throw new Error('Db not initialized');
+    await this.db.run('DELETE FROM cards WHERE id = ?', [cardId]);
+  }
+
   public async clear() {
     if (this.db) {
       await this.db.close();

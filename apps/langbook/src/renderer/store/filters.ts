@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 import { StartupData } from '@common/schemas/startup';
-import { getEmptyFilters } from '@common/schemas/filters';
+import { Filters, getEmptyFilters } from '@common/schemas/filters';
 import { CardFrequency } from '@common/schemas/card';
 import { arrayRemove, toRawDeep } from '@interapp/utils/utils';
 import { YesOrNo } from '@interapp/types/yesOrNo';
@@ -53,6 +53,10 @@ export const useFiltersStore = defineStore('filters', {
     async updateFilters() {
       await window.api.invoke(InvokeChannels.updateFilters, toRawDeep(this.filters));
       this.dirty = false;
+    },
+    async refetch() {
+      const filters = await window.api.invoke<Filters>(InvokeChannels.refetchFilters);
+      this.filters = filters;
     },
     clickedClear() {
       if (

@@ -12,5 +12,6 @@ export enum InvokeChannels {
   refetchProfile = 'refetch-profile',
   refetchSessions = 'refetch-sessions',
   refetchTags = 'refetch-tags',
+  refetchFilters = 'refetch-filters',
   getCardsPage = 'get-cards-page',
 }

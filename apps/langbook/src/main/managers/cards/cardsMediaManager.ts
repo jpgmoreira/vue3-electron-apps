@@ -143,4 +143,9 @@ export class CardsMediaManager {
     this.processMediaInput(card, mediaDir);
     this.processRteImages(card, mediaDir);
   }
+
+  public deleteMediaFolder(cardId: string, profileId: string) {
+    const mediaDir = path.join(DATA_DIR, 'profileData', profileId, 'media', cardId);
+    fs.rmSync(mediaDir, { recursive: true, force: true });
+  }
 }

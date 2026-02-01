@@ -76,11 +76,21 @@
     try {
       await filtersStore.updateFilters();
       uiStore.setCardsScrollTop(0);
-      cardsViewRef.value?.fetchCards(0);
+      await cardsViewRef.value?.fetchCards(0);
     } finally {
       filtering.value = false;
     }
   }
+
+  async function explorerDeletion() {
+    await profileStore.refetch();
+    await sessionsStore.refetch();
+    await tagsStore.refetch();
+    await filtersStore.refetch();
+    filtersStore.setDirty(true);
+    await filterClick();
+  }
+
   function explorerScroll(scrollTop: number) {
     uiStore.updateSettings({ explorerScrollTop: scrollTop });
   }
@@ -135,7 +145,7 @@
 <template>
   <div class="cards-page flex flex-col h-screen overflow-hidden" :class="{ resizing }">
     <Header />
-    <CardsPageModals ref="modals" />
+    <CardsPageModals ref="modals" @deleted="explorerDeletion" />
     <div class="flex grow">
       <div :style="{ width: `${explorerWidth}px` }">
         <Explorer

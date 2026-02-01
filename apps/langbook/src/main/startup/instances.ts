@@ -16,7 +16,7 @@ export const windowManager = new WindowManager();
 export const profileManager = new ProfileManager(emitter);
 export const uiManager = new UIManager(emitter);
 export const nodeCounterManager = new NodeCounterManager(emitter);
-export const sessionsManager = new SessionsManager(emitter);
+export const sessionsManager = new SessionsManager(profileManager, emitter);
 export const filtersManager = new FiltersManager(emitter, explorerManager);
 export const tagsManager = new TagsManager(emitter, filtersManager);
 
@@ -31,3 +31,5 @@ export const cardsManager = new CardsManager(
   sessionsManager,
   tagsManager
 );
+
+sessionsManager.setCardsManager(cardsManager);

@@ -8,3 +8,7 @@ ipcMain.handle(InvokeChannels.updateFilters, (_: IpcMainInvokeEvent, filters: Pa
   filtersManager.updateFilters(filters);
   cardsManager.filter();
 });
+
+ipcMain.handle(InvokeChannels.refetchFilters, (_: IpcMainInvokeEvent) => {
+  return filtersManager.getFilters();
+});

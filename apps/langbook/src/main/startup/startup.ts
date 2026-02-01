@@ -37,7 +37,7 @@ export async function loadStartupData(): Promise<StartupData> {
     explorerManager.loadTree(treePath);
     explorerManager.registerDeleteCallback(async (node: Node) => {
       if (node.type === 'file') {
-        // TODO: delete callback here.
+        await sessionsManager.deleteSession(node.id);
       }
     });
     await cardsManager.loadProfile(currProfile.id);

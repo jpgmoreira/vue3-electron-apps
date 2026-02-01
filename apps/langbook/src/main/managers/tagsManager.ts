@@ -38,20 +38,20 @@ export class TagsManager {
     return cloneDeep(this.target || {});
   }
 
-  public cardDeleted(card: Card) {
+  public cardWasDeleted(card: Card) {
     this.guard(this.proxy);
     for (const tag of card.tags) {
       if (tag in this.proxy) {
         this.proxy[tag]--;
         if (this.proxy[tag] === 0) {
           delete this.proxy[tag];
-          this.filtersManager.tagDeleted(tag);
+          this.filtersManager.tagWasDeleted(tag);
         }
       }
     }
   }
 
-  public cardCreated(card: Card) {
+  public cardWasCreated(card: Card) {
     this.guard(this.proxy);
     for (const tag of card.tags) {
       if (!(tag in this.proxy)) {

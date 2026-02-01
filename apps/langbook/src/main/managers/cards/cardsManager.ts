@@ -9,6 +9,8 @@ import { SessionsManager } from '../sessionsManager';
 import { TagsManager } from '../tagsManager';
 import { GetCardsPageResponseDTO } from '@common/dto/getCardsPageResponseDTO';
 import { CARDS_PAGE_SIZE } from '@common/constants';
+import path from 'path';
+import fs from 'fs';
 
 export class CardsManager {
   private dbManager: CardsDbManager;
@@ -72,8 +74,8 @@ export class CardsManager {
     this.mediaManager.processCardMedia(card, this.profileId);
     await this.dbManager.insertCard(card);
     this.profileManager.addCards(1);
-    this.sessionsManager.cardCreated(card);
-    this.tagsManager.cardCreated(card);
+    this.sessionsManager.cardWasCreated(card);
+    this.tagsManager.cardWasCreated(card);
     this.cardsMap[card.id] = card;
     this.filter();
   }
@@ -94,6 +96,32 @@ export class CardsManager {
       page,
       totalHeight,
     };
+  }
+
+  public async deleteCard(card: Card) {
+    if (!this.profileId) throw new Error('Profile id not initialized!');
+    delete this.cardsMap[card.id];
+    this.filtered = this.filtered.filter((c) => c.id !== card.id);
+    this.profileManager.addCards(-1);
+    this.mediaManager.deleteMediaFolder(card.id, this.profileId);
+    await this.dbManager.deleteCard(card.id);
+    this.sessionsManager.cardWasDeleted(card);
+    this.tagsManager.cardWasDeleted(card);
+  }
+
+  public async sessionWasDeleted(sessionId: string) {
+    const allCards = Object.values(this.cardsMap);
+    for (const card of allCards) {
+      if (!card.sessions.includes(sessionId)) {
+        continue;
+      }
+      card.sessions = card.sessions.filter((s) => s !== sessionId);
+      if (card.sessions.length === 0) {
+        await this.deleteCard(card);
+      } else {
+        await this.dbManager.updateCard(card);
+      }
+    }
   }
 
   public clear() {
