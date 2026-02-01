@@ -2,6 +2,8 @@ import { MediaFile } from '@interapp/types/mediaFile';
 
 export type CardFrequency = 'low' | 'normal' | 'high';
 
+export const CARD_RTE_FIELDS = Object.freeze(['front', 'back', 'extra']);
+
 export type Card = {
   id: string;
   front: string;

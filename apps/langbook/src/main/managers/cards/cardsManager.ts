@@ -79,6 +79,7 @@ export class CardsManager {
   }
 
   public getCardsPage(scrollTop: number): GetCardsPageResponseDTO {
+    if (!this.profileId) throw new Error('Profile not initialized!');
     let anchor = 0;
     let totalHeight = 0;
     for (let i = 0; i < this.filtered.length; i++) {
@@ -90,6 +91,9 @@ export class CardsManager {
     }
     const first = Math.max(0, anchor - Math.floor(CARDS_PAGE_SIZE / 2));
     const page = this.filtered.slice(first, first + CARDS_PAGE_SIZE);
+    for (const card of page) {
+      this.mediaManager.preparePaths(card, this.profileId);
+    }
     return {
       page,
       totalHeight,
