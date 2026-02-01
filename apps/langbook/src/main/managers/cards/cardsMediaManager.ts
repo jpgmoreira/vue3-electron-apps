@@ -3,13 +3,26 @@ import { DATA_DIR } from '@main/constants';
 import { parse } from 'node-html-parser';
 import { CARD_RTE_FIELDS } from '@common/schemas/card';
 import path from 'path';
+import fs from 'fs';
+import { ensureDirExists } from '@interapp/utils/fileUtils';
 
 export class CardsMediaManager {
-  public cardWasCreated(card: Card, profileId: string) {}
-
-  public deleteMediaFolder(cardId: string, profileId: string) {}
+  public cardWasCreated(card: Card, profileId: string) {
+    const mediaDir = this.buildMediaDir(card.id, profileId);
+    for (const media of card.media) {
+      const fPath = path.join(mediaDir, media.name);
+      media.base = media.name;
+      ensureDirExists(mediaDir);
+      fs.copyFileSync(media.path, fPath);
+    }
+  }
 
   public cardWasUpdated(oldCard: Card, newCard: Card, profileId: string) {}
+
+  public deleteMediaFolder(cardId: string, profileId: string) {
+    const mediaDir = this.buildMediaDir(cardId, profileId);
+    fs.rmSync(mediaDir, { force: true, recursive: true });
+  }
 
   /**
    * - Prepares all paths, from media input and RTE, so that the front can use them.
