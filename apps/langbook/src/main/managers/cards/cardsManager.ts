@@ -109,6 +109,15 @@ export class CardsManager {
     this.filter();
   }
 
+  public async updateCard(card: Card) {
+    const oldCard = this.cardsMap[card.id];
+    if (!oldCard) throw new Error('Card not found!');
+    this.mediaManager.cardWasUpdated(oldCard, card);
+    await this.dbManager.updateCard(card);
+    this.sessionsManager.cardWasUpdated(oldCard, card);
+    this.tagsManager.cardWasUpdated(oldCard, card);
+  }
+
   public async sessionWasDeleted(sessionId: string) {
     const allCards = Object.values(this.cardsMap);
     for (const card of allCards) {

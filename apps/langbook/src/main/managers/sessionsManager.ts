@@ -62,6 +62,16 @@ export class SessionsManager {
     }
   }
 
+  public cardWasUpdated(oldCard: Card, newCard: Card) {
+    if (!this.proxy) throw new Error('Sessions not initialized!');
+    for (const session of oldCard.sessions) {
+      this.proxy[session].count--;
+    }
+    for (const session of newCard.sessions) {
+      this.proxy[session].count++;
+    }
+  }
+
   public async deleteSession(sessionId: string) {
     if (!this.proxy) throw new Error('Sessions map not set!');
     if (!this.cardsManager) throw new Error('Cards manager not set!');

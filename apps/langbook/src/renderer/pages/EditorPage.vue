@@ -202,6 +202,14 @@
     // TODO: Update also flashcards store.
     router.back();
   }
+
+  async function save() {
+    if (!card.value) throw new Error('Card not set!');
+    await window.api.invoke(InvokeChannels.updateCard, cloneDeep(card.value));
+    await sessionsStore.refetch();
+    await tagsStore.refetch();
+    router.back();
+  }
 </script>
 
 <template>
@@ -276,7 +284,7 @@
       <template v-else>
         <button type="button" class="btn-danger" @click="deleteClick">Delete</button>
         <button type="button" class="btn-warning" @click="cancel">Cancel</button>
-        <button type="button" class="btn-primary">Save</button>
+        <button type="button" class="btn-primary" @click="save">Save</button>
       </template>
     </footer>
   </div>

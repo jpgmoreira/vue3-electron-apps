@@ -10,6 +10,7 @@ export enum InvokeChannels {
   updateFilters = 'update-filters',
   createCard = 'create-card',
   deleteCard = 'delete-card',
+  updateCard = 'update-card',
   refetchProfile = 'refetch-profile',
   refetchSessions = 'refetch-sessions',
   refetchTags = 'refetch-tags',
