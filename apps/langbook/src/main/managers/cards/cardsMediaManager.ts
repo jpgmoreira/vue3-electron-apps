@@ -21,6 +21,7 @@ export class CardsMediaManager {
   public preparePaths(card: Card, profileId: string) {
     const mediaDir = this.buildMediaDir(card.id, profileId);
     for (const media of card.media) {
+      if (!media.base) throw new Error('Media without base!');
       const fName = path.join(mediaDir, media.base);
       media.path = `safe-file://${fName}`;
     }
