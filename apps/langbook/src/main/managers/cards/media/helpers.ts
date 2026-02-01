@@ -38,6 +38,7 @@ function saveBase64src(src: string, mediaDir: string, fName: string) {
 
 async function saveHttpSrc(src: string, mediaDir: string, fName: string) {
   const response = await fetch(src);
+  if (!response.ok) throw new Error(`Failed to download image: ${src}`);
   const arrayBuffer = await response.arrayBuffer();
   const buffer = Buffer.from(arrayBuffer);
   saveBuffer(mediaDir, buffer, fName);
