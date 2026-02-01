@@ -1,6 +1,6 @@
 <script lang="ts" setup>
   import { computed, onBeforeUnmount, onMounted, ref, useTemplateRef } from 'vue';
-  import { NodeType } from '@interapp/components/Explorer/common/tree';
+  import { Node, NodeType } from '@interapp/components/Explorer/common/tree';
   import { useUIStore } from '@renderer/store/ui';
   import { useTagsStore } from '@renderer/store/tags';
   import { useFiltersStore } from '@renderer/store/filters';
@@ -8,6 +8,7 @@
   import Multiselect from '@interapp/components/Multiselect.vue';
   import Explorer, {
     CreateNodeCallback,
+    DeleteNodeCallback,
   } from '@interapp/components/Explorer/renderer/Explorer.vue';
   import { InvokeChannels } from '@preload/channels/invoke';
   import { randomId } from '@interapp/utils/utils';
@@ -20,6 +21,7 @@
   import { useProfileStore } from '@renderer/store/profile';
   import CardsView from '@renderer/components/CardsView/CardsView.vue';
   import { useSessionsStore } from '@renderer/store/sessions';
+  import CardsPageModals from './CardsPageModals.vue';
 
   const uiStore = useUIStore();
   const tagsStore = useTagsStore();
@@ -35,6 +37,7 @@
   const explorerWidth = ref(uiStore.settings.explorerWidth);
 
   const cardsViewRef = useTemplateRef('cards-view');
+  const modalsRef = useTemplateRef('modals');
 
   const initialExplorerScrollTop = uiStore.settings.explorerScrollTop;
 
@@ -97,6 +100,16 @@
       await sessionsStore.refetch();
     }
   }
+  async function beforeDeleteNode(node: Node, callback: DeleteNodeCallback) {
+    modalsRef.value?.showDeleteSingle(node, callback);
+  }
+  async function beforeDeleteMultiple(
+    files: number,
+    folders: number,
+    callback: DeleteNodeCallback
+  ) {
+    modalsRef.value?.showDeleteMultiple(files, folders, callback);
+  }
   function windowMouseMove(e: MouseEvent) {
     if (!resizing.value) return;
     const { clientX } = e;
@@ -122,6 +135,7 @@
 <template>
   <div class="cards-page flex flex-col h-screen overflow-hidden" :class="{ resizing }">
     <Header />
+    <CardsPageModals ref="modals" />
     <div class="flex grow">
       <div :style="{ width: `${explorerWidth}px` }">
         <Explorer
@@ -130,6 +144,8 @@
           :initial-scroll-top="initialExplorerScrollTop"
           @scroll="explorerScroll"
           @before-create-node="beforeCreateNode"
+          @before-delete-node="beforeDeleteNode"
+          @before-delete-selected="beforeDeleteMultiple"
           @file-selection-changed="explorerSelectionChanged"
         />
       </div>
