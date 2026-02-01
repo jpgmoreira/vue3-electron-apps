@@ -92,7 +92,7 @@
   );
 
   const mostRecentSession = sessionsStore.getMostRecentSession();
-  if (mostRecentSession) {
+  if (isCreate && mostRecentSession) {
     card.value.sessions.push(mostRecentSession.id);
   }
 
