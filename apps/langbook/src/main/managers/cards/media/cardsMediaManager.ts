@@ -59,6 +59,7 @@ export class CardsMediaManager {
         const base = img.getAttribute('data-base')!;
         allBases.push(base);
       }
+      card[field] = html.toString();
     }
     const allOldFiles = listFilesInDir(mediaDir);
     const allNewFiles = allBases.map((b) => path.resolve(mediaDir, b));
