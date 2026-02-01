@@ -199,6 +199,7 @@
     await sessionsStore.refetch();
     await tagsStore.refetch();
     await filtersStore.refetch();
+    // TODO: Update also flashcards store.
     router.back();
   }
 </script>
