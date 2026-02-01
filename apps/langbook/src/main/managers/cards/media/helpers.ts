@@ -9,6 +9,9 @@ export async function saveRTEImage(src: string, mediaDir: string): Promise<strin
   }
   const hash = genHash(src);
   const fName = `${hash}.png`;
+  if (fs.existsSync(path.join(mediaDir, fName))) {
+    return fName;
+  }
   if (isBase64(src)) {
     saveBase64src(src, mediaDir, fName);
   } else if (isHttp(src)) {

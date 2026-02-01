@@ -117,7 +117,7 @@ export class CardsManager {
     if (!this.profileId) throw new Error('Profile id not initialized!');
     const oldCard = this.cardsMap[card.id];
     if (!oldCard) throw new Error('Card not found!');
-    this.mediaManager.cardWasUpdated(oldCard, card, this.profileId);
+    await this.mediaManager.cardWasUpdated(oldCard, card, this.profileId);
     await this.dbManager.updateCard(card);
     this.sessionsManager.cardWasUpdated(oldCard, card);
     this.tagsManager.cardWasUpdated(oldCard, card);

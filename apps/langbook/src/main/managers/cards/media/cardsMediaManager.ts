@@ -29,7 +29,7 @@ export class CardsMediaManager {
     }
   }
 
-  public cardWasUpdated(oldCard: Card, newCard: Card, profileId: string) {}
+  public async cardWasUpdated(oldCard: Card, newCard: Card, profileId: string) {}
 
   public deleteMediaFolder(cardId: string, profileId: string) {
     const mediaDir = this.buildMediaDir(cardId, profileId);
