@@ -7,6 +7,7 @@ import {
   filtersManager,
   tagsManager,
   cardsManager,
+  graphManager,
 } from './instances';
 import { UISettings } from '@common/schemas/ui';
 import path from 'path';
@@ -16,6 +17,7 @@ import { Node } from '@interapp/components/Explorer/common/tree';
 import { Filters } from '@common/schemas/filters';
 import { TagsMap } from '@common/schemas/tags';
 import { SessionsMap } from '@common/schemas/session';
+import { GraphRecord } from '@common/schemas/graph';
 
 export async function loadStartupData(): Promise<StartupData> {
   const currProfile = profileManager.getCurrProfile();
@@ -24,7 +26,7 @@ export async function loadStartupData(): Promise<StartupData> {
   let filters: Filters | null = null;
   let tags: TagsMap | null = null;
   let sessions: SessionsMap | null = null;
-  let mediaDir: string | null = null;
+  let graph: GraphRecord[] | null = null;
   if (currProfile) {
     const profileDir = path.resolve(DATA_DIR, 'profileData', currProfile.id);
     // The order of initialization below is important.
@@ -41,11 +43,11 @@ export async function loadStartupData(): Promise<StartupData> {
       }
     });
     await cardsManager.loadProfile(currProfile.id);
+    graph = await graphManager.loadProfile(currProfile.id);
     ui = uiManager.getUISettings();
     filters = filtersManager.getFilters();
     tags = tagsManager.getTags();
     sessions = sessionsManager.getSessionsMap();
-    mediaDir = path.resolve(profileDir, 'media');
   }
   return {
     currProfile,
@@ -54,6 +56,6 @@ export async function loadStartupData(): Promise<StartupData> {
     filters,
     tags,
     sessions,
-    mediaDir,
+    graph,
   };
 }

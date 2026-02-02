@@ -1,4 +1,5 @@
 import { Filters } from './filters';
+import { GraphRecord } from './graph';
 import { Profile, ProfileRegistry } from './profile';
 import { SessionsMap } from './session';
 import { TagsMap } from './tags';
@@ -11,5 +12,5 @@ export type StartupData = {
   filters: Filters | null;
   tags: TagsMap | null;
   sessions: SessionsMap | null;
-  mediaDir: string | null;
+  graph: GraphRecord[] | null;
 };

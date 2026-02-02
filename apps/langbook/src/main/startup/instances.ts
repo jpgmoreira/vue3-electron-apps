@@ -10,6 +10,7 @@ import { TagsManager } from '@main/managers/tagsManager';
 import { CardsMediaManager } from '@main/managers/cards/media/cardsMediaManager';
 import { CardsDbManager } from '@main/managers/cards/cardsDbManager';
 import { CardsManager } from '@main/managers/cards/cardsManager';
+import { GraphManager } from '@main/managers/graphManager';
 
 const emitter = new EventEmitter();
 export const windowManager = new WindowManager();
@@ -19,6 +20,7 @@ export const nodeCounterManager = new NodeCounterManager(emitter);
 export const sessionsManager = new SessionsManager(profileManager, emitter);
 export const filtersManager = new FiltersManager(emitter, explorerManager);
 export const tagsManager = new TagsManager(emitter, filtersManager);
+export const graphManager = new GraphManager(emitter);
 
 const cardsMediaManager = new CardsMediaManager();
 const cardsDbManager = new CardsDbManager();
