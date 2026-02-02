@@ -1,4 +1,5 @@
 import { Filters } from './filters';
+import { Settings } from './settings';
 import { GraphRecord } from './graph';
 import { Profile, ProfileRegistry } from './profile';
 import { SessionsMap } from './session';
@@ -13,4 +14,5 @@ export type StartupData = {
   tags: TagsMap | null;
   sessions: SessionsMap | null;
   graph: GraphRecord[] | null;
+  settings: Settings | null;
 };

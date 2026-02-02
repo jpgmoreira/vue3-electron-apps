@@ -1,5 +1,25 @@
 <script lang="ts" setup>
+  import { ref } from 'vue';
+  import { useSettingsStore } from '@renderer/store/settings';
   import Header from '@renderer/components/Header.vue';
+  import {
+    DEFAULT_HIGH_FREQUENCY_INTERVAL,
+    DEFAULT_LOW_FREQUENCY_INTERVAL,
+  } from '@common/constants';
+  const settingsStore = useSettingsStore();
+  const lowInterval = ref(settingsStore.settings.lowInterval);
+  const highInterval = ref(settingsStore.settings.highInterval);
+  function updateSettings() {
+    settingsStore.updateSettings({
+      lowInterval: lowInterval.value,
+      highInterval: highInterval.value,
+    });
+  }
+  function resetIntervals() {
+    lowInterval.value = DEFAULT_LOW_FREQUENCY_INTERVAL;
+    highInterval.value = DEFAULT_HIGH_FREQUENCY_INTERVAL;
+    updateSettings();
+  }
 </script>
 
 <template>
@@ -60,14 +80,14 @@
         <h2>Options</h2>
         <div class="flex justify-between">
           <span>High frequency interval</span>
-          <input type="number" />
+          <input type="number" v-model="highInterval" @change="updateSettings" />
         </div>
         <div class="flex justify-between">
           <span>Low frequency interval</span>
-          <input type="number" />
+          <input type="number" v-model="lowInterval" @change="updateSettings" />
         </div>
         <div class="flex">
-          <button type="button" class="ml-auto btn-primary">Reset</button>
+          <button type="button" class="ml-auto btn-primary" @click="resetIntervals">Reset</button>
         </div>
       </section>
 

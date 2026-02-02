@@ -7,6 +7,7 @@ import { useFiltersStore } from '@renderer/store/filters';
 import { useSessionsStore } from '@renderer/store/sessions';
 import { useTagsStore } from '@renderer/store/tags';
 import { useGraphStore } from '@renderer/store/graph';
+import { useSettingsStore } from '@renderer/store/settings';
 
 eventEmitter.on(CommonEvents.loadInitialData, (data: StartupData) => {
   useProfileStore().initFromStartupData(data);
@@ -15,6 +16,7 @@ eventEmitter.on(CommonEvents.loadInitialData, (data: StartupData) => {
   useSessionsStore().initFromStartupData(data);
   useTagsStore().initFromStartupData(data);
   useGraphStore().initFromStartupData(data);
+  useSettingsStore().initFromStartupData(data);
 });
 
 eventEmitter.on(CommonEvents.clearProfileData, () => {
@@ -23,4 +25,5 @@ eventEmitter.on(CommonEvents.clearProfileData, () => {
   useTagsStore().clear();
   useSessionsStore().clear();
   useGraphStore().clear();
+  useSettingsStore().clear();
 });

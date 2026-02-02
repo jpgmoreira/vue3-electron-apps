@@ -4,10 +4,10 @@ import { EventEmitter } from '@interapp/events/eventEmitter';
 import { cloneDeep } from '@interapp/utils/utils';
 import { CommonEvents } from '@interapp/events/commonEvents';
 import path from 'path';
-import { getEmptyNodeCounter, NodeCounter, NodeType } from '@common/schemas/counter';
+import { Settings, getEmptySettings } from '@common/schemas/settings';
 
-export class NodeCounterManager {
-  private _proxy: FileProxy<NodeCounter> | null = null;
+export class SettingsManager {
+  private _proxy: FileProxy<Settings> | null = null;
 
   private get proxy() {
     return this._proxy?.proxy || null;
@@ -21,24 +21,23 @@ export class NodeCounterManager {
     emitter.on(CommonEvents.clearProfileData, () => this.clear);
   }
 
-  private guard<T extends NodeCounter>(obj: T | null): asserts obj is T {
-    if (!obj) throw new Error('Node counter not initialized!');
+  private guard<T extends Settings>(obj: T | null): asserts obj is T {
+    if (!obj) throw new Error('Settings not initialized!');
   }
 
   public loadProfile(profileId: string) {
-    const fPath = path.join(DATA_DIR, 'profileData', profileId, 'counter.json');
-    this._proxy = new FileProxy(fPath, getEmptyNodeCounter());
+    const fPath = path.join(DATA_DIR, 'profileData', profileId, 'settings.json');
+    this._proxy = new FileProxy(fPath, getEmptySettings());
   }
 
-  public getCounter(): NodeCounter {
+  public getSettings(): Settings {
     this.guard(this.target);
     return cloneDeep(this.target);
   }
 
-  public increment(type: NodeType) {
+  public update(settings: Settings) {
     this.guard(this.proxy);
-    if (type === 'file') this.proxy.nextFile++;
-    else this.proxy.nextDir++;
+    Object.assign(this.proxy, settings);
   }
 
   public clear() {

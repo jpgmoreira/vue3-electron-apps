@@ -5,4 +5,5 @@ import './invokes/tags';
 import './invokes/filters';
 import './invokes/cards';
 import './invokes/graph';
+import './invokes/settings';
 import '@interapp/components/Explorer/receiver/invokes';

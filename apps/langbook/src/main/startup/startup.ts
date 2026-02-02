@@ -8,6 +8,7 @@ import {
   tagsManager,
   cardsManager,
   graphManager,
+  settingsManager,
 } from './instances';
 import { UISettings } from '@common/schemas/ui';
 import path from 'path';
@@ -18,6 +19,7 @@ import { Filters } from '@common/schemas/filters';
 import { TagsMap } from '@common/schemas/tags';
 import { SessionsMap } from '@common/schemas/session';
 import { GraphRecord } from '@common/schemas/graph';
+import { Settings } from '@common/schemas/settings';
 
 export async function loadStartupData(): Promise<StartupData> {
   const currProfile = profileManager.getCurrProfile();
@@ -27,6 +29,7 @@ export async function loadStartupData(): Promise<StartupData> {
   let tags: TagsMap | null = null;
   let sessions: SessionsMap | null = null;
   let graph: GraphRecord[] | null = null;
+  let settings: Settings | null = null;
   if (currProfile) {
     const profileDir = path.resolve(DATA_DIR, 'profileData', currProfile.id);
     // The order of initialization below is important.
@@ -35,6 +38,7 @@ export async function loadStartupData(): Promise<StartupData> {
     sessionsManager.loadProfile(currProfile.id);
     filtersManager.loadProfile(currProfile.id);
     tagsManager.loadProfile(currProfile.id);
+    settingsManager.loadProfile(currProfile.id);
     const treePath = path.join(profileDir, 'tree.json');
     explorerManager.loadTree(treePath);
     explorerManager.registerDeleteCallback(async (node: Node) => {
@@ -48,6 +52,7 @@ export async function loadStartupData(): Promise<StartupData> {
     filters = filtersManager.getFilters();
     tags = tagsManager.getTags();
     sessions = sessionsManager.getSessionsMap();
+    settings = settingsManager.getSettings();
   }
   return {
     currProfile,
@@ -57,5 +62,6 @@ export async function loadStartupData(): Promise<StartupData> {
     tags,
     sessions,
     graph,
+    settings,
   };
 }
