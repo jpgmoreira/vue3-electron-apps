@@ -18,4 +18,5 @@ export enum InvokeChannels {
   refetchFilters = 'refetch-filters',
   getCardsPage = 'get-cards-page',
   incrementGraph = 'increment-graph',
+  clearFilteredBucket = 'clear-filtered-bucket',
 }

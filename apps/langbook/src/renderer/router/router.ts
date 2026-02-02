@@ -2,7 +2,7 @@ import { createMemoryHistory, createRouter } from 'vue-router';
 import LoginPage from '@renderer/pages/login/LoginPage.vue';
 import GraphPage from '@renderer/pages/GraphPage.vue';
 import CardsPage from '@renderer/pages/cards/CardsPage.vue';
-import PreFlashcardsPage from '@renderer/pages/PreFlashcardsPage.vue';
+import PreFlashcardsPage from '@renderer/pages/preFlashcards/PreFlashcardsPage.vue';
 import EditorPage from '@renderer/pages/EditorPage.vue';
 import SettingsPage from '@renderer/pages/SettingsPage.vue';
 

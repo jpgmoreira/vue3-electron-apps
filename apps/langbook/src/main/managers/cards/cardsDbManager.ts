@@ -127,6 +127,24 @@ export class CardsDbManager {
     await this.db.run('DELETE FROM cards WHERE id = ?', [cardId]);
   }
 
+  public async clearFilteredBucket(filtered: Card[]) {
+    if (!this.db) throw new Error('Db not initialized');
+    await this.db.run('BEGIN TRANSACTION');
+    try {
+      const stmt = await this.db.prepare('UPDATE cards SET bucket = FALSE WHERE id = ?');
+      for (const card of filtered) {
+        if (card.bucket) {
+          await stmt.run([card.id]);
+        }
+      }
+      await stmt.finalize();
+      await this.db.run('COMMIT');
+    } catch (err) {
+      await this.db.run('ROLLBACK');
+      console.error('Failed clearing bucket:', err);
+    }
+  }
+
   public async clear() {
     if (this.db) {
       await this.db.close();

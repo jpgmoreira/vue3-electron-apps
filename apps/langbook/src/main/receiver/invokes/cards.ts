@@ -22,3 +22,7 @@ ipcMain.handle(InvokeChannels.deleteCard, async (_: IpcMainInvokeEvent, cardId: 
 ipcMain.handle(InvokeChannels.updateCard, async (_: IpcMainInvokeEvent, card: Card) => {
   await cardsManager.updateCard(card);
 });
+
+ipcMain.handle(InvokeChannels.clearFilteredBucket, async (_: IpcMainInvokeEvent) => {
+  await cardsManager.clearFilteredBucket();
+});

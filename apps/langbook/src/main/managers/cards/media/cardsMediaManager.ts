@@ -61,10 +61,15 @@ export class CardsMediaManager {
       }
       card[field] = html.toString();
     }
-    const allOldFiles = listFilesInDir(mediaDir);
-    const allNewFiles = allBases.map((b) => path.resolve(mediaDir, b));
-    for (const file of allOldFiles) {
-      if (!allNewFiles.includes(file)) {
+    if (!fs.existsSync(mediaDir)) return;
+    if (allBases.length === 0) {
+      fs.rmSync(mediaDir, { recursive: true, force: true });
+      return;
+    }
+    const allOldCardFiles = listFilesInDir(mediaDir);
+    const allNewCardFiles = allBases.map((b) => path.resolve(mediaDir, b));
+    for (const file of allOldCardFiles) {
+      if (!allNewCardFiles.includes(file)) {
         fs.unlinkSync(file);
       }
     }

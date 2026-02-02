@@ -140,6 +140,15 @@ export class CardsManager {
     }
   }
 
+  public async clearFilteredBucket() {
+    await this.dbManager.clearFilteredBucket(this.filtered);
+    // "this.filtered" and "this.cardsMap" hold the same Card references.
+    for (const card of this.filtered) {
+      card.bucket = false;
+    }
+    this.filter();
+  }
+
   public clear() {
     this.profileId = null;
     this.dbManager.clear();
