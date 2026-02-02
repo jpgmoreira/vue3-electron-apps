@@ -19,4 +19,5 @@ export enum InvokeChannels {
   getCardsPage = 'get-cards-page',
   incrementGraph = 'increment-graph',
   clearFilteredBucket = 'clear-filtered-bucket',
+  getStatistics = 'get-statistics',
 }

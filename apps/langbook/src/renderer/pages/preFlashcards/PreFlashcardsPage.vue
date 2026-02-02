@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-  import { ref, useTemplateRef } from 'vue';
+  import { onMounted, ref, useTemplateRef } from 'vue';
   import { useSettingsStore } from '@renderer/store/settings';
   import Header from '@renderer/components/Header.vue';
   import {
@@ -7,30 +7,48 @@
     DEFAULT_LOW_FREQUENCY_INTERVAL,
   } from '@common/constants';
   import ClearBucketModal from './ClearBucketModal.vue';
+  import { getEmptyStatistics, Statistics } from '@common/schemas/statistics';
+  import { InvokeChannels } from '@preload/channels/invoke';
+
   const settingsStore = useSettingsStore();
+
+  const statistics = ref(getEmptyStatistics());
+
   const lowInterval = ref(settingsStore.settings.lowInterval);
   const highInterval = ref(settingsStore.settings.highInterval);
   const modalRef = useTemplateRef('modal');
+
   function updateSettings() {
     settingsStore.updateSettings({
       lowInterval: lowInterval.value,
       highInterval: highInterval.value,
     });
   }
+
   function resetIntervals() {
     lowInterval.value = DEFAULT_LOW_FREQUENCY_INTERVAL;
     highInterval.value = DEFAULT_HIGH_FREQUENCY_INTERVAL;
     updateSettings();
   }
+
   function emptyBucket() {
     if (!modalRef.value) throw new Error('Modal ref not set!');
     modalRef.value.show(100);
   }
+
+  async function fetchStatistics() {
+    const result = await window.api.invoke<Statistics>(InvokeChannels.getStatistics);
+    statistics.value = result;
+  }
+
+  onMounted(() => {
+    fetchStatistics();
+  });
 </script>
 
 <template>
   <div class="settings-page">
-    <ClearBucketModal ref="modal" />
+    <ClearBucketModal ref="modal" @cleared="fetchStatistics" />
     <Header />
     <div class="content">
       <h1>Flashcards study</h1>
@@ -39,23 +57,23 @@
         <h2>Overall statistics</h2>
         <div class="flex justify-between">
           <span>Total number of cards</span>
-          <b>0</b>
+          <b>{{ statistics.totalCards }}</b>
         </div>
         <div class="flex justify-between">
           <span>Total number of cards in the review bucket</span>
-          <b>0</b>
+          <b>{{ statistics.totalBucket }}</b>
         </div>
         <div class="flex justify-between">
           <span>Total number of low frequency cards</span>
-          <b>0</b>
+          <b>{{ statistics.totalLow }}</b>
         </div>
         <div class="flex justify-between">
           <span>Total number of high frequency cards</span>
-          <b>0</b>
+          <b>{{ statistics.totalHigh }}</b>
         </div>
         <div class="flex justify-between">
           <span>Total number of normal frequency cards</span>
-          <b>0</b>
+          <b>{{ statistics.totalNormal }}</b>
         </div>
       </section>
 
@@ -63,23 +81,23 @@
         <h2>Selected cards</h2>
         <div class="flex justify-between">
           <span>Selected cards</span>
-          <b>0</b>
+          <b>{{ statistics.filtered }}</b>
         </div>
         <div class="flex justify-between">
           <span>Selected cards in the review bucket</span>
-          <b>0</b>
+          <b>{{ statistics.filteredBucket }}</b>
         </div>
         <div class="flex justify-between">
           <span>Selected cards with low frequency</span>
-          <b>0</b>
+          <b>{{ statistics.filteredLow }}</b>
         </div>
         <div class="flex justify-between">
           <span>Selected cards with high frequency</span>
-          <b>0</b>
+          <b>{{ statistics.filteredHigh }}</b>
         </div>
         <div class="flex justify-between">
           <span>Selected cards with normal frequency</span>
-          <b>0</b>
+          <b>{{ statistics.filteredNormal }}</b>
         </div>
       </section>
 

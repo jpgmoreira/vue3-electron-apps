@@ -9,6 +9,7 @@ import { SessionsManager } from '../sessionsManager';
 import { TagsManager } from '../tagsManager';
 import { GetCardsPageResponseDTO } from '@common/dto/getCardsPageResponseDTO';
 import { CARDS_PAGE_SIZE } from '@common/constants';
+import { Statistics } from '@common/schemas/statistics';
 
 export class CardsManager {
   private dbManager: CardsDbManager;
@@ -147,6 +148,35 @@ export class CardsManager {
       card.bucket = false;
     }
     this.filter();
+  }
+
+  public getStatistics(): Statistics {
+    const allCards = Object.values(this.cardsMap);
+
+    const totalCards = allCards.length;
+    const totalBucket = allCards.filter((c) => c.bucket).length;
+    const totalLow = allCards.filter((c) => c.frequency === 'low').length;
+    const totalHigh = allCards.filter((c) => c.frequency === 'high').length;
+    const totalNormal = allCards.filter((c) => c.frequency === 'normal').length;
+
+    const filtered = this.filtered.length;
+    const filteredBucket = this.filtered.filter((c) => c.bucket).length;
+    const filteredLow = this.filtered.filter((c) => c.frequency === 'low').length;
+    const filteredHigh = this.filtered.filter((c) => c.frequency === 'high').length;
+    const filteredNormal = this.filtered.filter((c) => c.frequency === 'normal').length;
+
+    return {
+      totalCards,
+      totalBucket,
+      totalLow,
+      totalHigh,
+      totalNormal,
+      filtered,
+      filteredBucket,
+      filteredLow,
+      filteredHigh,
+      filteredNormal,
+    };
   }
 
   public clear() {
