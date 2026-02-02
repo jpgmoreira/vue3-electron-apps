@@ -21,7 +21,7 @@
   const deleteMultipleText = computed(() => {
     const files = deleteFiles.value;
     const folders = deleteFolders.value;
-    const filesText = `${files} file${files !== 1 ? 's' : ''}`;
+    const filesText = `${files} session${files !== 1 ? 's' : ''}`;
     const foldersText = `${folders} folder${folders !== 1 ? 's' : ''}`;
     if (files && folders) {
       return `${filesText} and ${foldersText}`;

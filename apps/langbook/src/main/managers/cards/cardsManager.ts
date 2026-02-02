@@ -111,7 +111,11 @@ export class CardsManager {
     await this.dbManager.deleteCard(cardId);
     this.sessionsManager.cardWasDeleted(card);
     this.tagsManager.cardWasDeleted(card);
-    this.filter();
+    // I do not call "this.filter" here because this method
+    //   can potentially be called a very large number of times
+    //   on a single explorer delete operation.
+    // You should call it elsewhere whenever using this
+    //   deleteCard operation.
   }
 
   public async updateCard(card: Card) {
@@ -139,6 +143,7 @@ export class CardsManager {
         await this.dbManager.updateCard(card);
       }
     }
+    this.filter();
   }
 
   public async clearFilteredBucket() {
