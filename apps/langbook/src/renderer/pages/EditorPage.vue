@@ -29,7 +29,11 @@
   const filtersStore = useFiltersStore();
   const profileStore = useProfileStore();
   const card = ref<Card>(getEmptyCard(randomId()));
-  if (editorStore.card) card.value = cloneDeep(editorStore.card);
+  if (editorStore.card) {
+    card.value = cloneDeep(editorStore.card);
+    card.value.allowReversed = Boolean(card.value.allowReversed);
+    card.value.bucket = Boolean(card.value.bucket);
+  }
 
   const cardRef = useTemplateRef('card-ref');
 
