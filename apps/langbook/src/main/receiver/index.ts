@@ -6,4 +6,5 @@ import './invokes/filters';
 import './invokes/cards';
 import './invokes/graph';
 import './invokes/settings';
+import './invokes/flashcards';
 import '@interapp/components/Explorer/receiver/invokes';

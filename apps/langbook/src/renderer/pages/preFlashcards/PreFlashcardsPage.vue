@@ -9,8 +9,13 @@
   import PreFlashcardsModals from './PreFlashcardsModals.vue';
   import { getEmptyStatistics, Statistics } from '@common/schemas/statistics';
   import { InvokeChannels } from '@preload/channels/invoke';
+  import { useFlashcardsStore } from '@renderer/store/flashcards';
+  import { useRouter } from 'vue-router';
 
   const settingsStore = useSettingsStore();
+  const flashcardsStore = useFlashcardsStore();
+
+  const router = useRouter();
 
   const statistics = ref(getEmptyStatistics());
 
@@ -61,6 +66,11 @@
   async function fetchStatistics() {
     const result = await window.api.invoke<Statistics>(InvokeChannels.getStatistics);
     statistics.value = result;
+  }
+
+  function goFlashcards() {
+    flashcardsStore.reset();
+    router.replace('/flashcards');
   }
 
   onMounted(() => {
@@ -179,7 +189,7 @@
       </section>
 
       <div>
-        <button type="button" class="btn btn-primary">Start</button>
+        <button type="button" class="btn btn-primary" @click="goFlashcards">Start</button>
       </div>
     </div>
   </div>
