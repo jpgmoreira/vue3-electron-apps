@@ -132,18 +132,25 @@ export class CardsManager {
 
   public async sessionWasDeleted(sessionId: string) {
     const allCards = Object.values(this.cardsMap);
-    for (const card of allCards) {
-      if (!card.sessions.includes(sessionId)) {
-        continue;
+    await this.dbManager.beginTransaction();
+    try {
+      for (const card of allCards) {
+        if (!card.sessions.includes(sessionId)) {
+          continue;
+        }
+        card.sessions = card.sessions.filter((s) => s !== sessionId);
+        if (card.sessions.length === 0) {
+          await this.deleteCard(card.id);
+        } else {
+          await this.dbManager.updateCard(card);
+        }
       }
-      card.sessions = card.sessions.filter((s) => s !== sessionId);
-      if (card.sessions.length === 0) {
-        await this.deleteCard(card.id);
-      } else {
-        await this.dbManager.updateCard(card);
-      }
+      this.dbManager.commit();
+    } catch {
+      this.dbManager.rollback();
+    } finally {
+      this.filter();
     }
-    this.filter();
   }
 
   public async clearFilteredBucket() {

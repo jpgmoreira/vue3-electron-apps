@@ -167,6 +167,25 @@ export class CardsDbManager {
     }
   }
 
+  // -- Externally managed transactions: use with caution! ---
+
+  public async beginTransaction() {
+    if (!this.db) throw new Error('Db not initialized');
+    await this.db.run('BEGIN TRANSACTION');
+  }
+
+  public async commit() {
+    if (!this.db) throw new Error('Db not initialized');
+    await this.db.run('COMMIT');
+  }
+
+  public async rollback() {
+    if (!this.db) throw new Error('Db not initialized');
+    await this.db.run('ROLLBACK');
+  }
+
+  // ---
+
   public async clear() {
     if (this.db) {
       await this.db.close();
