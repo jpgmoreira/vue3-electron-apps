@@ -18,23 +18,27 @@
   <div class="settings-page flex flex-col h-screen overflow-hidden">
     <Header />
 
-    <!-- Profile -->
-    <section>
-      <h1>Profile</h1>
-      <div class="flex justify-between items-center">
-        <div>{{ profileName }}</div>
-        <button type="button" class="btn btn-warning" @click="logout">Logout</button>
-      </div>
-    </section>
+    <div class="content">
+      <h1>Settings</h1>
 
-    <!-- Version -->
-    <section>
-      <h1>Version</h1>
-      <div>{{ APP_PRODUCT_NAME }} version {{ APP_VERSION }}</div>
-      <div>
-        Homepage:
-        <a href="#" @click="copyUrlToClipboard(APP_HOMEPAGE)">{{ APP_HOMEPAGE }}</a>
-      </div>
-    </section>
+      <!-- Profile -->
+      <section>
+        <h2>Profile</h2>
+        <div class="flex justify-between items-center">
+          <div>{{ profileName }}</div>
+          <button type="button" class="btn btn-warning" @click="logout">Logout</button>
+        </div>
+      </section>
+
+      <!-- Version -->
+      <section>
+        <h2>Version</h2>
+        <div>{{ APP_PRODUCT_NAME }} version {{ APP_VERSION }}</div>
+        <div>
+          Homepage:
+          <a href="#" @click="copyUrlToClipboard(APP_HOMEPAGE)">{{ APP_HOMEPAGE }}</a>
+        </div>
+      </section>
+    </div>
   </div>
 </template>

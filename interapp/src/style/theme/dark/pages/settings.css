@@ -1,16 +1,29 @@
-.theme-dark .settings-page section {
-  background: #1f2223;
-  border-radius: 12px;
-  padding: 24px;
-  margin: 15px;
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
-}
-
 .theme-dark .settings-page h1 {
-  font-size: 17px;
+  font-size: 20px;
   font-weight: 600;
-  margin-bottom: 16px;
   color: #e5e7eb;
   letter-spacing: 0.3px;
+}
+
+.theme-dark .settings-page .content {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding: 32px;
+}
+
+.theme-dark .settings-page section {
+  font-size: 0.9rem;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background: #1f2223;
+  border-radius: 6px;
+  padding: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.theme-dark .settings-page section h2 {
+  font-size: 16px;
+  font-weight: bold;
 }

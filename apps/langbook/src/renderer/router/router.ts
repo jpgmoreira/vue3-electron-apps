@@ -38,6 +38,7 @@ export const router = createRouter({
   routes,
 });
 
+// - I decided to always start on the cards page.
 // router.afterEach((to) => {
 //   const keep = ['/cards', '/graph'];
 //   if (keep.includes(to.path)) {
