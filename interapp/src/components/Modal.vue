@@ -55,6 +55,7 @@
     position: fixed;
     inset: 0;
     z-index: 9999;
+    will-change: opacity;
   }
   .modal {
     position: fixed;
@@ -64,6 +65,7 @@
     min-width: 60vw;
     border-radius: 5px;
     z-index: 99999;
+    will-change: opacity, transform;
   }
   .modal-header {
     font-weight: bold;
@@ -92,9 +94,13 @@
   }
 
   /* Transitions */
+
+  /* Using "all" here really slows down a lot the animation */
   .modal-transition-enter-active,
   .modal-transition-leave-active {
-    transition: all 0.2s ease;
+    transition:
+      opacity 0.2s ease,
+      transform 0.2s ease;
   }
   .modal-transition-enter-from,
   .modal-transition-leave-to {
