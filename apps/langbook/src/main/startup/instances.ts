@@ -25,7 +25,7 @@ export const tagsManager = new TagsManager(emitter, filtersManager);
 export const graphManager = new GraphManager(emitter);
 export const settingsManager = new SettingsManager(emitter);
 
-const flashcardsManager = new FlashcardsManager();
+const flashcardsManager = new FlashcardsManager(settingsManager);
 const cardsMediaManager = new CardsMediaManager();
 const cardsDbManager = new CardsDbManager();
 export const cardsManager = new CardsManager(

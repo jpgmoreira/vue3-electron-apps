@@ -1,5 +1,6 @@
 import { Card, CardFrequency } from '@common/schemas/card';
 import { cloneDeep, deepFreeze } from '@interapp/utils/utils';
+import { SettingsManager } from '../settingsManager';
 
 const EMPTY_QUEUES = deepFreeze({
   normal: [],
@@ -9,6 +10,12 @@ const EMPTY_QUEUES = deepFreeze({
 
 export class FlashcardsManager {
   private queues: Record<CardFrequency, Card[]> = cloneDeep(EMPTY_QUEUES);
+  private counter = 0;
+  private settingsManager: SettingsManager;
+
+  constructor(settingsManager: SettingsManager) {
+    this.settingsManager = settingsManager;
+  }
 
   private compare(a: Card, b: Card) {
     const aLast = a.lastReviewedAt;
@@ -26,7 +33,32 @@ export class FlashcardsManager {
     this.queues.low = filtered.filter((c) => c.frequency === 'low').sort(this.compare);
   }
 
-  private clear() {
+  private chooseQueue(): CardFrequency | null {
+    const h = this.queues.high.length;
+    const l = this.queues.low.length;
+    const n = this.queues.normal.length;
+    if (!h && !l && !n) return null;
+    if (!h && !l && n) return 'normal';
+    if (!h && l && !n) return 'low';
+    if (h && !l && !n) return 'high';
+    this.counter++;
+    const { highInterval, lowInterval } = this.settingsManager.getSettings();
+    if (highInterval && this.counter % highInterval === 0) return 'high';
+    if (lowInterval && this.counter % lowInterval === 0) return 'low';
+    return 'normal';
+  }
+
+  public getNextFlashcard(): Card | null {
+    const queue = this.chooseQueue();
+    if (!queue) return null;
+    const card = this.queues[queue].shift();
+    if (!card) throw new Error('Invalid card!');
+    this.queues[queue].push(card);
+    return card;
+  }
+
+  public clear() {
     this.queues = cloneDeep(EMPTY_QUEUES);
+    this.counter = 0;
   }
 }
