@@ -36,6 +36,16 @@
     }
   }
 
+  async function goPrev() {
+    if (reveal.value) {
+      reveal.value = false;
+      return;
+    }
+    reveal.value = true;
+    index.value--;
+    card.value = await getFlashcard(history.value[index.value]);
+  }
+
   function exit() {
     router.back();
   }
@@ -60,7 +70,9 @@
       <div v-else class="absolute-center message-xl">No cards</div>
     </div>
     <footer class="custom-footer flex justify-evenly">
-      <button type="button" class="btn-primary" :disabled="cannotGoPrev">Prev</button>
+      <button type="button" class="btn-primary" @click="goPrev" :disabled="cannotGoPrev">
+        Prev
+      </button>
       <button type="button" class="btn-primary" @click="goNext" :disabled="!card">Next</button>
       <button type="button" class="btn-primary" :disabled="!card">Edit</button>
       <button type="button" class="btn-warning" @click="exit">Exit</button>
