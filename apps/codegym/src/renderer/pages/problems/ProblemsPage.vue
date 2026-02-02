@@ -43,7 +43,7 @@
     <Filters class="rounded-md m-1" :curr-oj="currOj" :oj-context="ojContext" />
   </div>
 
-  <footer class="mt-auto w-full flex justify-around py-1.5">
+  <footer class="custom-footer mt-auto w-full flex justify-around py-1.5">
     <button class="flex items-center btn-primary" @click="newProblem" :disabled="isBusy">
       {{ btnText }}
     </button>

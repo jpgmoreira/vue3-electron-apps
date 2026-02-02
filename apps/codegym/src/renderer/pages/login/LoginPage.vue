@@ -65,7 +65,7 @@
         </table>
       </div>
     </div>
-    <footer class="flex justify-center gap-1.5 p-2">
+    <footer class="custom-footer flex justify-center gap-1.5 p-2">
       <button type="button" class="btn-primary" @click="open('create')">Create</button>
       <button type="button" class="btn-primary" :disabled="!selected" @click="select">
         Select
