@@ -10,9 +10,11 @@ import { TagsManager } from '../tagsManager';
 import { GetCardsPageResponseDTO } from '@common/dto/getCardsPageResponseDTO';
 import { CARDS_PAGE_SIZE } from '@common/constants';
 import { Statistics } from '@common/schemas/statistics';
+import { FlashcardsManager } from './flashcardsManager';
 
 export class CardsManager {
   private dbManager: CardsDbManager;
+  private flashcardsManager: FlashcardsManager;
   private mediaManager: CardsMediaManager;
   private filtersManager: FiltersManager;
   private profileManager: ProfileManager;
@@ -33,7 +35,8 @@ export class CardsManager {
     filtersManager: FiltersManager,
     profileManager: ProfileManager,
     sessionsManager: SessionsManager,
-    tagsManager: TagsManager
+    tagsManager: TagsManager,
+    flashcardsManager: FlashcardsManager
   ) {
     emitter.on(CommonEvents.clearProfileData, () => this.clear);
     this.dbManager = dbManager;
@@ -42,6 +45,7 @@ export class CardsManager {
     this.profileManager = profileManager;
     this.sessionsManager = sessionsManager;
     this.tagsManager = tagsManager;
+    this.flashcardsManager = flashcardsManager;
   }
 
   public async loadProfile(profileId: string) {
@@ -66,6 +70,7 @@ export class CardsManager {
       scrollTop += card.height;
       position++;
     }
+    this.flashcardsManager.recomputeQueues(this.filtered);
   }
 
   public async createCard(card: Card) {

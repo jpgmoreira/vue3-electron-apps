@@ -12,6 +12,7 @@ import { CardsDbManager } from '@main/managers/cards/cardsDbManager';
 import { CardsManager } from '@main/managers/cards/cardsManager';
 import { GraphManager } from '@main/managers/graphManager';
 import { SettingsManager } from '@main/managers/settingsManager';
+import { FlashcardsManager } from '@main/managers/cards/flashcardsManager';
 
 const emitter = new EventEmitter();
 export const windowManager = new WindowManager();
@@ -24,6 +25,7 @@ export const tagsManager = new TagsManager(emitter, filtersManager);
 export const graphManager = new GraphManager(emitter);
 export const settingsManager = new SettingsManager(emitter);
 
+const flashcardsManager = new FlashcardsManager();
 const cardsMediaManager = new CardsMediaManager();
 const cardsDbManager = new CardsDbManager();
 export const cardsManager = new CardsManager(
@@ -33,7 +35,8 @@ export const cardsManager = new CardsManager(
   filtersManager,
   profileManager,
   sessionsManager,
-  tagsManager
+  tagsManager,
+  flashcardsManager
 );
 
 sessionsManager.setCardsManager(cardsManager);
