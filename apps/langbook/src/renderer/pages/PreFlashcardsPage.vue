@@ -3,6 +3,7 @@
 </script>
 
 <template>
-  <Header />
-  <div>Flashcards page!</div>
+  <div>
+    <Header />
+  </div>
 </template>

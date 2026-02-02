@@ -5,7 +5,6 @@ import CardsPage from '@renderer/pages/cards/CardsPage.vue';
 import PreFlashcardsPage from '@renderer/pages/PreFlashcardsPage.vue';
 import EditorPage from '@renderer/pages/EditorPage.vue';
 import SettingsPage from '@renderer/pages/SettingsPage.vue';
-import { useUIStore } from '@renderer/store/ui';
 
 const routes = [
   {
@@ -39,9 +38,9 @@ export const router = createRouter({
   routes,
 });
 
-router.afterEach((to) => {
-  const skip = ['/', '/login', '/editor', '/flashcards', '/settings'];
-  if (!skip.includes(to.path)) {
-    useUIStore().updateSettings({ page: to.path });
-  }
-});
+// router.afterEach((to) => {
+//   const keep = ['/cards', '/graph'];
+//   if (keep.includes(to.path)) {
+//     useUIStore().updateSettings({ page: to.path });
+//   }
+// });
