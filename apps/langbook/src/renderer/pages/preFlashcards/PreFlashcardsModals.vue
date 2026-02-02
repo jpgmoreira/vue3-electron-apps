@@ -54,7 +54,11 @@
   <Modal :visible="visible === 'bucket'" @close="close">
     <template #header>Empty review bucket</template>
     <template #body>
-      <div>This will remove {{ nCards }} {{ word }} from the bucket.</div>
+      <div>
+        This will remove
+        <b>{{ nCards }} {{ word }}</b>
+        from the bucket.
+      </div>
       <div v-if="isRequesting" class="flex items-center">Processing...</div>
     </template>
     <template #footer>
@@ -78,7 +82,11 @@
   <Modal :visible="visible === 'high'" @close="close">
     <template #header>Clear high frequency</template>
     <template #body>
-      <div>This will clear the frequency of {{ nCards }} high-frequency selected {{ word }}.</div>
+      <div>
+        This will clear the frequency of
+        <b>{{ nCards }} high-frequency</b>
+        selected {{ word }}.
+      </div>
       <div v-if="isRequesting" class="flex items-center">Processing...</div>
     </template>
     <template #footer>
@@ -102,7 +110,11 @@
   <Modal :visible="visible === 'low'" @close="close">
     <template #header>Clear low frequency</template>
     <template #body>
-      <div>This will clear the frequency of {{ nCards }} low-frequency selected {{ word }}.</div>
+      <div>
+        This will clear the frequency of
+        <b>{{ nCards }} low-frequency</b>
+        selected {{ word }}.
+      </div>
       <div v-if="isRequesting" class="flex items-center">Processing...</div>
     </template>
     <template #footer>

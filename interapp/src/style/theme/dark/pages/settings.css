@@ -27,6 +27,13 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  transition: background 0.2s ease;
+  padding: 3px 8px;
+  border-radius: 5px;
+}
+
+.theme-dark .settings-page section > div:hover {
+  background: #292d2e;
 }
 
 .theme-dark .settings-page section h2 {

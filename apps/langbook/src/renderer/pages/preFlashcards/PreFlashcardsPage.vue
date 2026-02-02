@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-  import { onMounted, ref, useTemplateRef } from 'vue';
+  import { onMounted, ref, useTemplateRef, computed } from 'vue';
   import { useSettingsStore } from '@renderer/store/settings';
   import Header from '@renderer/components/Header.vue';
   import {
@@ -17,6 +17,18 @@
   const lowInterval = ref(settingsStore.settings.lowInterval);
   const highInterval = ref(settingsStore.settings.highInterval);
   const modalsRef = useTemplateRef('modal');
+
+  const emptyBucketTooltip = computed(() =>
+    statistics.value.filteredBucket ? '' : 'There are no filtered cards in the bucket'
+  );
+
+  const clearHighTooltip = computed(() =>
+    statistics.value.filteredHigh ? '' : 'There are no filtered cards with high frequency'
+  );
+
+  const clearLowTooltip = computed(() =>
+    statistics.value.filteredLow ? '' : 'There are no filtered cards with low frequency'
+  );
 
   function updateSettings() {
     settingsStore.updateSettings({
@@ -127,7 +139,7 @@
       </section>
 
       <section>
-        <h2>Review bucket</h2>
+        <h2>Filters</h2>
         <div>
           <span>Empty review bucket for selected cards</span>
           <button
@@ -135,14 +147,11 @@
             class="btn-warning"
             @click="emptyBucket"
             :disabled="!statistics.filteredBucket"
+            v-tooltip="emptyBucketTooltip"
           >
             Empty
           </button>
         </div>
-      </section>
-
-      <section>
-        <h2>Frequencies</h2>
         <div>
           <span>Clear high-frequency selected cards</span>
           <button
@@ -150,6 +159,7 @@
             class="btn-warning"
             @click="clearHigh"
             :disabled="!statistics.filteredHigh"
+            v-tooltip="clearHighTooltip"
           >
             Clear
           </button>
@@ -161,6 +171,7 @@
             class="btn-warning"
             @click="clearLow"
             :disabled="!statistics.filteredLow"
+            v-tooltip="clearLowTooltip"
           >
             Clear
           </button>
