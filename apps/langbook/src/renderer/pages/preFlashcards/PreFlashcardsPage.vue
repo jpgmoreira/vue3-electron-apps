@@ -6,7 +6,7 @@
     DEFAULT_HIGH_FREQUENCY_INTERVAL,
     DEFAULT_LOW_FREQUENCY_INTERVAL,
   } from '@common/constants';
-  import ClearBucketModal from './ClearBucketModal.vue';
+  import PreFlashcardsModals from './PreFlashcardsModals.vue';
   import { getEmptyStatistics, Statistics } from '@common/schemas/statistics';
   import { InvokeChannels } from '@preload/channels/invoke';
 
@@ -16,7 +16,7 @@
 
   const lowInterval = ref(settingsStore.settings.lowInterval);
   const highInterval = ref(settingsStore.settings.highInterval);
-  const modalRef = useTemplateRef('modal');
+  const modalsRef = useTemplateRef('modal');
 
   function updateSettings() {
     settingsStore.updateSettings({
@@ -32,8 +32,18 @@
   }
 
   function emptyBucket() {
-    if (!modalRef.value) throw new Error('Modal ref not set!');
-    modalRef.value.show(100);
+    if (!modalsRef.value) throw new Error('Modal ref not set!');
+    modalsRef.value.show('bucket', statistics.value.filteredBucket);
+  }
+
+  function clearHigh() {
+    if (!modalsRef.value) throw new Error('Modal ref not set!');
+    modalsRef.value.show('high', statistics.value.filteredHigh);
+  }
+
+  function clearLow() {
+    if (!modalsRef.value) throw new Error('Modal ref not set!');
+    modalsRef.value.show('low', statistics.value.filteredLow);
   }
 
   async function fetchStatistics() {
@@ -48,30 +58,30 @@
 
 <template>
   <div class="settings-page">
-    <ClearBucketModal ref="modal" @cleared="fetchStatistics" />
+    <PreFlashcardsModals ref="modal" @cleared="fetchStatistics" />
     <Header />
     <div class="content">
       <h1>Flashcards study</h1>
 
       <section>
         <h2>Overall statistics</h2>
-        <div class="flex justify-between">
+        <div>
           <span>Total number of cards</span>
           <b>{{ statistics.totalCards }}</b>
         </div>
-        <div class="flex justify-between">
+        <div>
           <span>Total number of cards in the review bucket</span>
           <b>{{ statistics.totalBucket }}</b>
         </div>
-        <div class="flex justify-between">
+        <div>
           <span>Total number of low frequency cards</span>
           <b>{{ statistics.totalLow }}</b>
         </div>
-        <div class="flex justify-between">
+        <div>
           <span>Total number of high frequency cards</span>
           <b>{{ statistics.totalHigh }}</b>
         </div>
-        <div class="flex justify-between">
+        <div>
           <span>Total number of normal frequency cards</span>
           <b>{{ statistics.totalNormal }}</b>
         </div>
@@ -79,35 +89,35 @@
 
       <section>
         <h2>Selected cards</h2>
-        <div class="flex justify-between">
+        <div>
           <span>Selected cards</span>
           <b>{{ statistics.filtered }}</b>
         </div>
-        <div class="flex justify-between">
+        <div>
           <span>Selected cards in the review bucket</span>
           <b>{{ statistics.filteredBucket }}</b>
         </div>
-        <div class="flex justify-between">
+        <div>
           <span>Selected cards with low frequency</span>
           <b>{{ statistics.filteredLow }}</b>
         </div>
-        <div class="flex justify-between">
+        <div>
           <span>Selected cards with high frequency</span>
           <b>{{ statistics.filteredHigh }}</b>
         </div>
-        <div class="flex justify-between">
+        <div>
           <span>Selected cards with normal frequency</span>
           <b>{{ statistics.filteredNormal }}</b>
         </div>
       </section>
 
       <section>
-        <h2>Options</h2>
-        <div class="flex justify-between">
+        <h2>Intervals</h2>
+        <div>
           <span>High frequency interval</span>
           <input type="number" v-model="highInterval" @change="updateSettings" />
         </div>
-        <div class="flex justify-between">
+        <div>
           <span>Low frequency interval</span>
           <input type="number" v-model="lowInterval" @change="updateSettings" />
         </div>
@@ -118,9 +128,42 @@
 
       <section>
         <h2>Review bucket</h2>
-        <div class="flex justify-between">
+        <div>
           <span>Empty review bucket for selected cards</span>
-          <button type="button" class="btn-warning" @click="emptyBucket">Empty</button>
+          <button
+            type="button"
+            class="btn-warning"
+            @click="emptyBucket"
+            :disabled="!statistics.filteredBucket"
+          >
+            Empty
+          </button>
+        </div>
+      </section>
+
+      <section>
+        <h2>Frequencies</h2>
+        <div>
+          <span>Clear high-frequency selected cards</span>
+          <button
+            type="button"
+            class="btn-warning"
+            @click="clearHigh"
+            :disabled="!statistics.filteredHigh"
+          >
+            Clear
+          </button>
+        </div>
+        <div>
+          <span>Clear low-frequency selected cards</span>
+          <button
+            type="button"
+            class="btn-warning"
+            @click="clearLow"
+            :disabled="!statistics.filteredLow"
+          >
+            Clear
+          </button>
         </div>
       </section>
 

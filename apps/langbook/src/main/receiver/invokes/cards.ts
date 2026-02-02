@@ -1,7 +1,7 @@
 import { ipcMain, IpcMainInvokeEvent } from 'electron';
 import { InvokeChannels } from '@preload/channels/invoke';
 import { cardsManager } from '@main/startup/instances';
-import { Card } from '@common/schemas/card';
+import { Card, CardFrequency } from '@common/schemas/card';
 import { GetCardsPageResponseDTO } from '@common/dto/getCardsPageResponseDTO';
 import { Statistics } from '@common/schemas/statistics';
 
@@ -24,10 +24,17 @@ ipcMain.handle(InvokeChannels.updateCard, async (_: IpcMainInvokeEvent, card: Ca
   await cardsManager.updateCard(card);
 });
 
+ipcMain.handle(InvokeChannels.getStatistics, (): Statistics => {
+  return cardsManager.getStatistics();
+});
+
 ipcMain.handle(InvokeChannels.clearFilteredBucket, async (_: IpcMainInvokeEvent) => {
   await cardsManager.clearFilteredBucket();
 });
 
-ipcMain.handle(InvokeChannels.getStatistics, (): Statistics => {
-  return cardsManager.getStatistics();
-});
+ipcMain.handle(
+  InvokeChannels.clearFilteredFrequency,
+  async (_: IpcMainInvokeEvent, frequency: CardFrequency) => {
+    await cardsManager.clearFilteredFrequency(frequency);
+  }
+);

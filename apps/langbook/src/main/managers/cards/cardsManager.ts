@@ -1,7 +1,7 @@
 import { EventEmitter } from '@interapp/events/eventEmitter';
 import { CommonEvents } from '@interapp/events/commonEvents';
 import { CardsDbManager } from './cardsDbManager';
-import { Card } from '@common/schemas/card';
+import { Card, CardFrequency } from '@common/schemas/card';
 import { FiltersManager } from '../filtersManager';
 import { CardsMediaManager } from './media/cardsMediaManager';
 import { ProfileManager } from '../profileManager';
@@ -146,6 +146,16 @@ export class CardsManager {
     // "this.filtered" and "this.cardsMap" hold the same Card references.
     for (const card of this.filtered) {
       card.bucket = false;
+    }
+    this.filter();
+  }
+
+  public async clearFilteredFrequency(frequency: CardFrequency) {
+    await this.dbManager.clearFilteredFrequency(this.filtered, frequency);
+    for (const card of this.filtered) {
+      if (card.frequency === frequency) {
+        card.frequency = 'normal';
+      }
     }
     this.filter();
   }

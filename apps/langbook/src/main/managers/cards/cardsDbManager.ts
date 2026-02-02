@@ -1,6 +1,6 @@
 import { open, type Database } from 'sqlite';
 import sqlite3 from 'sqlite3';
-import { Card, DBCard } from '@common/schemas/card';
+import { Card, CardFrequency, DBCard } from '@common/schemas/card';
 import path from 'path';
 import { setDbPragmas } from '@interapp/utils/sql';
 import { DATA_DIR } from '@main/constants';
@@ -142,6 +142,28 @@ export class CardsDbManager {
     } catch (err) {
       await this.db.run('ROLLBACK');
       console.error('Failed clearing bucket:', err);
+    }
+  }
+
+  public async clearFilteredFrequency(filtered: Card[], frequency: CardFrequency) {
+    if (!this.db) throw new Error('Db not initialized');
+    await this.db.run('BEGIN TRANSACTION');
+    try {
+      const stmt = await this.db.prepare(`
+        UPDATE cards
+        SET frequency = 'normal'
+        WHERE id = ?
+      `);
+      for (const card of filtered) {
+        if (card.frequency === frequency) {
+          await stmt.run([card.id]);
+        }
+      }
+      await stmt.finalize();
+      await this.db.run('COMMIT');
+    } catch (err) {
+      await this.db.run('ROLLBACK');
+      console.error('Failed clearing frequency:', err);
     }
   }
 

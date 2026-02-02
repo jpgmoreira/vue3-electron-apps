@@ -23,6 +23,12 @@
   border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
+.theme-dark .settings-page section > div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
 .theme-dark .settings-page section h2 {
   font-size: 16px;
   font-weight: bold;
