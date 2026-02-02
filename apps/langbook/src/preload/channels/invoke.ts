@@ -21,4 +21,5 @@ export enum InvokeChannels {
   getStatistics = 'get-statistics',
   clearFilteredBucket = 'clear-filtered-bucket',
   clearFilteredFrequency = 'clear-filtered-frequency',
+  getFlashcard = 'get-flashcard',
 }
