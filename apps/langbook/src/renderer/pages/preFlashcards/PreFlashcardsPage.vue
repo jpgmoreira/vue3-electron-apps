@@ -70,7 +70,7 @@
 
   function goFlashcards() {
     flashcardsStore.reset();
-    router.replace('/flashcards');
+    router.push('/flashcards');
   }
 
   onMounted(() => {
