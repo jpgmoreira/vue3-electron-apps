@@ -121,9 +121,6 @@
   function refreshContent(field: RTEField) {
     if (!rteRefs.value[field]) throw new Error('RTE ref not set!');
     card.value[field] = rteRefs.value[field].getContent();
-    if (field === 'back' && !card.value.back) {
-      card.value.allowReversed = false;
-    }
   }
 
   // --- Media: ---

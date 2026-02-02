@@ -1,14 +1,16 @@
 <script lang="ts" setup>
-  import { ref } from 'vue';
+  import { ref, useTemplateRef } from 'vue';
   import { useSettingsStore } from '@renderer/store/settings';
   import Header from '@renderer/components/Header.vue';
   import {
     DEFAULT_HIGH_FREQUENCY_INTERVAL,
     DEFAULT_LOW_FREQUENCY_INTERVAL,
   } from '@common/constants';
+  import ClearBucketModal from './ClearBucketModal.vue';
   const settingsStore = useSettingsStore();
   const lowInterval = ref(settingsStore.settings.lowInterval);
   const highInterval = ref(settingsStore.settings.highInterval);
+  const modalRef = useTemplateRef('modal');
   function updateSettings() {
     settingsStore.updateSettings({
       lowInterval: lowInterval.value,
@@ -20,10 +22,15 @@
     highInterval.value = DEFAULT_HIGH_FREQUENCY_INTERVAL;
     updateSettings();
   }
+  function emptyBucket() {
+    if (!modalRef.value) throw new Error('Modal ref not set!');
+    modalRef.value.show(100);
+  }
 </script>
 
 <template>
   <div class="settings-page">
+    <ClearBucketModal ref="modal" />
     <Header />
     <div class="content">
       <h1>Flashcards study</h1>
@@ -94,8 +101,8 @@
       <section>
         <h2>Review bucket</h2>
         <div class="flex justify-between">
-          <span>Clear review bucket for selected cards</span>
-          <button type="button" class="btn-warning">Clear</button>
+          <span>Empty review bucket for selected cards</span>
+          <button type="button" class="btn-warning" @click="emptyBucket">Empty</button>
         </div>
       </section>
 
