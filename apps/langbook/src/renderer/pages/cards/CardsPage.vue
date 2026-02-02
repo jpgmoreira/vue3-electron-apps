@@ -21,7 +21,7 @@
   import { useProfileStore } from '@renderer/store/profile';
   import CardsView from '@renderer/components/CardsView/CardsView.vue';
   import { useSessionsStore } from '@renderer/store/sessions';
-  import CardsPageModals from './CardsPageModals.vue';
+  import CardsPageModals from './CardsModals.vue';
 
   const uiStore = useUIStore();
   const tagsStore = useTagsStore();
