@@ -11,6 +11,7 @@
 @import './elements/resizer.css';
 @import './elements/label.css';
 @import './elements/contextmenu.css';
+@import './elements/footer.css';
 
 @import './components/modal.css';
 @import './components/toast.css';

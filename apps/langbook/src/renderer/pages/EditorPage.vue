@@ -260,7 +260,7 @@
         <input type="checkbox" name="bucket-input" id="bucket-input" v-model="card.bucket" />
       </div>
     </div>
-    <footer class="mt-auto flex justify-around">
+    <footer class="custom-footer mt-auto flex justify-around">
       <div class="flex items-center gap-1">
         <label for="allow-reversed">Allow reversed:</label>
         <input

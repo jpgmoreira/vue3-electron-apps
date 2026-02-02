@@ -206,7 +206,7 @@
               </div>
             </div>
           </div>
-          <footer class="flex items-center justify-evenly mt-auto">
+          <footer class="custom-footer flex items-center justify-evenly mt-auto">
             <button
               type="button"
               class="caret-button"

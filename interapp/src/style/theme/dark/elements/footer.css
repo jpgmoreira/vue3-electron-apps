@@ -1,0 +1,8 @@
+.theme-dark footer.custom-footer {
+  background: linear-gradient(180deg, #242628, #1d1f20);
+  border-top: 1px solid #2f3236;
+  padding: 8px 12px;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  box-shadow: 0 -3px 8px rgba(0, 0, 0, 0.35);
+}
