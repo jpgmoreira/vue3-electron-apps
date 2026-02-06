@@ -5,9 +5,11 @@
   import { storeToRefs } from 'pinia';
   import { computed, onMounted, ref } from 'vue';
   import { useRouter } from 'vue-router';
+  import Flashcard from './Flashcard.vue';
 
   const flashcardsStore = useFlashcardsStore();
-  const { history, index, reveal } = storeToRefs(flashcardsStore);
+  const { history, index, reveal, reversed } = storeToRefs(flashcardsStore);
+
   const card = ref<Card | null>(null);
   const cannotGoPrev = computed(() => index.value === 0 && !reveal.value);
 
@@ -32,6 +34,11 @@
     if (next) {
       index.value++;
       history.value.push(next.id);
+      if (next.allowReversed) {
+        reversed.value.push(Math.random() < 0.5);
+      } else {
+        reversed.value.push(false);
+      }
       card.value = next;
     }
   }
@@ -62,11 +69,7 @@
 <template>
   <div class="flashcards-page flex flex-col h-screen">
     <div class="grow relative">
-      <div v-if="card">
-        <div v-html="card.front"></div>
-        <div v-if="card.back && reveal" v-html="card.back"></div>
-        <div v-if="card.extra && reveal" v-html="card.extra"></div>
-      </div>
+      <Flashcard v-if="card" :card="card" :reveal="reveal" :reversed="reversed[index]" />
       <div v-else class="absolute-center message-xl">No cards</div>
     </div>
     <footer class="custom-footer flex justify-evenly">

@@ -5,7 +5,7 @@ import CardsPage from '@renderer/pages/cards/CardsPage.vue';
 import PreFlashcardsPage from '@renderer/pages/preFlashcards/PreFlashcardsPage.vue';
 import EditorPage from '@renderer/pages/EditorPage.vue';
 import SettingsPage from '@renderer/pages/SettingsPage.vue';
-import FlashcardsPage from '@renderer/pages/FlashcardsPage.vue';
+import FlashcardsPage from '@renderer/pages/flashcards/FlashcardsPage.vue';
 
 const routes = [
   {
