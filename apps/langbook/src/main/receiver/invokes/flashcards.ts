@@ -5,7 +5,7 @@ import { Card } from '@common/schemas/card';
 
 ipcMain.handle(
   InvokeChannels.getFlashcard,
-  (_: IpcMainInvokeEvent, id: string | null): Card | null => {
-    return cardsManager.getFlashcard(id);
+  async (_: IpcMainInvokeEvent, id: string | null): Promise<Card | null> => {
+    return await cardsManager.getFlashcard(id);
   }
 );

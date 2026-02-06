@@ -203,9 +203,14 @@ export class CardsManager {
     };
   }
 
-  public getFlashcard(id: string | null): Card | null {
+  public async getFlashcard(id: string | null): Promise<Card | null> {
     if (id) return this.cardsMap[id];
-    return this.flashcardsManager.getNextFlashcard();
+    const card = this.flashcardsManager.getNextFlashcard();
+    if (card) {
+      card.lastReviewedAt = Date.now();
+      await this.dbManager.updateCard(card);
+    }
+    return card;
   }
 
   public clear() {

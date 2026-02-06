@@ -21,8 +21,8 @@ export class FlashcardsManager {
     const aLast = a.lastReviewedAt;
     const bLast = b.lastReviewedAt;
     if (aLast !== null && bLast !== null) return aLast - bLast;
-    if (aLast === null && bLast !== null) return 1;
-    if (aLast !== null && bLast === null) return -1;
+    if (aLast === null && bLast !== null) return -1;
+    if (aLast !== null && bLast === null) return 1;
     return a.createdAt - b.createdAt;
   }
 
