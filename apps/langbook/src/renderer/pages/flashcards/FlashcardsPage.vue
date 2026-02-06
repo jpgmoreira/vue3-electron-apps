@@ -3,7 +3,7 @@
   import { InvokeChannels } from '@preload/channels/invoke';
   import { useFlashcardsStore } from '@renderer/store/flashcards';
   import { storeToRefs } from 'pinia';
-  import { computed, onMounted, ref } from 'vue';
+  import { computed, onMounted, ref, reactive, onBeforeUnmount } from 'vue';
   import { useRouter } from 'vue-router';
   import Flashcard from './Flashcard.vue';
 
@@ -15,6 +15,27 @@
   const cannotGoPrev = computed(() => index.value === 0 && !reveal.value);
 
   const router = useRouter();
+
+  const position = reactive({
+    top: 0,
+    left: 0,
+    scale: 1,
+  });
+
+  const cardStyle = computed(() => {
+    const { top, left, scale } = position;
+    return {
+      transform: `translate(${left}px, ${top}px) scale(${scale})`,
+    };
+  });
+
+  const isMoving = ref(false);
+
+  function resetPosition() {
+    position.top = 0;
+    position.left = 0;
+    position.scale = 1;
+  }
 
   async function getFlashcard(id: string | null) {
     return window.api.invoke<Card | null>(InvokeChannels.getFlashcard, id);
@@ -62,6 +83,20 @@
     router.back();
   }
 
+  function windowKeyDown(e: KeyboardEvent) {
+    if (e.key === 'Escape') {
+      resetPosition();
+    }
+  }
+  function windowMouseUp() {
+    isMoving.value = false;
+  }
+  function windowMouseMove(e: MouseEvent) {
+    if (!isMoving.value) return;
+    position.left += e.movementX;
+    position.top += e.movementY;
+  }
+
   onMounted(async () => {
     if (!history.value.length) {
       const first = await getFlashcard(null);
@@ -72,13 +107,30 @@
       }
       hasLoaded.value = true;
     }
+    window.addEventListener('keydown', windowKeyDown);
+    window.addEventListener('mouseup', windowMouseUp);
+    window.addEventListener('mousemove', windowMouseMove);
+  });
+  onBeforeUnmount(() => {
+    window.removeEventListener('keydown', windowKeyDown);
+    window.removeEventListener('mouseup', windowMouseUp);
+    window.removeEventListener('mousemove', windowMouseMove);
   });
 </script>
 
 <template>
-  <div class="flashcards-page flex flex-col h-screen">
+  <div class="flashcards-page flex flex-col h-screen select-none">
     <div class="grow relative">
-      <Flashcard v-if="card" :card="card" :reveal="reveal" :reversed="reversed[index]" />
+      <div
+        v-if="card"
+        class="absolute inset-0 overflow-hidden"
+        :class="isMoving ? 'cursor-grabbing' : 'cursor-grab'"
+        @pointerdown="isMoving = true"
+      >
+        <div class="absolute" :style="cardStyle">
+          <Flashcard :card="card" :reveal="reveal" :flip="reversed[index]" />
+        </div>
+      </div>
       <div v-else-if="hasLoaded" class="absolute-center message-xl">No cards</div>
     </div>
     <footer class="custom-footer flex justify-evenly">

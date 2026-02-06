@@ -7,13 +7,13 @@
   const props = defineProps<{
     card: Card;
     reveal: boolean;
-    reversed: boolean;
+    flip: boolean;
   }>();
 
   const uiStore = useUIStore();
 
-  const front = computed(() => (props.reversed ? props.card.back : props.card.front));
-  const back = computed(() => (props.reversed ? props.card.front : props.card.back));
+  const front = computed(() => (props.flip ? props.card.back : props.card.front));
+  const back = computed(() => (props.flip ? props.card.front : props.card.back));
 
   function mediaButtonClass(mime: string) {
     if (mime.startsWith('image')) return 'image';
