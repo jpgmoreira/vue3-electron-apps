@@ -10,6 +10,7 @@
   const flashcardsStore = useFlashcardsStore();
   const { history, index, reveal, reversed } = storeToRefs(flashcardsStore);
 
+  const hasLoaded = ref(false);
   const card = ref<Card | null>(null);
   const cannotGoPrev = computed(() => index.value === 0 && !reveal.value);
 
@@ -17,6 +18,14 @@
 
   async function getFlashcard(id: string | null) {
     return window.api.invoke<Card | null>(InvokeChannels.getFlashcard, id);
+  }
+
+  function pushReversed(card: Card) {
+    if (card.allowReversed) {
+      reversed.value.push(Math.random() < 0.5);
+    } else {
+      reversed.value.push(false);
+    }
   }
 
   async function goNext() {
@@ -34,11 +43,7 @@
     if (next) {
       index.value++;
       history.value.push(next.id);
-      if (next.allowReversed) {
-        reversed.value.push(Math.random() < 0.5);
-      } else {
-        reversed.value.push(false);
-      }
+      pushReversed(next);
       card.value = next;
     }
   }
@@ -61,7 +66,11 @@
     if (!history.value.length) {
       const first = await getFlashcard(null);
       card.value = first;
-      if (first) history.value.push(first.id);
+      if (first) {
+        history.value.push(first.id);
+        pushReversed(first);
+      }
+      hasLoaded.value = true;
     }
   });
 </script>
@@ -70,7 +79,7 @@
   <div class="flashcards-page flex flex-col h-screen">
     <div class="grow relative">
       <Flashcard v-if="card" :card="card" :reveal="reveal" :reversed="reversed[index]" />
-      <div v-else class="absolute-center message-xl">No cards</div>
+      <div v-else-if="hasLoaded" class="absolute-center message-xl">No cards</div>
     </div>
     <footer class="custom-footer flex justify-evenly">
       <button type="button" class="btn-primary" @click="goPrev" :disabled="cannotGoPrev">
