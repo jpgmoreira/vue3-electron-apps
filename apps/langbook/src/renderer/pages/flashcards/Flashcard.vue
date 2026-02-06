@@ -32,7 +32,7 @@
 </script>
 
 <template>
-  <div>
+  <div class="flashcard">
     <div v-html="front"></div>
     <div v-if="back && reveal" v-html="card.back"></div>
     <div v-if="card.extra && reveal" v-html="card.extra"></div>

@@ -1,5 +1,6 @@
 @import './components/explorer.css';
-@import './components/cards.css';
+@import './components/maincard.css';
+@import './components/flashcard.css';
 @import './components/mediamodal.css';
 @import './components/mediabutton.css';
 
