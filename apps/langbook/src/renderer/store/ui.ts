@@ -14,7 +14,6 @@ export const useUIStore = defineStore('ui', {
     cardsScrollTop: 0,
     mediaModal: {
       visible: false,
-      cardId: null as string | null,
       media: null as MediaFile | null,
     },
     // Internal:
@@ -36,9 +35,8 @@ export const useUIStore = defineStore('ui', {
     toggleShowFilters() {
       this.showFilters = !this.showFilters;
     },
-    showMediaModal(cardId: string, media: MediaFile) {
+    showMediaModal(media: MediaFile) {
       this.mediaModal.visible = true;
-      this.mediaModal.cardId = cardId;
       this.mediaModal.media = media;
     },
     setCardsScrollTop(value: number) {
@@ -46,7 +44,6 @@ export const useUIStore = defineStore('ui', {
     },
     hideMediaModal() {
       this.mediaModal.visible = false;
-      this.mediaModal.cardId = null;
       this.mediaModal.media = null;
     },
     clear() {

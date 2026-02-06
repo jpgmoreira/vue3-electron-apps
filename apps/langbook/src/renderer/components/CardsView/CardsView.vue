@@ -99,12 +99,12 @@
       fetchCards(scrollTop);
     }, 30);
   }
-  function mediaClick(cardId: string, media: MediaFile) {
+  function mediaClick(media: MediaFile) {
     if (media.type.startsWith('audio')) {
       const audio = new Audio(media.path);
       audio.play();
     } else if (media.type.startsWith('image')) {
-      uiStore.showMediaModal(cardId, media);
+      uiStore.showMediaModal(media);
     }
   }
   defineExpose({

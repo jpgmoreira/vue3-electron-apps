@@ -6,12 +6,12 @@
   const cardRef = useTemplateRef('card-ref');
   const props = defineProps<{
     card: Card;
-    onMediaClick?: (cardId: string, media: MediaFile) => void;
+    onMediaClick?: (media: MediaFile) => void;
   }>();
   defineExpose({ getHeight });
   function mediaClick(media: MediaFile) {
     if (props.onMediaClick) {
-      props.onMediaClick(props.card.id, media);
+      props.onMediaClick(media);
     }
   }
   function mediaButtonClass(mime: string) {
