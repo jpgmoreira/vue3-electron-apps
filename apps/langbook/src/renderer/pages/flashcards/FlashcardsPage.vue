@@ -6,6 +6,7 @@
   import { computed, onMounted, ref, reactive, onBeforeUnmount } from 'vue';
   import { useRouter } from 'vue-router';
   import Flashcard from './Flashcard.vue';
+  import { clamp } from '@interapp/utils/utils';
 
   const flashcardsStore = useFlashcardsStore();
   const { history, index, reveal, reversed } = storeToRefs(flashcardsStore);
@@ -83,6 +84,27 @@
     router.back();
   }
 
+  function wheel(e: WheelEvent) {
+    e.preventDefault();
+    const minScale = 0.1;
+    const maxScale = 1000;
+    // finer control when CTRL is pressed
+    const factor = e.ctrlKey ? 2500 : 1000;
+    // use a relative scale change (so zoom speed is proportional to current scale)
+    const delta = -e.deltaY / factor;
+    const newScale = clamp(minScale, maxScale, position.scale * (1 + delta));
+    const mx = e.clientX;
+    const my = e.clientY;
+    const oldScale = position.scale;
+    // convert mouse screen coords to element-local coords (assuming transform origin at 0,0)
+    const localX = (mx - position.left) / oldScale;
+    const localY = (my - position.top) / oldScale;
+    // keep the same local point under the mouse after scaling
+    position.left = mx - localX * newScale;
+    position.top = my - localY * newScale;
+    position.scale = newScale;
+  }
+
   function windowKeyDown(e: KeyboardEvent) {
     if (e.key === 'Escape') {
       resetPosition();
@@ -126,8 +148,9 @@
         class="absolute inset-0 overflow-hidden"
         :class="isMoving ? 'cursor-grabbing' : 'cursor-grab'"
         @pointerdown="isMoving = true"
+        @wheel="wheel"
       >
-        <div class="absolute" :style="cardStyle">
+        <div class="flashcard-parent absolute" :style="cardStyle">
           <Flashcard :card="card" :reveal="reveal" :flip="reversed[index]" />
         </div>
       </div>
@@ -143,3 +166,9 @@
     </footer>
   </div>
 </template>
+
+<style scoped>
+  .flashcard-parent {
+    transform-origin: 0 0;
+  }
+</style>
