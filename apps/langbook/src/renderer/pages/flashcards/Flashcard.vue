@@ -3,6 +3,9 @@
   import { Card } from '@common/schemas/card';
   import { MediaFile } from '@interapp/types/mediaFile';
   import { useUIStore } from '@renderer/store/ui';
+  import { useSessionsStore } from '@renderer/store/sessions';
+  import SelectionList from '@interapp/components/SelectionList.vue';
+  import { FREQUENCY_OPTIONS } from '@renderer/helpers/options';
 
   const props = defineProps<{
     card: Card;
@@ -11,9 +14,15 @@
   }>();
 
   const uiStore = useUIStore();
+  const sessionsStore = useSessionsStore();
+
+  const sessions = computed(() => props.card.sessions.map((s) => sessionsStore.sessions[s]));
 
   const front = computed(() => (props.flip ? props.card.back : props.card.front));
   const back = computed(() => (props.flip ? props.card.front : props.card.back));
+
+  const frontTitle = computed(() => (props.flip ? 'Back' : 'Front'));
+  const backTitle = computed(() => (props.flip ? 'Front' : 'Back'));
 
   function mediaButtonClass(mime: string) {
     if (mime.startsWith('image')) return 'image';
@@ -33,18 +42,48 @@
 
 <template>
   <div class="flashcard">
-    <div v-html="front"></div>
-    <div v-if="back && reveal" v-html="card.back"></div>
-    <div v-if="card.extra && reveal" v-html="card.extra"></div>
-    <div v-if="card.media.length && reveal">
-      <button
-        type="button"
-        v-for="m in card.media"
-        class="media-button m-1"
-        :class="mediaButtonClass(m.type)"
-        @click="mediaClick(m)"
-        v-tooltip="m.name"
-      ></button>
+    <div class="relative">
+      <div class="field-title">{{ frontTitle }}:</div>
+      <div v-html="front"></div>
     </div>
+    <template v-if="reveal">
+      <div v-if="back" class="relative">
+        <div class="field-title">{{ backTitle }}:</div>
+        <div v-html="card.back"></div>
+      </div>
+      <div v-if="card.extra" class="relative">
+        <div class="field-title">Extra:</div>
+        <div v-html="card.extra"></div>
+      </div>
+      <div class="content">
+        <div v-if="card.media.length">
+          <button
+            type="button"
+            v-for="m in card.media"
+            class="media-button m-1"
+            :class="mediaButtonClass(m.type)"
+            @click="mediaClick(m)"
+            v-tooltip="m.name"
+          ></button>
+        </div>
+        <div>
+          <div class="session-badge" v-for="session in sessions" :key="session.id">
+            {{ session.name }}
+          </div>
+        </div>
+        <div v-if="card.tags.length">
+          <div class="tag-badge" v-for="tag in card.tags" :key="tag">
+            {{ tag }}
+          </div>
+        </div>
+        <div class="flex gap-36">
+          <SelectionList :options="[...FREQUENCY_OPTIONS]" :selected="[card.frequency]" />
+          <div class="flex items-center gap-1">
+            <label for="bucket-input">Review bucket:</label>
+            <input type="checkbox" v-model="card.bucket" id="bucket-input" name="bucket-input" />
+          </div>
+        </div>
+      </div>
+    </template>
   </div>
 </template>

@@ -150,7 +150,7 @@
         @pointerdown="isMoving = true"
         @wheel="wheel"
       >
-        <div class="flashcard-parent absolute" :style="cardStyle">
+        <div class="flashcard-parent absolute w-full" :style="cardStyle">
           <Flashcard :card="card" :reveal="reveal" :flip="reversed[index]" />
         </div>
       </div>

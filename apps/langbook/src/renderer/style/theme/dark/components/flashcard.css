@@ -1,3 +1,39 @@
-.theme-dark .flashcard {
-  border: 1px solid red;
+.theme-dark .flashcard > div {
+  padding: 40px 0;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.theme-dark .flashcard > div + div {
+  border-top: 2px dashed #aaa;
+}
+
+.theme-dark .flashcard .content > div {
+  display: flex;
+  padding-bottom: 15px;
+}
+
+.theme-dark .flashcard .field-title {
+  font-weight: bold;
+  position: absolute;
+  left: 10px;
+  color: #6fb0f8;
+}
+
+.theme-dark .flashcard .session-badge,
+.theme-dark .flashcard .tag-badge {
+  padding: 2px 5px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: bold;
+}
+
+.theme-dark .flashcard .session-badge {
+  background: #c62828;
+}
+
+.theme-dark .flashcard .tag-badge {
+  background: #1565c0;
 }
