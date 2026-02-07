@@ -102,3 +102,12 @@
     </template>
   </div>
 </template>
+
+<style scoped>
+  .flashcard :deep(img) {
+    display: inline-block;
+  }
+  .flashcard :deep(span) {
+    color: inherit;
+  }
+</style>

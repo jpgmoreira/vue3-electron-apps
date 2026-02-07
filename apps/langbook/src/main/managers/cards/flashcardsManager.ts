@@ -10,7 +10,8 @@ const EMPTY_QUEUES = deepFreeze({
 
 export class FlashcardsManager {
   private queues: Record<CardFrequency, Card[]> = cloneDeep(EMPTY_QUEUES);
-  private counter = 0;
+  private lowCounter = 0;
+  private highCounter = 0;
   private settingsManager: SettingsManager;
 
   constructor(settingsManager: SettingsManager) {
@@ -34,18 +35,24 @@ export class FlashcardsManager {
   }
 
   private chooseQueue(): CardFrequency | null {
-    const h = this.queues.high.length;
-    const l = this.queues.low.length;
-    const n = this.queues.normal.length;
+    this.lowCounter++;
+    this.highCounter++;
+    const { high, low, normal } = this.queues;
     const { highInterval, lowInterval } = this.settingsManager.getSettings();
-    const hMatch = Boolean(highInterval && this.counter % highInterval === 0);
-    const lMatch = Boolean(lowInterval && this.counter % lowInterval === 0);
-    this.counter++;
-    if (h && hMatch) return 'high';
-    if (l && lMatch) return 'low';
-    if (n) return 'normal';
-    if (h) return 'high';
-    if (l) return 'low';
+    const hMatch = Boolean(this.highCounter >= highInterval);
+    const lMatch = Boolean(this.lowCounter >= lowInterval);
+    if (high.length && hMatch) {
+      this.highCounter = 0;
+      return 'high';
+    }
+    if (low.length && lMatch) {
+      this.lowCounter = 0;
+      return 'low';
+    }
+    if (normal.length) return 'normal';
+    // Fallback:
+    if (high.length) return 'high';
+    if (low.length) return 'low';
     return null;
   }
 
@@ -60,6 +67,7 @@ export class FlashcardsManager {
 
   public clear() {
     this.queues = cloneDeep(EMPTY_QUEUES);
-    this.counter = 0;
+    this.highCounter = 0;
+    this.lowCounter = 0;
   }
 }
