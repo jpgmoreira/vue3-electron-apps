@@ -1,3 +1,9 @@
+.theme-dark .flashcard {
+  padding: 15px;
+  margin: 20px;
+  border-radius: 15px;
+}
+
 .theme-dark .flashcard > div {
   padding: 40px 0;
   width: 100%;
@@ -18,7 +24,7 @@
 .theme-dark .flashcard .field-title {
   font-weight: bold;
   position: absolute;
-  left: 10px;
+  left: 0;
   color: #6fb0f8;
 }
 
@@ -36,4 +42,14 @@
 
 .theme-dark .flashcard .tag-badge {
   background: #1565c0;
+}
+
+.theme-dark .flashcard.high {
+  outline: 1px solid #2e7d4f;
+  background: linear-gradient(180deg, #233128, #1d2923);
+}
+
+.theme-dark .flashcard.low {
+  outline: 1px solid #6a3b3b;
+  background: linear-gradient(180deg, #332929, #292222);
 }

@@ -46,7 +46,7 @@
 </script>
 
 <template>
-  <div class="flashcard">
+  <div class="flashcard" :class="card.frequency">
     <div class="relative">
       <div class="field-title">{{ frontTitle }}:</div>
       <div v-html="front"></div>
