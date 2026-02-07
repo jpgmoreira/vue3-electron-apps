@@ -8,7 +8,10 @@ export function useGetContent(editorRef: Ref<HTMLElement | null>) {
     const clone = editorRef.value.cloneNode(true) as HTMLElement;
     let content = normalizeLines(clone);
     content = linkifyText(content);
-    content = DOMPurify.sanitize(content);
+    content = DOMPurify.sanitize(content, {
+      ADD_URI_SAFE_ATTR: ['src'],
+      ALLOWED_URI_REGEXP: /^(https?|safe-file:|data:image\/[a-zA-Z0-9.]+;base64,)/,
+    });
     return content;
   }
 
