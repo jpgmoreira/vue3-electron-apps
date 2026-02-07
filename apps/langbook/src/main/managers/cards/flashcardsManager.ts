@@ -37,15 +37,16 @@ export class FlashcardsManager {
     const h = this.queues.high.length;
     const l = this.queues.low.length;
     const n = this.queues.normal.length;
-    if (!h && !l && !n) return null;
-    if (!h && !l && n) return 'normal';
-    if (!h && l && !n) return 'low';
-    if (h && !l && !n) return 'high';
-    this.counter++;
     const { highInterval, lowInterval } = this.settingsManager.getSettings();
-    if (h && highInterval && this.counter % highInterval === 0) return 'high';
-    if (l && lowInterval && this.counter % lowInterval === 0) return 'low';
-    return 'normal';
+    const hMatch = Boolean(highInterval && this.counter % highInterval === 0);
+    const lMatch = Boolean(lowInterval && this.counter % lowInterval === 0);
+    this.counter++;
+    if (h && hMatch) return 'high';
+    if (l && lMatch) return 'low';
+    if (n) return 'normal';
+    if (h) return 'high';
+    if (l) return 'low';
+    return null;
   }
 
   public getNextFlashcard(): Card | null {

@@ -83,7 +83,10 @@
     <PreFlashcardsModals ref="modal" @cleared="fetchStatistics" />
     <Header />
     <div class="content">
-      <h1>Flashcards study</h1>
+      <div class="flex justify-between">
+        <h1>Flashcards study</h1>
+        <button type="button" class="btn btn-primary" @click="goFlashcards">Start</button>
+      </div>
 
       <section>
         <h2>Overall statistics</h2>
@@ -187,10 +190,6 @@
           </button>
         </div>
       </section>
-
-      <div>
-        <button type="button" class="btn btn-primary" @click="goFlashcards">Start</button>
-      </div>
     </div>
   </div>
 </template>
