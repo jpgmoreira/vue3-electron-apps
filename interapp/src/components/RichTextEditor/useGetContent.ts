@@ -9,8 +9,8 @@ export function useGetContent(editorRef: Ref<HTMLElement | null>) {
     let content = normalizeLines(clone);
     content = linkifyText(content);
     content = DOMPurify.sanitize(content, {
-      ADD_URI_SAFE_ATTR: ['src'],
-      ALLOWED_URI_REGEXP: /^(https?|safe-file:|data:image\/[a-zA-Z0-9.]+;base64,)/,
+      ADD_URI_SAFE_ATTR: ['src', 'width'],
+      ALLOWED_URI_REGEXP: /^(https?|safe-file:|data:image\/[a-zA-Z0-9\.]+;base64,)/,
     });
     return content;
   }
