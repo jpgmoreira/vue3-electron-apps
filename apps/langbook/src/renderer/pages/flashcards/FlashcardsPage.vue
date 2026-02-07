@@ -38,8 +38,13 @@
     position.scale = 1;
   }
 
-  async function getFlashcard(id: string | null) {
-    return window.api.invoke<Card | null>(InvokeChannels.getFlashcard, id);
+  async function getFlashcard(id: string | null): Promise<Card | null> {
+    const flashcard = await window.api.invoke<Card | null>(InvokeChannels.getFlashcard, id);
+    if (flashcard) {
+      flashcard.bucket = Boolean(flashcard.bucket);
+      flashcard.allowReversed = Boolean(flashcard.allowReversed);
+    }
+    return flashcard;
   }
 
   function pushReversed(card: Card) {
@@ -66,8 +71,8 @@
       index.value++;
       history.value.push(next.id);
       pushReversed(next);
-      card.value = next;
     }
+    card.value = next;
   }
 
   async function goPrev() {
