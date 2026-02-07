@@ -14,5 +14,14 @@ export const useFlashcardsStore = defineStore('flashcards', {
       this.index = 0;
       this.reveal = false;
     },
+    cardWasDeleted(cardId: string) {
+      const initialIndex = this.index;
+      for (let i = 0; i < this.history.length; i++) {
+        if (this.history[i] === cardId && i <= initialIndex) {
+          this.index = Math.max(0, this.index - 1);
+        }
+      }
+      this.history = this.history.filter((id) => id !== cardId);
+    },
   },
 });

@@ -22,7 +22,12 @@
 
   const hasLoaded = ref(false);
   const card = ref<Card | null>(null);
-  const cannotGoPrev = computed(() => index.value === 0 && !reveal.value);
+  const cannotGoPrev = computed(() => {
+    if (history.value.length) {
+      return index.value === 0 && !reveal.value;
+    }
+    return true;
+  });
 
   const router = useRouter();
 

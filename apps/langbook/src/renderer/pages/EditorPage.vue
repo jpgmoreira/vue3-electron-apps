@@ -20,6 +20,7 @@
   import MainCard from '@renderer/components/CardsView/MainCard.vue';
   import DeleteCardModal from '@renderer/components/DeleteCardModal.vue';
   import { useFiltersStore } from '@renderer/store/filters';
+  import { useFlashcardsStore } from '@renderer/store/flashcards';
 
   const router = useRouter();
   const editorStore = useEditorStore();
@@ -28,6 +29,7 @@
   const sessionsStore = useSessionsStore();
   const filtersStore = useFiltersStore();
   const profileStore = useProfileStore();
+  const flashcardsStore = useFlashcardsStore();
   const card = ref<Card>(getEmptyCard(randomId()));
   if (editorStore.card) {
     card.value = cloneDeep(editorStore.card);
@@ -200,7 +202,7 @@
     await sessionsStore.refetch();
     await tagsStore.refetch();
     await filtersStore.refetch();
-    // TODO: Update also flashcards store.
+    flashcardsStore.cardWasDeleted(card.value.id);
     router.back();
   }
 </script>
