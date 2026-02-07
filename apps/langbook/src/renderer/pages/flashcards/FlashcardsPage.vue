@@ -186,8 +186,8 @@
         </div>
         <div class="flashcards-info">
           <div>Seen: {{ seen }}</div>
-          <div>Total: {{ statistics.filtered }}</div>
-          <div>Review bucket: {{ statistics.filteredBucket }}</div>
+          <div>Total selected: {{ statistics.filtered }}</div>
+          <div>Selected in review bucket: {{ statistics.filteredBucket }}</div>
         </div>
       </div>
       <div v-else-if="hasLoaded" class="absolute-center message-xl">No cards</div>
