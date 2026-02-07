@@ -38,7 +38,7 @@ export class CardsManager {
     tagsManager: TagsManager,
     flashcardsManager: FlashcardsManager
   ) {
-    emitter.on(CommonEvents.clearProfileData, () => this.clear);
+    emitter.on(CommonEvents.clearProfileData, () => this.clear());
     this.dbManager = dbManager;
     this.filtersManager = filtersManager;
     this.mediaManager = mediaManager;

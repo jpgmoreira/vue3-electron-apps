@@ -82,11 +82,14 @@
           </div>
         </div>
         <div class="flex gap-36">
-          <SelectionList
-            :options="[...FREQUENCY_OPTIONS]"
-            :selected="[card.frequency]"
-            @toggle="emit('changeFrequency', $event)"
-          />
+          <div class="flex items-center gap-1">
+            <span>Frequency:</span>
+            <SelectionList
+              :options="[...FREQUENCY_OPTIONS]"
+              :selected="[card.frequency]"
+              @toggle="emit('changeFrequency', $event)"
+            />
+          </div>
           <div class="flex items-center gap-1">
             <label for="bucket-input">Review bucket:</label>
             <input

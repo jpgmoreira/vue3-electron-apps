@@ -23,7 +23,7 @@ export class SessionsManager {
   }
 
   constructor(profileManager: ProfileManager, emitter: EventEmitter) {
-    emitter.on(CommonEvents.clearProfileData, () => this.clear);
+    emitter.on(CommonEvents.clearProfileData, () => this.clear());
     this.profileManager = profileManager;
   }
 

@@ -21,7 +21,7 @@ export class FiltersManager {
   }
 
   constructor(emitter: EventEmitter, explorerManager: ExplorerManager) {
-    emitter.on(CommonEvents.clearProfileData, () => this.clear);
+    emitter.on(CommonEvents.clearProfileData, () => this.clear());
     this.explorerManager = explorerManager;
   }
 

@@ -18,7 +18,7 @@ export class SettingsManager {
   }
 
   constructor(emitter: EventEmitter) {
-    emitter.on(CommonEvents.clearProfileData, () => this.clear);
+    emitter.on(CommonEvents.clearProfileData, () => this.clear());
   }
 
   private guard<T extends Settings>(obj: T | null): asserts obj is T {

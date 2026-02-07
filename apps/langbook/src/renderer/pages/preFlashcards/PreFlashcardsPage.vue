@@ -88,30 +88,6 @@
       </div>
 
       <section>
-        <h2>Overall statistics</h2>
-        <div>
-          <span>Total number of cards</span>
-          <b>{{ statistics.totalCards }}</b>
-        </div>
-        <div>
-          <span>Total number of cards in the review bucket</span>
-          <b>{{ statistics.totalBucket }}</b>
-        </div>
-        <div>
-          <span>Total number of low frequency cards</span>
-          <b>{{ statistics.totalLow }}</b>
-        </div>
-        <div>
-          <span>Total number of high frequency cards</span>
-          <b>{{ statistics.totalHigh }}</b>
-        </div>
-        <div>
-          <span>Total number of normal frequency cards</span>
-          <b>{{ statistics.totalNormal }}</b>
-        </div>
-      </section>
-
-      <section>
         <h2>Selected cards</h2>
         <div>
           <span>Selected cards</span>
@@ -132,6 +108,30 @@
         <div>
           <span>Selected cards with normal frequency</span>
           <b>{{ statistics.filteredNormal }}</b>
+        </div>
+      </section>
+
+      <section>
+        <h2>Overall statistics</h2>
+        <div>
+          <span>Total number of cards</span>
+          <b>{{ statistics.totalCards }}</b>
+        </div>
+        <div>
+          <span>Total number of cards in the review bucket</span>
+          <b>{{ statistics.totalBucket }}</b>
+        </div>
+        <div>
+          <span>Total number of low frequency cards</span>
+          <b>{{ statistics.totalLow }}</b>
+        </div>
+        <div>
+          <span>Total number of high frequency cards</span>
+          <b>{{ statistics.totalHigh }}</b>
+        </div>
+        <div>
+          <span>Total number of normal frequency cards</span>
+          <b>{{ statistics.totalNormal }}</b>
         </div>
       </section>
 
