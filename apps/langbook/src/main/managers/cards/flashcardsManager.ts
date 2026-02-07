@@ -43,8 +43,8 @@ export class FlashcardsManager {
     if (h && !l && !n) return 'high';
     this.counter++;
     const { highInterval, lowInterval } = this.settingsManager.getSettings();
-    if (highInterval && this.counter % highInterval === 0) return 'high';
-    if (lowInterval && this.counter % lowInterval === 0) return 'low';
+    if (h && highInterval && this.counter % highInterval === 0) return 'high';
+    if (l && lowInterval && this.counter % lowInterval === 0) return 'low';
     return 'normal';
   }
 

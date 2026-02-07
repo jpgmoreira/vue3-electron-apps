@@ -1,6 +1,6 @@
 <script setup lang="ts">
   import { computed } from 'vue';
-  import { Card } from '@common/schemas/card';
+  import { Card, CardFrequency } from '@common/schemas/card';
   import { MediaFile } from '@interapp/types/mediaFile';
   import { useUIStore } from '@renderer/store/ui';
   import { useSessionsStore } from '@renderer/store/sessions';
@@ -11,6 +11,11 @@
     card: Card;
     reveal: boolean;
     flip: boolean;
+  }>();
+
+  const emit = defineEmits<{
+    (e: 'updateBucket'): void;
+    (e: 'changeFrequency', frequency: CardFrequency): void;
   }>();
 
   const uiStore = useUIStore();
@@ -77,10 +82,20 @@
           </div>
         </div>
         <div class="flex gap-36">
-          <SelectionList :options="[...FREQUENCY_OPTIONS]" :selected="[card.frequency]" />
+          <SelectionList
+            :options="[...FREQUENCY_OPTIONS]"
+            :selected="[card.frequency]"
+            @toggle="emit('changeFrequency', $event)"
+          />
           <div class="flex items-center gap-1">
             <label for="bucket-input">Review bucket:</label>
-            <input type="checkbox" v-model="card.bucket" id="bucket-input" name="bucket-input" />
+            <input
+              type="checkbox"
+              v-model="card.bucket"
+              id="bucket-input"
+              name="bucket-input"
+              @change="emit('updateBucket')"
+            />
           </div>
         </div>
       </div>

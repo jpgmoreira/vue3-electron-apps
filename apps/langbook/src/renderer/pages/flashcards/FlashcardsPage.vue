@@ -1,12 +1,12 @@
 <script setup lang="ts">
-  import { Card } from '@common/schemas/card';
+  import { Card, CardFrequency } from '@common/schemas/card';
   import { InvokeChannels } from '@preload/channels/invoke';
   import { useFlashcardsStore } from '@renderer/store/flashcards';
   import { storeToRefs } from 'pinia';
   import { computed, onMounted, ref, reactive, onBeforeUnmount } from 'vue';
   import { useRouter } from 'vue-router';
   import Flashcard from './Flashcard.vue';
-  import { clamp } from '@interapp/utils/utils';
+  import { clamp, cloneDeep } from '@interapp/utils/utils';
 
   const flashcardsStore = useFlashcardsStore();
   const { history, index, reveal, reversed } = storeToRefs(flashcardsStore);
@@ -84,6 +84,17 @@
     router.back();
   }
 
+  function updateBucket() {
+    if (!card.value) throw new Error('Toggle bucket: invalid card!');
+    window.api.invoke(InvokeChannels.updateCard, cloneDeep(card.value));
+  }
+
+  function changeFrequency(frequency: CardFrequency) {
+    if (!card.value) throw new Error('Change frequency: invalid card!');
+    card.value.frequency = frequency;
+    window.api.invoke(InvokeChannels.updateCard, cloneDeep(card.value));
+  }
+
   function wheel(e: WheelEvent) {
     e.preventDefault();
     const minScale = 0.1;
@@ -151,7 +162,13 @@
         @wheel="wheel"
       >
         <div class="flashcard-parent absolute w-full" :style="cardStyle">
-          <Flashcard :card="card" :reveal="reveal" :flip="reversed[index]" />
+          <Flashcard
+            :card="card"
+            :reveal="reveal"
+            :flip="reversed[index]"
+            @update-bucket="updateBucket"
+            @change-frequency="changeFrequency"
+          />
         </div>
       </div>
       <div v-else-if="hasLoaded" class="absolute-center message-xl">No cards</div>
