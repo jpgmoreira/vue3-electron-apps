@@ -136,6 +136,21 @@ export function arrayContainsAny(base: string[], query: string[]) {
 }
 
 /**
+ * Returns true if both arrays contain exactly the same strings.
+ */
+export function arraysEqual(a: string[], b: string[]) {
+  if (a.length !== b.length) return false;
+  const countA: Record<string, number> = {};
+  const countB: Record<string, number> = {};
+  for (const s of a) countA[s] = (countA[s] ?? 0) + 1;
+  for (const s of b) countB[s] = (countB[s] ?? 0) + 1;
+  for (const key in countA) {
+    if (countA[key] !== countB[key]) return false;
+  }
+  return true;
+}
+
+/**
  * Extracts the file extension name from a mime type:
  */
 export function extFromMime(mime: string): string {

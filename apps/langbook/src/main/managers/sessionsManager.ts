@@ -3,7 +3,7 @@ import { DATA_DIR } from '@main/constants';
 import { EventEmitter } from '@interapp/events/eventEmitter';
 import { CommonEvents } from '@interapp/events/commonEvents';
 import { getEmptySession, SessionsMap, Session } from '@common/schemas/session';
-import { buildId, cloneDeep } from '@interapp/utils/utils';
+import { arraysEqual, buildId, cloneDeep } from '@interapp/utils/utils';
 import path from 'path';
 import { Card } from '@common/schemas/card';
 import { ProfileManager } from './profileManager';
@@ -64,6 +64,7 @@ export class SessionsManager {
 
   public cardWasUpdated(oldCard: Card, newCard: Card) {
     if (!this.proxy) throw new Error('Sessions not initialized!');
+    if (arraysEqual(oldCard.sessions, newCard.sessions)) return;
     for (const session of oldCard.sessions) {
       this.proxy[session].count--;
     }
