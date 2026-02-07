@@ -8,6 +8,7 @@ import { useSessionsStore } from '@renderer/store/sessions';
 import { useTagsStore } from '@renderer/store/tags';
 import { useGraphStore } from '@renderer/store/graph';
 import { useSettingsStore } from '@renderer/store/settings';
+import { useStatisticsStore } from '@renderer/store/statistics';
 
 eventEmitter.on(CommonEvents.loadInitialData, (data: StartupData) => {
   useProfileStore().initFromStartupData(data);
@@ -26,4 +27,5 @@ eventEmitter.on(CommonEvents.clearProfileData, () => {
   useSessionsStore().clear();
   useGraphStore().clear();
   useSettingsStore().clear();
+  useStatisticsStore().clear();
 });

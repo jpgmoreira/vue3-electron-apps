@@ -7,9 +7,15 @@
   import { useRouter } from 'vue-router';
   import Flashcard from './Flashcard.vue';
   import { clamp, cloneDeep } from '@interapp/utils/utils';
+  import { useStatisticsStore } from '@renderer/store/statistics';
 
   const flashcardsStore = useFlashcardsStore();
   const { history, index, reveal, reversed } = storeToRefs(flashcardsStore);
+
+  const statisticsStore = useStatisticsStore();
+  const statistics = computed(() => statisticsStore.statistics);
+
+  const seen = computed(() => new Set(history.value).size);
 
   const hasLoaded = ref(false);
   const card = ref<Card | null>(null);
@@ -89,15 +95,17 @@
     router.back();
   }
 
-  function updateBucket() {
+  async function updateBucket() {
     if (!card.value) throw new Error('Toggle bucket: invalid card!');
-    window.api.invoke(InvokeChannels.updateCard, cloneDeep(card.value));
+    await window.api.invoke(InvokeChannels.updateCard, cloneDeep(card.value));
+    statisticsStore.refetch();
   }
 
-  function changeFrequency(frequency: CardFrequency) {
+  async function changeFrequency(frequency: CardFrequency) {
     if (!card.value) throw new Error('Change frequency: invalid card!');
     card.value.frequency = frequency;
-    window.api.invoke(InvokeChannels.updateCard, cloneDeep(card.value));
+    await window.api.invoke(InvokeChannels.updateCard, cloneDeep(card.value));
+    statisticsStore.refetch();
   }
 
   function wheel(e: WheelEvent) {
@@ -145,6 +153,7 @@
       }
       hasLoaded.value = true;
     }
+    statisticsStore.refetch();
     window.addEventListener('keydown', windowKeyDown);
     window.addEventListener('mouseup', windowMouseUp);
     window.addEventListener('mousemove', windowMouseMove);
@@ -174,6 +183,11 @@
             @update-bucket="updateBucket"
             @change-frequency="changeFrequency"
           />
+        </div>
+        <div class="flashcards-info">
+          <div>Seen: {{ seen }}</div>
+          <div>Total: {{ statistics.filtered }}</div>
+          <div>Review bucket: {{ statistics.filteredBucket }}</div>
         </div>
       </div>
       <div v-else-if="hasLoaded" class="absolute-center message-xl">No cards</div>

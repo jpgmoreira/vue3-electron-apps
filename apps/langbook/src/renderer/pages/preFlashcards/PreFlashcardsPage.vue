@@ -7,17 +7,17 @@
     DEFAULT_LOW_FREQUENCY_INTERVAL,
   } from '@common/constants';
   import PreFlashcardsModals from './PreFlashcardsModals.vue';
-  import { getEmptyStatistics, Statistics } from '@common/schemas/statistics';
-  import { InvokeChannels } from '@preload/channels/invoke';
   import { useFlashcardsStore } from '@renderer/store/flashcards';
+  import { useStatisticsStore } from '@renderer/store/statistics';
   import { useRouter } from 'vue-router';
 
   const settingsStore = useSettingsStore();
   const flashcardsStore = useFlashcardsStore();
+  const statisticsStore = useStatisticsStore();
 
   const router = useRouter();
 
-  const statistics = ref(getEmptyStatistics());
+  const statistics = computed(() => statisticsStore.statistics);
 
   const lowInterval = ref(settingsStore.settings.lowInterval);
   const highInterval = ref(settingsStore.settings.highInterval);
@@ -63,9 +63,8 @@
     modalsRef.value.show('low', statistics.value.filteredLow);
   }
 
-  async function fetchStatistics() {
-    const result = await window.api.invoke<Statistics>(InvokeChannels.getStatistics);
-    statistics.value = result;
+  function fetchStatistics() {
+    statisticsStore.refetch();
   }
 
   function goFlashcards() {
