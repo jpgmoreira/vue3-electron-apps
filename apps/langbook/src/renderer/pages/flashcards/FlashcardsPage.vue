@@ -8,12 +8,15 @@
   import Flashcard from './Flashcard.vue';
   import { clamp, cloneDeep } from '@interapp/utils/utils';
   import { useStatisticsStore } from '@renderer/store/statistics';
+  import { useEditorStore } from '@renderer/store/editor';
 
   const flashcardsStore = useFlashcardsStore();
   const { history, index, reveal, reversed } = storeToRefs(flashcardsStore);
 
   const statisticsStore = useStatisticsStore();
   const statistics = computed(() => statisticsStore.statistics);
+
+  const editorStore = useEditorStore();
 
   const seen = computed(() => new Set(history.value).size);
 
@@ -95,6 +98,12 @@
     router.back();
   }
 
+  function goEdit() {
+    if (!card.value) throw new Error('Cannot edit a null card!');
+    editorStore.setCard(card.value);
+    router.push('/editor');
+  }
+
   async function updateBucket() {
     if (!card.value) throw new Error('Toggle bucket: invalid card!');
     await window.api.invoke(InvokeChannels.updateCard, cloneDeep(card.value));
@@ -144,15 +153,14 @@
   }
 
   onMounted(async () => {
-    if (!history.value.length) {
-      const first = await getFlashcard(null);
-      card.value = first;
-      if (first) {
-        history.value.push(first.id);
-        pushReversed(first);
-      }
-      hasLoaded.value = true;
+    const isFirst = history.value.length === 0;
+    const id = isFirst ? null : history.value[index.value];
+    card.value = await getFlashcard(id);
+    if (isFirst && card.value) {
+      history.value.push(card.value.id);
+      pushReversed(card.value);
     }
+    hasLoaded.value = true;
     statisticsStore.refetch();
     window.addEventListener('keydown', windowKeyDown);
     window.addEventListener('mouseup', windowMouseUp);
@@ -197,7 +205,7 @@
         Prev
       </button>
       <button type="button" class="btn-primary" @click="goNext" :disabled="!card">Next</button>
-      <button type="button" class="btn-primary" :disabled="!card">Edit</button>
+      <button type="button" class="btn-primary" :disabled="!card" @click="goEdit">Edit</button>
       <button type="button" class="btn-warning" @click="exit">Exit</button>
     </footer>
   </div>
