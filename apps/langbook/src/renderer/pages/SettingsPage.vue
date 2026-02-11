@@ -3,7 +3,7 @@
   import { useProfileStore } from '@renderer/store/profile';
   import { APP_HOMEPAGE, APP_NAME, APP_PRODUCT_NAME, APP_VERSION } from '@common/constants';
   import { useRouter } from 'vue-router';
-  import { copyUrlToClipboard } from '@renderer/helpers/helpers';
+  import { copyUrlToClipboard } from '@interapp/helpers/helpers';
   const router = useRouter();
   const profileStore = useProfileStore();
   const profileName = profileStore.currProfile!.name;

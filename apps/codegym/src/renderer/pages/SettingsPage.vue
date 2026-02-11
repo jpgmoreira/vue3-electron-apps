@@ -7,7 +7,7 @@
   import { useOjStatusStore } from '@renderer/store/ojStatus';
   import { useProfileStore } from '@renderer/store/profile';
   import { APP_HOMEPAGE, APP_NAME, APP_PRODUCT_NAME, APP_VERSION } from '@common/constants';
-  import { copyUrlToClipboard } from '@renderer/helpers/helpers';
+  import { copyUrlToClipboard } from '@interapp/helpers/helpers';
   import { useRouter } from 'vue-router';
   const router = useRouter();
   const ojMetaStore = useOjMetaStore();
