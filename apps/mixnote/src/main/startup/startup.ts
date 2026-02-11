@@ -13,7 +13,7 @@ export async function loadStartupData(): Promise<StartupData> {
   if (currProfile) {
     const profileDir = path.resolve(DATA_DIR, 'profileData', currProfile.id);
     // The order of initialization below is important.
-    ui = uiManager.getUISettings();
+    uiManager.loadProfile(currProfile.id);
     const treePath = path.join(profileDir, 'tree.json');
     explorerManager.loadTree(treePath);
     explorerManager.registerDeleteCallback(async (node: Node) => {
@@ -21,6 +21,7 @@ export async function loadStartupData(): Promise<StartupData> {
         // TODO: Note delete callback here.
       }
     });
+    ui = uiManager.getUISettings();
   }
   return {
     currProfile,

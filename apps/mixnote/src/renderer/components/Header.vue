@@ -6,7 +6,7 @@
 <template>
   <Header class="flex justify-between">
     <div class="flex">
-      <HeaderButton to="/cards">Notes</HeaderButton>
+      <HeaderButton to="/notes">Notes</HeaderButton>
       <HeaderButton to="/pre-flashcards">Flashcards</HeaderButton>
     </div>
     <div class="flex">
