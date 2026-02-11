@@ -74,7 +74,7 @@
 
   // --- Variables: ---
 
-  // Set the same in the <style scoped> of this file, under .node-input
+  // Set this same value as the .node-row height in the <style scoped> of this file.
   const rowHeight = 24;
 
   const paddingBottom = 250;
@@ -554,7 +554,11 @@
           :style="{ transform: `translateY(${nodeContainerOffset}px)` }"
           class="nodes-container absolute top-0 left-0"
         >
-          <div v-for="node in tree.page" :key="node.id" class="flex items-center whitespace-nowrap">
+          <div
+            v-for="node in tree.page"
+            :key="node.id"
+            class="node-row flex items-center whitespace-nowrap"
+          >
             <span :style="getNodeIndentStyle(node)"></span>
 
             <span
@@ -613,12 +617,15 @@
     user-select: none;
   }
 
-  .node-input {
+  .node-row {
     height: 24px;
+  }
+
+  .node-input {
     cursor: pointer;
     background-color: transparent;
-    font-size: 15px;
     field-sizing: content; /** CSS experimental. On recent electron versions it should work fine. */
+    font-size: 15px;
   }
 
   .node-caret {
