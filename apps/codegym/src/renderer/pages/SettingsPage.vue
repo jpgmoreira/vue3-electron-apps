@@ -37,13 +37,15 @@
 </script>
 
 <template>
-  <div class="settings-page flex flex-col h-screen overflow-hidden">
+  <div class="settings-page flex flex-col h-screen">
     <SettingsPageHeader />
 
-    <div class="overflow-y-auto grow">
+    <div class="content">
+      <h1>Settings</h1>
+
       <!-- Cache -->
       <section>
-        <h1>Cache</h1>
+        <h2>Cache</h2>
         <table class="table-fixed w-full">
           <thead>
             <tr>
@@ -76,7 +78,7 @@
 
       <!-- Profile -->
       <section>
-        <h1>Profile</h1>
+        <h2>Profile</h2>
         <div class="flex justify-between items-center">
           <div>{{ profileName }}</div>
           <button type="button" class="btn btn-warning" @click="logout">Logout</button>
@@ -85,7 +87,7 @@
 
       <!-- Version -->
       <section>
-        <h1>Version</h1>
+        <h2>Version</h2>
         <div>{{ APP_PRODUCT_NAME }} version {{ APP_VERSION }}</div>
         <div>
           Homepage:

@@ -104,7 +104,9 @@
           Created at:
           <strong>{{ parseTimestamp(contest.createdAt) }}</strong>
         </div>
-        <button type="button" class="btn-primary btn-small" @click="addProblem">Add problem</button>
+        <button type="button" class="btn-primary add-problem-btn" @click="addProblem">
+          Add problem
+        </button>
       </div>
     </header>
     <textarea
@@ -199,6 +201,9 @@
     width: 100%;
     field-sizing: content;
     padding: 2px 4px;
+  }
+  .add-problem-btn {
+    font-size: 14.5px;
   }
   .col-problem {
     width: 30%;

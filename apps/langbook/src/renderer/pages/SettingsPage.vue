@@ -15,7 +15,7 @@
 </script>
 
 <template>
-  <div class="settings-page flex flex-col h-screen overflow-hidden">
+  <div class="settings-page flex flex-col h-screen">
     <Header />
 
     <div class="content">
