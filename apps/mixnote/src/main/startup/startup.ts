@@ -1,15 +1,17 @@
 import { StartupData } from '@common/schemas/startup';
-import { profileManager, uiManager } from './instances';
+import { graphManager, profileManager, uiManager } from './instances';
 import { explorerManager } from '@interapp/components/Explorer/main/instances/instances';
 import { Node } from '@interapp/components/Explorer/common/tree';
 import { DATA_DIR } from '@main/constants';
 import path from 'path';
 import { UISettings } from '@common/schemas/ui';
+import { GraphRecord } from '@common/schemas/graph';
 
 export async function loadStartupData(): Promise<StartupData> {
   const currProfile = profileManager.getCurrProfile();
   const profileRegistry = profileManager.getProfileRegistry();
   let ui: UISettings | null = null;
+  let graph: GraphRecord[] | null = null;
   if (currProfile) {
     const profileDir = path.resolve(DATA_DIR, 'profileData', currProfile.id);
     // The order of initialization below is important.
@@ -22,10 +24,12 @@ export async function loadStartupData(): Promise<StartupData> {
       }
     });
     ui = uiManager.getUISettings();
+    graph = await graphManager.loadProfile(currProfile.id);
   }
   return {
     currProfile,
     profileRegistry,
     ui,
+    graph,
   };
 }

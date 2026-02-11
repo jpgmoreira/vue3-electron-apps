@@ -1,10 +1,11 @@
 export enum InvokeChannels {
-  // ----------------------------------
   createProfile = 'create-profile',
   renameProfile = 'rename-profile',
   deleteProfile = 'delete-profile',
   login = 'login',
   logout = 'logout',
+  incrementGraph = 'increment-graph',
+  // ----------------------------------
   updateUISettings = 'update-ui-settings',
   updateSettings = 'update-settings',
   createFolder = 'create-folder',
@@ -18,7 +19,6 @@ export enum InvokeChannels {
   refetchTags = 'refetch-tags',
   refetchFilters = 'refetch-filters',
   getCardsPage = 'get-cards-page',
-  incrementGraph = 'increment-graph',
   getStatistics = 'get-statistics',
   clearFilteredBucket = 'clear-filtered-bucket',
   clearFilteredFrequency = 'clear-filtered-frequency',
