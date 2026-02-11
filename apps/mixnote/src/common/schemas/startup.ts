@@ -1,5 +1,6 @@
 import { GraphRecord } from './graph';
 import { Profile, ProfileRegistry } from './profile';
+import { TabGroup } from './tabs';
 import { UISettings } from './ui';
 
 export type StartupData = {
@@ -7,4 +8,5 @@ export type StartupData = {
   profileRegistry: ProfileRegistry;
   ui: UISettings | null;
   graph: GraphRecord[] | null;
+  tabs: TabGroup[] | null;
 };
