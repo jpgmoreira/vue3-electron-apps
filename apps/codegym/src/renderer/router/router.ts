@@ -40,8 +40,8 @@ export const router = createRouter({
 });
 
 router.afterEach((to) => {
-  const keep = ['/problems', '/contests'];
-  if (keep.includes(to.path)) {
+  const save = ['/problems', '/contests'];
+  if (save.includes(to.path)) {
     useUIStore().updateSettings({ page: to.path });
   }
 });
