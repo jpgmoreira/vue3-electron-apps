@@ -1,0 +1,19 @@
+{
+  "extends": "@electron-toolkit/tsconfig/tsconfig.web.json",
+  "include": [
+    "src/renderer/**/*",
+    "src/common/**/*",
+    "tests/unit/renderer/**/*",
+    "../../interapp/src/**/*"
+  ],
+  "compilerOptions": {
+    "composite": true,
+    "baseUrl": ".",
+    "paths": {
+      "@interapp/*": ["../../interapp/src/*"],
+      "@renderer/*": ["./src/renderer/*"],
+      "@common/*": ["./src/common/*"],
+      "@preload/*": ["./src/preload/*"]
+    }
+  }
+}
