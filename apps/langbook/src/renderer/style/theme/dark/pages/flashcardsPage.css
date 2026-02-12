@@ -3,9 +3,10 @@
   right: 0;
   bottom: 0;
   display: flex;
+  flex-wrap: wrap;
   gap: 0.75rem;
   padding: 0.3rem 0.6rem;
-  background: rgba(20, 20, 20, 0.55);
+  background: rgb(20, 20, 20, 0.9);
   border: 1px solid rgba(255, 255, 255, 0.06);
   color: #e4e4e4;
   font-size: 14px;
