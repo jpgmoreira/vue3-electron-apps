@@ -7,7 +7,6 @@
   import { Columns2Icon, AlignHorizontalDistributeCenterIcon, XIcon } from 'lucide-vue-next';
 
   const MIN_GROUP_WIDTH = 30; // px.
-  const MIN_LAST_GROUP_WIDTH = 30; // px.
 
   const tabsStore = useTabsStore();
 
@@ -87,13 +86,13 @@
 
   function closeTab(group: TabGroup, tabId: string) {
     const tab = group.tabs.find((t) => t.id === tabId);
-    if (!tab) throw new Error('Tab not found!');
+    if (!tab) throw new Error('Close tab: tab not found!');
     group.tabs = group.tabs.filter((t) => t.id !== tabId);
   }
 
   function tabHeaderClick(group: TabGroup, tabId: string) {
     const tab = group.tabs.find((tab) => tab.id === tabId);
-    if (!tab) throw new Error('Tab not found!');
+    if (!tab) throw new Error('Tab header click: tab not found!');
     group.tabs.forEach((tab) => (tab.active = tab.id === tabId));
     tab.preview = false;
   }
@@ -150,8 +149,7 @@
       const prevWidth = tabGroups.value[index - 1].width;
       for (let i = index; i < tabGroups.value.length; i++) {
         const group = tabGroups.value[i];
-        const limit = i === tabGroups.value.length - 1 ? MIN_LAST_GROUP_WIDTH : MIN_GROUP_WIDTH;
-        const maxCanReduce = group.width - limit / containerWidth;
+        const maxCanReduce = group.width - MIN_GROUP_WIDTH / containerWidth;
         if (maxCanReduce <= 0) continue;
         const toReduce = Math.min(maxCanReduce, totalRatio);
         totalRatio -= toReduce;
@@ -181,10 +179,9 @@
 </script>
 
 <template>
-  <div class="notes-view flex h-full overflow-hidden" ref="groups-container">
+  <div class="notes-view flex absolute inset-0 overflow-hidden" ref="groups-container">
     <!-- Tab groups -->
     <div
-      v-if="tabGroups"
       v-for="(group, index) in tabGroups"
       class="tab-group flex overflow-hidden"
       :key="group.id"
@@ -212,11 +209,11 @@
             @click="tabHeaderClick(group, tab.id)"
           >
             <!-- TODO: Get tab title -->
-            <span class="tab-title">SOME TAB</span>
-            <span @click="closeTab(group, tab.id)"><XIcon /></span>
+            <span class="tab-title">{{ tab.noteId }}</span>
+            <span @click.stop="closeTab(group, tab.id)"><XIcon /></span>
           </div>
           <!-- Tab group buttons -->
-          <div class="ml-auto flex tab-actions" @click.stop>
+          <div class="ml-auto flex tab-actions flex-wrap" @click.stop>
             <button type="button" v-if="tabGroups.length > 1" @click="closeTabGroup(group.id)">
               <XIcon />
             </button>
