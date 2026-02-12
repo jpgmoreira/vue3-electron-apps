@@ -15,10 +15,12 @@
   import NotesModals from './NotesModals.vue';
   import { useTabsStore } from '@renderer/store/tabs';
   import NotesView from '@renderer/components/NotesView.vue';
+  import { useNotesStore } from '@renderer/store/notes';
 
   const uiStore = useUIStore();
   const profileStore = useProfileStore();
   const tabsStore = useTabsStore();
+  const notesStore = useNotesStore();
 
   const resizing = ref(false);
   const explorerWidth = ref(uiStore.settings.explorerWidth);
@@ -53,6 +55,10 @@
   async function deletionHappened() {
     await profileStore.refetch();
     await tabsStore.refetch();
+  }
+
+  function renameNote(noteId: string, newName: string) {
+    notesStore.renameNote(noteId, newName);
   }
 
   async function beforeDeleteNode(node: Node, callback: DeleteNodeCallback) {
@@ -102,6 +108,7 @@
           @before-delete-node="beforeDeleteNode"
           @before-delete-selected="beforeDeleteMultiple"
           @node-click="explorerNodeClick"
+          @rename-file="renameNote"
         />
       </div>
       <div class="custom-resizer" @mousedown="resizing = true"></div>

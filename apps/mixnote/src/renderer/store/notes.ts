@@ -38,6 +38,15 @@ export const useNotesStore = defineStore('notes', {
         window.api.invoke(InvokeChannels.updateNote, cloneDeep(note));
       }, 500);
     },
+    async renameNote(noteId: string, newName: string) {
+      // Rename came from the Explorer component.
+      // Note can be present or absent in the cache.
+      const wasInCache = noteId in this.notes;
+      const note = await this.fetchNote(noteId);
+      note.name = newName;
+      this.persistNote(note);
+      if (!wasInCache) delete this.notes[noteId];
+    },
     async fetchNote(noteId: string): Promise<Note> {
       if (noteId in this.notes) return this.notes[noteId];
       const note = await window.api.invoke<Note>(InvokeChannels.getNote, noteId);
