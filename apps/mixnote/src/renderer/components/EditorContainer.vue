@@ -17,6 +17,9 @@
     const content = headRef.value.value;
     notesStore.updateCachedNoteHead(props.note.id, content);
   }
+  function updateNoteBody(value: string) {
+    notesStore.updateCachedNoteBody(props.note.id, value);
+  }
 </script>
 
 <template>
@@ -66,6 +69,7 @@
         ref="body-ref"
         :initial="props.note.body"
         @toggle-focus-mode="toggleFocus"
+        @on-change="updateNoteBody"
         placeholder="BODY"
       />
     </div>

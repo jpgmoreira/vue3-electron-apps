@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-  import { ref, useTemplateRef } from 'vue';
+  import { ref, useTemplateRef, watch } from 'vue';
   import { MdEditor, ToolbarNames, type ExposeParam } from 'md-editor-v3';
   import CustomPreview from './CustomPreview.vue';
   import ColorPicker from './ColorPicker/ColorPicker.vue';
@@ -13,6 +13,7 @@
 
   const emit = defineEmits<{
     (e: 'toggleFocusMode'): void;
+    (e: 'change', value: string);
   }>();
 
   const props = defineProps<{
@@ -83,6 +84,13 @@
   function setPreviewOnly(value: boolean) {
     editorRef.value?.togglePreviewOnly(value);
   }
+
+  watch(
+    () => props.initial,
+    (newValue: string) => {
+      content.value = newValue;
+    }
+  );
 </script>
 
 <template>
@@ -93,6 +101,7 @@
     language="en-US"
     theme="dark"
     @onUploadImg="uploadImage"
+    @onChange="emit('change', $event)"
     noUploadImg
     noImgZoomIn
     :previewComponent="CustomPreview"
