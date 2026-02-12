@@ -85,3 +85,15 @@
     </div>
   </div>
 </template>
+
+<style scoped>
+  .head-textarea {
+    padding: 3px 5px;
+    field-sizing: content;
+    resize: none;
+    font-size: 14px;
+  }
+  .note-info {
+    font-size: 14px;
+  }
+</style>
