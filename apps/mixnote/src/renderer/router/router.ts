@@ -3,7 +3,7 @@ import LoginPage from '@renderer/pages/login/LoginPage.vue';
 import PreFlashcardsPage from '@renderer/pages/PreFlashcardsPage.vue';
 import GraphPage from '@renderer/pages/GraphPage.vue';
 import SettingsPage from '@renderer/pages/SettingsPage.vue';
-import NotesPage from '@renderer/pages/NotesPage.vue';
+import NotesPage from '@renderer/pages/notes/NotesPage.vue';
 
 const routes = [
   {

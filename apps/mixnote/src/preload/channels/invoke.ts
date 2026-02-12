@@ -5,11 +5,11 @@ export enum InvokeChannels {
   login = 'login',
   logout = 'logout',
   incrementGraph = 'increment-graph',
-  // ----------------------------------
-  updateUISettings = 'update-ui-settings',
-  updateSettings = 'update-settings',
   createFolder = 'create-folder',
-  createSession = 'create-session',
+  createNote = 'create-note',
+  updateUISettings = 'update-ui-settings',
+  // ----------------------------------
+  updateSettings = 'update-settings',
   updateFilters = 'update-filters',
   createCard = 'create-card',
   deleteCard = 'delete-card',

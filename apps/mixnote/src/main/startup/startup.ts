@@ -1,5 +1,12 @@
 import { StartupData } from '@common/schemas/startup';
-import { graphManager, profileManager, tabsManager, uiManager } from './instances';
+import {
+  graphManager,
+  nodeCounterManager,
+  notesManager,
+  profileManager,
+  tabsManager,
+  uiManager,
+} from './instances';
 import { explorerManager } from '@interapp/components/Explorer/main/instances/instances';
 import { Node } from '@interapp/components/Explorer/common/tree';
 import { DATA_DIR } from '@main/constants';
@@ -18,6 +25,8 @@ export async function loadStartupData(): Promise<StartupData> {
     const profileDir = path.resolve(DATA_DIR, 'profileData', currProfile.id);
     // The order of initialization below is important.
     uiManager.loadProfile(currProfile.id);
+    nodeCounterManager.loadProfile(currProfile.id);
+    notesManager.loadProfile(currProfile.id);
     tabsManager.loadProfile(currProfile.id);
     const treePath = path.join(profileDir, 'tree.json');
     explorerManager.loadTree(treePath);
