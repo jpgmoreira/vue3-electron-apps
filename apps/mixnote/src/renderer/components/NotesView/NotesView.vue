@@ -79,9 +79,8 @@
     groups[index].active = true;
   }
 
-  function hasActiveNote(group: TabGroup) {
-    const activeTab = group.tabs.find((tab) => tab.active);
-    return Boolean(activeTab);
+  function hasActiveNote(group: TabGroup): Boolean {
+    return group.tabs.some((tab) => tab.active);
   }
 
   function closeTab(group: TabGroup, tabId: string) {

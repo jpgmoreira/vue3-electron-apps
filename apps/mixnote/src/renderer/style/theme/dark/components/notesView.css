@@ -124,23 +124,3 @@
   color: #fff;
   background: rgba(255, 255, 255, 0.06);
 }
-
-/* =========================
-   Tab Content Area
-   ========================= */
-
-.theme-dark .notes-view .tab-group .grow {
-  background: #232323;
-  color: #e0e0e0;
-  font-size: 14px;
-  line-height: 1.6;
-  overflow: auto;
-}
-
-.theme-dark .notes-view .tab-group .grow pre,
-.theme-dark .notes-view .tab-group .grow code {
-  background: #282828;
-  padding: 12px;
-  border-radius: 6px;
-  border: 1px solid #41464b;
-}
