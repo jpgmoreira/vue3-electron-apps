@@ -30,9 +30,9 @@ export const useNotesStore = defineStore('notes', {
       if (!note) throw new Error(`Update cached note head: Note id not found! ${noteId}`);
       note.head = content;
       note.lastModified = Date.now();
-      this.updateNote(note);
+      this.persistNote(note);
     },
-    updateNote(note: Note) {
+    persistNote(note: Note) {
       clearTimeout(this.timers[note.id]);
       this.timers[note.id] = setTimeout(() => {
         window.api.invoke(InvokeChannels.updateNote, cloneDeep(note));
