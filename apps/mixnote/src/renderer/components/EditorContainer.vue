@@ -8,7 +8,6 @@
   const notesStore = useNotesStore();
   const focus = ref(false);
   const headRef = useTemplateRef('head-ref');
-  const bodyRef = useTemplateRef('body-ref');
   function toggleFocus() {
     focus.value = !focus.value;
   }
@@ -66,7 +65,6 @@
       ></textarea>
       <MdEditor
         class="grow"
-        ref="body-ref"
         :initial="props.note.body"
         @toggle-focus-mode="toggleFocus"
         @on-change="updateNoteBody"

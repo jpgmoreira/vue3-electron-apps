@@ -43,7 +43,6 @@ export const useNotesStore = defineStore('notes', {
       this.persistNote(note);
     },
     persistNote(note: Note) {
-      // This method is an exception and can be used by the flashcards study.
       clearTimeout(this.timers[note.id]);
       this.timers[note.id] = setTimeout(() => {
         window.api.invoke(InvokeChannels.updateNote, cloneDeep(note));

@@ -6,8 +6,6 @@
   import Focus from './Focus.vue';
 
   defineExpose({
-    getContent,
-    resetContent,
     setPreviewOnly,
   });
 
@@ -71,14 +69,6 @@
 
   function insertColor(color: string) {
     editorRef.value?.insert(() => ({ targetValue: color, select: false }));
-  }
-
-  function getContent() {
-    return content.value;
-  }
-
-  function resetContent() {
-    content.value = props.initial;
   }
 
   function setPreviewOnly(value: boolean) {
