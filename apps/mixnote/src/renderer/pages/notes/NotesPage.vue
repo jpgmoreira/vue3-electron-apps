@@ -103,7 +103,7 @@
 </template>
 
 <style scoped>
-  .cards-page.resizing {
+  .notes-page.resizing {
     cursor: col-resize;
   }
 </style>
