@@ -57,6 +57,20 @@ export class NotesManager {
     return JSON.parse(fs.readFileSync(notePath, 'utf-8')) as Note;
   }
 
+  private atomicallySaveNote(note: Note) {
+    const dirPath = this.guard(note.id);
+    ensureDirExists(dirPath);
+    const fPath = path.join(dirPath, `${note.id}.json`);
+    const tmpPath = path.join(dirPath, `${note.id}.json.tmp`);
+    fs.writeFileSync(tmpPath, JSON.stringify(note), 'utf-8');
+    fs.renameSync(tmpPath, fPath);
+  }
+
+  public updateNote(note: Note) {
+    // TODO: Process note images.
+    this.atomicallySaveNote(note);
+  }
+
   public clear() {
     this.profileId = null;
   }

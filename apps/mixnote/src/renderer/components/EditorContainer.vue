@@ -1,36 +1,22 @@
 <script lang="ts" setup>
-  import { ref, useTemplateRef, watch } from 'vue';
+  import { ref, useTemplateRef } from 'vue';
   import { Note } from '@common/schemas/notes';
   import { parseTimestamp } from '@interapp/utils/dateUtils';
   import MdEditor from './MdEditor/MdEditor.vue';
-  import { cloneDeep } from '@interapp/utils/utils';
+  import { useNotesStore } from '@renderer/store/notes';
   const props = defineProps<{ note: Note }>();
-  const bodyRef = useTemplateRef('body-ref');
-  const headContent = ref(props.note.head);
+  const notesStore = useNotesStore();
   const focus = ref(false);
+  const headRef = useTemplateRef('head-ref');
+  const bodyRef = useTemplateRef('body-ref');
   function toggleFocus() {
     focus.value = !focus.value;
   }
-  function noteChange() {
-    const clone = cloneDeep(props.note); // Do not mutate props.
-    clone.head = headContent.value;
-    clone.body = bodyRef.value!.getContent();
-    // notesStore.updateNote(clone);
+  function updateNoteHead() {
+    if (!headRef.value) throw new Error('Invalid head ref!');
+    const content = headRef.value.value;
+    notesStore.updateCachedNoteHead(props.note.id, content);
   }
-  watch(
-    () => props.note.id,
-    () => {
-      headContent.value = props.note.head;
-      bodyRef.value?.resetContent();
-    }
-  );
-  watch(
-    // Body is already watched inside of Editor.
-    () => props.note.head,
-    () => {
-      headContent.value = props.note.head;
-    }
-  );
 </script>
 
 <template>
@@ -68,17 +54,17 @@
       </div>
       <textarea
         v-if="!focus"
+        ref="head-ref"
         class="head-textarea"
         placeholder="HEAD"
         spellcheck="false"
-        v-model="headContent"
-        @input="noteChange"
+        :value="props.note.head"
+        @input="updateNoteHead"
       ></textarea>
       <MdEditor
         class="grow"
         ref="body-ref"
         :initial="props.note.body"
-        @input="noteChange"
         @toggle-focus-mode="toggleFocus"
         placeholder="BODY"
       />

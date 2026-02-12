@@ -2,11 +2,13 @@ import { defineStore } from 'pinia';
 import { StartupData } from '@common/schemas/startup';
 import { Note } from '@common/schemas/notes';
 import { InvokeChannels } from '@preload/channels/invoke';
+import { cloneDeep } from '@interapp/utils/utils';
 
 export const useNotesStore = defineStore('notes', {
   state: () => ({
     // This notes cache is used only for the editor, not the flashcards!
     notes: {} as Record<string, Note>,
+    timers: {} as Record<string, ReturnType<typeof setTimeout> | undefined>,
   }),
   actions: {
     async initFromStartupData(data: StartupData) {
@@ -22,6 +24,19 @@ export const useNotesStore = defineStore('notes', {
         throw new Error(`getNoteFromCache: Note not found! ${noteId}`);
       }
       return this.notes[noteId];
+    },
+    updateCachedNoteHead(noteId: string, content: string) {
+      const note = this.notes[noteId];
+      if (!note) throw new Error(`Update cached note head: Note id not found! ${noteId}`);
+      note.head = content;
+      note.lastModified = Date.now();
+      this.updateNote(note);
+    },
+    updateNote(note: Note) {
+      clearTimeout(this.timers[note.id]);
+      this.timers[note.id] = setTimeout(() => {
+        window.api.invoke(InvokeChannels.updateNote, cloneDeep(note));
+      }, 500);
     },
     async fetchNote(noteId: string): Promise<Note> {
       if (noteId in this.notes) return this.notes[noteId];
