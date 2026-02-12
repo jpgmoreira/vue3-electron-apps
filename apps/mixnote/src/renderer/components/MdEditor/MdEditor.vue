@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-  import { nextTick, ref, useTemplateRef, watch } from 'vue';
+  import { ref, useTemplateRef } from 'vue';
   import { MdEditor, ToolbarNames, type ExposeParam } from 'md-editor-v3';
   import CustomPreview from './CustomPreview.vue';
   import ColorPicker from './ColorPicker/ColorPicker.vue';
@@ -12,9 +12,6 @@
   });
 
   const emit = defineEmits<{
-    (e: 'keydown'): void;
-    (e: 'input'): void;
-    (e: 'blur'): void;
     (e: 'toggleFocusMode'): void;
   }>();
 
@@ -86,17 +83,6 @@
   function setPreviewOnly(value: boolean) {
     editorRef.value?.togglePreviewOnly(value);
   }
-
-  async function onChange() {
-    await nextTick();
-    emit('input');
-  }
-
-  // May cause issues if changed too frequently.
-  watch(
-    () => props.initial,
-    (newValue) => (content.value = newValue)
-  );
 </script>
 
 <template>
@@ -115,9 +101,6 @@
     noEcharts
     :autoFoldThreshold="Infinity"
     :placeholder="props.placeholder || ''"
-    @onChange="onChange"
-    @onBlur="emit('blur')"
-    @keydown="emit('keydown')"
   >
     <template #defToolbars>
       <ColorPicker @select="insertColor" />
@@ -182,6 +165,7 @@
   }
   .md-editor-code code {
     margin-top: -18px;
+    font-size: 14.8px !important;
   }
   /* Unordered lists */
   .md-editor-preview ul {

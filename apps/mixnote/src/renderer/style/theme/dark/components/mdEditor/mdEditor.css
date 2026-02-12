@@ -18,22 +18,32 @@
 
 .theme-dark .md-editor {
   --md-bk-color: #1f1f1f;
+  --md-color: #ccc;
+  --md-border-color: #525252;
 }
 
 .theme-dark .md-editor * {
   --md-theme-code-block-color: #c7d6e7;
-  --md-theme-code-block-bg-color: #161616 !important;
+  --md-theme-code-block-bg-color: #181818 !important;
   --md-theme-color: #ccc !important;
-  --md-border-color: #525252;
 }
+
+/* Links */
 
 .theme-dark .md-editor a:hover {
   color: #2d8cf0 !important;
 }
 
+/* Code */
+
 .theme-dark .md-editor .md-editor-code {
   border: 1px solid rgb(97.4, 97.4, 97.4);
   border-radius: var(--md-theme-code-block-radius);
+  filter: contrast(1.02);
+}
+
+.theme-dark .md-editor .md-editor-code * {
+  filter: saturate(1.25);
 }
 
 /* Tables */
