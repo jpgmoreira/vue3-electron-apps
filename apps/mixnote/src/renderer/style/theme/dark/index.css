@@ -1,2 +1,4 @@
 @import './components/explorer.css';
+@import './components/mdEditor/mdEditor.css';
+@import './components/mdEditor/editorContainer.css';
 @import './components/notesView.css';

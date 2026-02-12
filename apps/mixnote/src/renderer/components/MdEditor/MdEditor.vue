@@ -101,6 +101,7 @@
 
 <template>
   <MdEditor
+    class="md-editor"
     v-model="content"
     ref="editor-ref"
     language="en-US"
