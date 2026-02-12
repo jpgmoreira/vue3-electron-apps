@@ -3,6 +3,7 @@ import { StartupData } from '@common/schemas/startup';
 import { TabGroup } from '@common/schemas/tabs';
 import { InvokeChannels } from '@preload/channels/invoke';
 import { cloneDeep, randomId } from '@interapp/utils/utils';
+import { useNotesStore } from './notes';
 
 export const useTabsStore = defineStore('tabs', {
   state: () => ({
@@ -24,11 +25,12 @@ export const useTabsStore = defineStore('tabs', {
     setActiveTab(group: TabGroup, tabId: string) {
       group.tabs.forEach((tab) => (tab.active = tab.id === tabId));
     },
-    explorerNoteClicked(noteId: string) {
+    async explorerNoteClicked(noteId: string) {
       if (!this.tabGroups.length) {
         throw new Error('No tab groups!');
       }
-      // TODO: Get note from the back-end.
+      // 1. Make sure we have the note in the front:
+      await useNotesStore().getNote(noteId);
       // 2. Verify if the note is already open in the current tab group:
       let activeGroup = this.tabGroups.find((g) => g.active);
       if (!activeGroup) {

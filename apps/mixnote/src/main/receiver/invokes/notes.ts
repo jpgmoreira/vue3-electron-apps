@@ -17,3 +17,7 @@ ipcMain.handle(InvokeChannels.createNote, (_: IpcMainInvokeEvent): Note => {
   profileManager.addNotes(1);
   return note;
 });
+
+ipcMain.handle(InvokeChannels.getNote, (_: IpcMainInvokeEvent, noteId: string): Note => {
+  return notesManager.getNote(noteId);
+});

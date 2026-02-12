@@ -5,10 +5,12 @@
   import { TabGroup } from '@common/schemas/tabs';
   import { randomId } from '@interapp/utils/utils';
   import { Columns2Icon, AlignHorizontalDistributeCenterIcon, XIcon } from 'lucide-vue-next';
+  import { useNotesStore } from '@renderer/store/notes';
 
   const MIN_GROUP_WIDTH = 30; // px.
 
   const tabsStore = useTabsStore();
+  const notesStore = useNotesStore();
 
   const { tabGroups } = storeToRefs(tabsStore);
 
@@ -207,8 +209,7 @@
             @mousedown.middle.stop="closeTab(group, tab.id)"
             @click="tabHeaderClick(group, tab.id)"
           >
-            <!-- TODO: Get tab title -->
-            <span class="tab-title">{{ tab.noteId }}</span>
+            <span class="tab-title">{{ notesStore.getNoteName(tab.noteId) }}</span>
             <span @click.stop="closeTab(group, tab.id)"><XIcon /></span>
           </div>
           <!-- Tab group buttons -->

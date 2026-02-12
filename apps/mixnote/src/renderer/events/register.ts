@@ -5,16 +5,19 @@ import { useProfileStore } from '@renderer/store/profile';
 import { useGraphStore } from '@renderer/store/graph';
 import { useTabsStore } from '@renderer/store/tabs';
 import { useUIStore } from '@renderer/store/uiStore';
+import { useNotesStore } from '@renderer/store/notes';
 
-eventEmitter.on(CommonEvents.loadInitialData, (data: StartupData) => {
+eventEmitter.on(CommonEvents.loadInitialData, async (data: StartupData) => {
   useProfileStore().initFromStartupData(data);
   useGraphStore().initFromStartupData(data);
   useTabsStore().initFromStartupData(data);
   useUIStore().initFromStartupData(data);
+  await useNotesStore().initFromStartupData(data);
 });
 
 eventEmitter.on(CommonEvents.clearProfileData, () => {
   useGraphStore().clear();
   useTabsStore().clear();
   useUIStore().clear();
+  useNotesStore().clear();
 });

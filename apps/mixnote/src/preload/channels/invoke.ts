@@ -11,6 +11,7 @@ export enum InvokeChannels {
   refetchProfile = 'refetch-profile',
   refetchTabs = 'refetch-tabs',
   updateTabs = 'update-tabs',
+  getNote = 'get-note',
   // ----------------------------------
   updateSettings = 'update-settings',
   updateFilters = 'update-filters',

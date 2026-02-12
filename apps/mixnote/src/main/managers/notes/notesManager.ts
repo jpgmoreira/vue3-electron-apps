@@ -20,6 +20,15 @@ export class NotesManager {
     this.tabsManager = tabsManager;
   }
 
+  private guard(noteId: string) {
+    if (!this.profileId) throw new Error('Profile not initialized.');
+    const dirPath = path.join(DATA_DIR, 'profileData', this.profileId, 'notes', noteId);
+    if (!fs.existsSync(dirPath)) {
+      throw new Error(`Note does not exist!: ${noteId}`);
+    }
+    return dirPath;
+  }
+
   public loadProfile(profileId: string) {
     this.profileId = profileId;
   }
@@ -36,14 +45,15 @@ export class NotesManager {
   }
 
   public deleteNote(noteId: string) {
-    if (!this.profileId) throw new Error('Profile id not initialized!');
-    const dirPath = path.join(DATA_DIR, 'profileData', this.profileId, 'notes', noteId);
-    if (!fs.existsSync(dirPath)) {
-      throw new Error(`Note does not exist!: ${noteId}`);
-    }
+    const dirPath = this.guard(noteId);
     fs.rmSync(dirPath, { recursive: true, force: true });
     this.profileManager.addNotes(-1);
     this.tabsManager.noteWasDeleted(noteId);
+  }
+
+  public getNote(noteId: string): Note {
+    const dirPath = this.guard(noteId);
+    return JSON.parse(fs.readFileSync(dirPath, 'utf-8')) as Note;
   }
 
   public clear() {
