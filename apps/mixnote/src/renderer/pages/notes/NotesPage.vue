@@ -14,7 +14,7 @@
   import { useProfileStore } from '@renderer/store/profile';
   import NotesModals from './NotesModals.vue';
   import { useTabsStore } from '@renderer/store/tabs';
-  import NotesView from '@renderer/components/NotesView/NotesView.vue';
+  import NotesView from '@renderer/components/NotesView.vue';
 
   const uiStore = useUIStore();
   const profileStore = useProfileStore();
