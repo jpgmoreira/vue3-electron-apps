@@ -42,7 +42,7 @@ export class TabsManager {
     this.proxy.groups = groups;
   }
 
-  public noteDeleted(noteId: string) {
+  public noteWasDeleted(noteId: string) {
     if (!this.proxy) throw new Error('Proxy not initialized');
     for (const group of this.proxy.groups) {
       group.tabs = group.tabs.filter((t) => t.noteId !== noteId);

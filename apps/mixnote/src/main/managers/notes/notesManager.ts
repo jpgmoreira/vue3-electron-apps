@@ -3,14 +3,21 @@ import { DATA_DIR } from '@main/constants';
 import { EventEmitter } from '@interapp/events/eventEmitter';
 import { CommonEvents } from '@interapp/events/commonEvents';
 import path from 'path';
+import fs from 'fs';
 import { getEmptyNote, Note } from '@common/schemas/notes';
 import { ensureDirExists } from '@interapp/utils/fileUtils';
+import { ProfileManager } from '../profileManager';
+import { TabsManager } from '../tabsManager';
 
 export class NotesManager {
   private profileId: string | null = null;
+  private profileManager: ProfileManager;
+  private tabsManager: TabsManager;
 
-  constructor(emitter: EventEmitter) {
+  constructor(emitter: EventEmitter, profileManager: ProfileManager, tabsManager: TabsManager) {
     emitter.on(CommonEvents.clearProfileData, () => this.clear());
+    this.profileManager = profileManager;
+    this.tabsManager = tabsManager;
   }
 
   public loadProfile(profileId: string) {
@@ -26,6 +33,17 @@ export class NotesManager {
     const fPath = path.join(dirPath, `${note.id}.json`);
     new FileProxy(fPath, note);
     return note;
+  }
+
+  public deleteNote(noteId: string) {
+    if (!this.profileId) throw new Error('Profile id not initialized!');
+    const dirPath = path.join(DATA_DIR, 'profileData', this.profileId, 'notes', noteId);
+    if (!fs.existsSync(dirPath)) {
+      throw new Error(`Note does not exist!: ${noteId}`);
+    }
+    fs.rmSync(dirPath, { recursive: true, force: true });
+    this.profileManager.addNotes(-1);
+    this.tabsManager.noteWasDeleted(noteId);
   }
 
   public clear() {

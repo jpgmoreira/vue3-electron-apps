@@ -32,7 +32,7 @@ export async function loadStartupData(): Promise<StartupData> {
     explorerManager.loadTree(treePath);
     explorerManager.registerDeleteCallback(async (node: Node) => {
       if (node.type === 'file') {
-        // TODO: Note delete callback here.
+        notesManager.deleteNote(node.id);
       }
     });
     ui = uiManager.getUISettings();

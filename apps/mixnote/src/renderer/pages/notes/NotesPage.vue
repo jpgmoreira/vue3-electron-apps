@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-  import { ref, onMounted, onBeforeUnmount } from 'vue';
+  import { ref, onMounted, onBeforeUnmount, useTemplateRef } from 'vue';
   import Header from '@renderer/components/Header.vue';
   import { useUIStore } from '@renderer/store/uiStore';
   import Explorer, {
@@ -10,15 +10,21 @@
   import { InvokeChannels } from '@preload/channels/invoke';
   import { randomId } from '@interapp/utils/utils';
   import { Note } from '@common/schemas/notes';
+  import { Node } from '@interapp/components/Explorer/common/tree';
   import { useProfileStore } from '@renderer/store/profile';
+  import NotesModals from './NotesModals.vue';
+  import { useTabsStore } from '@renderer/store/tabs';
 
   const uiStore = useUIStore();
   const profileStore = useProfileStore();
+  const tabsStore = useTabsStore();
 
   const resizing = ref(false);
   const explorerWidth = ref(uiStore.settings.explorerWidth);
 
   const initialExplorerScrollTop = uiStore.settings.explorerScrollTop;
+
+  const modalsRef = useTemplateRef('modals');
 
   function explorerScroll(scrollTop: number) {
     uiStore.updateSettings({ explorerScrollTop: scrollTop });
@@ -36,16 +42,22 @@
       await profileStore.refetch();
     }
   }
-  // async function beforeDeleteNode(node: Node, callback: DeleteNodeCallback) {
-  //   modalsRef.value?.showDeleteSingle(node, callback);
-  // }
-  // async function beforeDeleteMultiple(
-  //   files: number,
-  //   folders: number,
-  //   callback: DeleteNodeCallback
-  // ) {
-  //   modalsRef.value?.showDeleteMultiple(files, folders, callback);
-  // }
+
+  async function deletionHappened() {
+    await profileStore.refetch();
+    await tabsStore.refetch();
+  }
+
+  async function beforeDeleteNode(node: Node, callback: DeleteNodeCallback) {
+    modalsRef.value?.showDeleteSingle(node, callback);
+  }
+  async function beforeDeleteMultiple(
+    files: number,
+    folders: number,
+    callback: DeleteNodeCallback
+  ) {
+    modalsRef.value?.showDeleteMultiple(files, folders, callback);
+  }
 
   function windowMouseMove(e: MouseEvent) {
     if (!resizing.value) return;
@@ -72,6 +84,7 @@
 <template>
   <div class="notes-page flex flex-col h-screen overflow-hidden" :class="{ resizing }">
     <Header />
+    <NotesModals ref="modals" @deleted="deletionHappened" />
     <div class="flex grow">
       <div :style="{ width: `${explorerWidth}px` }">
         <Explorer

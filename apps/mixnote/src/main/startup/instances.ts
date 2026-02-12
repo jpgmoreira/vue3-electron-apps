@@ -14,4 +14,4 @@ export const uiManager = new UIManager(emitter);
 export const graphManager = new GraphManager(emitter);
 export const tabsManager = new TabsManager(emitter);
 export const nodeCounterManager = new NodeCounterManager(emitter);
-export const notesManager = new NotesManager(emitter);
+export const notesManager = new NotesManager(emitter, profileManager, tabsManager);
