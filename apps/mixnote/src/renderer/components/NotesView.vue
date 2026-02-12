@@ -6,6 +6,8 @@
   import { randomId } from '@interapp/utils/utils';
   import { Columns2Icon, AlignHorizontalDistributeCenterIcon, XIcon } from 'lucide-vue-next';
   import { useNotesStore } from '@renderer/store/notes';
+  import EditorContainer from './EditorContainer.vue';
+  import { Note } from '@common/schemas/notes';
 
   const MIN_GROUP_WIDTH = 30; // px.
 
@@ -83,6 +85,12 @@
 
   function hasActiveNote(group: TabGroup): Boolean {
     return group.tabs.some((tab) => tab.active);
+  }
+
+  function getActiveNote(group: TabGroup): Note | null {
+    const activeTab = group.tabs.find((tab) => tab.active);
+    if (!activeTab) return null;
+    return notesStore.getNoteFromCache(activeTab.noteId);
   }
 
   function closeTab(group: TabGroup, tabId: string) {
@@ -209,7 +217,7 @@
             @mousedown.middle.stop="closeTab(group, tab.id)"
             @click="tabHeaderClick(group, tab.id)"
           >
-            <span class="tab-title">{{ notesStore.getNoteName(tab.noteId) }}</span>
+            <span class="tab-title">{{ notesStore.getNoteFromCache(tab.noteId).name }}</span>
             <span @click.stop="closeTab(group, tab.id)"><XIcon /></span>
           </div>
           <!-- Tab group buttons -->
@@ -227,7 +235,7 @@
         </div>
         <!-- Tab content -->
         <div v-if="hasActiveNote(group)" class="grow relative overflow-y-auto">
-          <!-- TODO: Editor container here -->
+          <EditorContainer :note="getActiveNote(group)!" />
         </div>
         <div v-else class="absolute-center message-xl">No note selected</div>
       </div>

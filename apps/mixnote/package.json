@@ -32,9 +32,13 @@
     "build:linux": "pnpm run build && electron-builder --linux"
   },
   "dependencies": {
+    "@codemirror/view": "^6.39.14",
     "@electron-toolkit/preload": "^3.0.2",
     "@electron-toolkit/utils": "^4.0.0",
+    "highlight.js": "^11.11.1",
+    "katex": "^0.16.28",
     "lucide-vue-next": "^0.563.0",
+    "md-editor-v3": "^6.3.1",
     "pinia": "^3.0.3",
     "sqlite": "^5.1.1",
     "sqlite3": "^5.1.7",

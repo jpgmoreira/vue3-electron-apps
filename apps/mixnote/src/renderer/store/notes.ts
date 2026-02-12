@@ -13,17 +13,17 @@ export const useNotesStore = defineStore('notes', {
       if (data.tabGroups) {
         const noteIds = data.tabGroups.map((g) => g.tabs.map((t) => t.noteId)).flat();
         for (const noteId of noteIds) {
-          await this.getNote(noteId);
+          await this.fetchNote(noteId);
         }
       }
     },
-    getNoteName(noteId: string): string {
+    getNoteFromCache(noteId: string): Note {
       if (!(noteId in this.notes)) {
-        throw new Error(`getNoteName: Note not found! ${noteId}`);
+        throw new Error(`getNoteFromCache: Note not found! ${noteId}`);
       }
-      return this.notes[noteId].name;
+      return this.notes[noteId];
     },
-    async getNote(noteId: string): Promise<Note> {
+    async fetchNote(noteId: string): Promise<Note> {
       if (noteId in this.notes) return this.notes[noteId];
       const note = await window.api.invoke<Note>(InvokeChannels.getNote, noteId);
       this.notes[noteId] = note;

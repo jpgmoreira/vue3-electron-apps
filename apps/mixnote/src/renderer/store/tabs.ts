@@ -30,7 +30,7 @@ export const useTabsStore = defineStore('tabs', {
         throw new Error('No tab groups!');
       }
       // 1. Make sure we have the note in the front cache:
-      await useNotesStore().getNote(noteId);
+      await useNotesStore().fetchNote(noteId);
       // 2. Verify if the note is already open in the current tab group:
       let activeGroup = this.tabGroups.find((g) => g.active);
       if (!activeGroup) {
