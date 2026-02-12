@@ -1,3 +1,66 @@
+/* Color picker */
+
 .theme-dark .md-editor .color-box:hover {
   outline: 2px solid #5b8cff;
+}
+
+/* Resizer */
+
+.theme-dark .md-editor-resize-operate {
+  background: rgb(66, 66, 66) !important;
+}
+.theme-dark .md-editor-resize-operate:hover,
+.theme-dark .md-editor-resize-operate:active {
+  background: #0087e7 !important;
+}
+
+/* Theme colors */
+
+.theme-dark .md-editor {
+  --md-bk-color: #1f1f1f;
+}
+
+.theme-dark .md-editor * {
+  --md-theme-code-block-color: #c7d6e7;
+  --md-theme-code-block-bg-color: #161616 !important;
+  --md-theme-color: #ccc !important;
+  --md-border-color: #525252;
+}
+
+.theme-dark .md-editor a:hover {
+  color: #2d8cf0 !important;
+}
+
+.theme-dark .md-editor .md-editor-code {
+  border: 1px solid rgb(97.4, 97.4, 97.4);
+  border-radius: var(--md-theme-code-block-radius);
+}
+
+/* Tables */
+
+.theme-dark .md-editor-preview table th {
+  background-color: #353535 !important;
+  border-color: #4d4d4d !important;
+}
+.theme-dark .md-editor-preview table tbody td {
+  background-color: #2b2b2b !important;
+  border-color: #4d4d4d !important;
+}
+.theme-dark .md-editor-preview table tbody tr:hover td {
+  background-color: #313131 !important;
+}
+.theme-dark .md-editor-table-shape-col-default {
+  background-color: #3b3b3b !important;
+}
+.theme-dark .md-editor-table-shape-col-include {
+  background-color: #5c5c5c !important;
+}
+
+/* Inline code */
+
+.md-editor-preview code:not(.md-editor-code code):not(pre code) {
+  font-family: 'Fira Code', 'JetBrains Mono', monospace !important;
+  border-radius: 4px;
+  white-space: nowrap;
+  border: 1px solid #1a5594;
 }

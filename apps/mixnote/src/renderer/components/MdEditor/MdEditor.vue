@@ -125,3 +125,87 @@
     </template>
   </MdEditor>
 </template>
+
+<style>
+  /* Editor */
+  .md-editor {
+    border: none !important;
+  }
+  .md-editor .cm-content {
+    font-family: 'Fira Code', 'JetBrains Mono', monospace !important;
+    font-size: 14px !important;
+  }
+  /* Toolbar */
+  .md-editor-toolbar-wrapper {
+    padding: 0 !important;
+  }
+  .md-editor-toolbar-left,
+  .md-editor-toolbar-right {
+    padding: 0 !important;
+    display: flex;
+    flex-wrap: wrap;
+  }
+  .md-editor-toolbar-item {
+    padding: 3px !important;
+  }
+  .md-editor-icon {
+    padding: 0 !important;
+  }
+  .md-editor-divider {
+    margin: 3px !important;
+  }
+  /* Resizer */
+  .md-editor-custom-scrollbar__track {
+    display: none !important;
+  }
+  .md-editor-resize-operate {
+    height: 100%;
+    padding: 2px;
+    cursor: col-resize;
+    z-index: 10;
+  }
+  /* Code editor */
+  .md-editor-code {
+    margin: 15px 0 !important;
+  }
+  .md-editor-code-head {
+    display: flex !important;
+    justify-content: end !important;
+  }
+  .md-editor-code-flag {
+    display: none !important;
+  }
+  .md-editor-code-lang {
+    font-weight: bold !important;
+    text-transform: uppercase;
+    font-size: 11.5px;
+  }
+  .md-editor-code code {
+    margin-top: -18px;
+  }
+  /* Unordered lists */
+  .md-editor-preview ul {
+    list-style: disc !important;
+  }
+  .md-editor-preview ul ul {
+    list-style: circle !important;
+  }
+  /* Ordered lists */
+  .md-editor-preview ol {
+    list-style: decimal !important;
+  }
+  /* Tables */
+  .md-editor-preview table * {
+    line-height: 1rem !important;
+  }
+  .md-editor-preview table th {
+    border-bottom: none !important;
+    border-top: none !important;
+  }
+  /* Checkboxes */
+  .md-editor-preview .task-list-item {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+</style>
