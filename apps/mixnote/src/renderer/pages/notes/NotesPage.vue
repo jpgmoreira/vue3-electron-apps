@@ -14,6 +14,7 @@
   import { useProfileStore } from '@renderer/store/profile';
   import NotesModals from './NotesModals.vue';
   import { useTabsStore } from '@renderer/store/tabs';
+  import NotesView from '@renderer/components/NotesView/NotesView.vue';
 
   const uiStore = useUIStore();
   const profileStore = useProfileStore();
@@ -28,6 +29,12 @@
 
   function explorerScroll(scrollTop: number) {
     uiStore.updateSettings({ explorerScrollTop: scrollTop });
+  }
+
+  function explorerNodeClick(node: Node) {
+    if (node.type === 'file') {
+      tabsStore.explorerNoteClicked(node.id);
+    }
   }
 
   async function beforeCreateNode(type: NodeType, callback: CreateNodeCallback) {
@@ -94,10 +101,13 @@
           @before-create-node="beforeCreateNode"
           @before-delete-node="beforeDeleteNode"
           @before-delete-selected="beforeDeleteMultiple"
+          @node-click="explorerNodeClick"
         />
       </div>
       <div class="custom-resizer" @mousedown="resizing = true"></div>
-      <div class="grow relative"></div>
+      <div class="grow relative">
+        <NotesView />
+      </div>
     </div>
   </div>
 </template>

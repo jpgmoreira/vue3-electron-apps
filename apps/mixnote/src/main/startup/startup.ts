@@ -20,7 +20,7 @@ export async function loadStartupData(): Promise<StartupData> {
   const profileRegistry = profileManager.getProfileRegistry();
   let ui: UISettings | null = null;
   let graph: GraphRecord[] | null = null;
-  let tabs: TabGroup[] | null = null;
+  let tabGroups: TabGroup[] | null = null;
   if (currProfile) {
     const profileDir = path.resolve(DATA_DIR, 'profileData', currProfile.id);
     // The order of initialization below is important.
@@ -37,12 +37,13 @@ export async function loadStartupData(): Promise<StartupData> {
     });
     ui = uiManager.getUISettings();
     graph = await graphManager.loadProfile(currProfile.id);
+    tabGroups = tabsManager.getGroups();
   }
   return {
     currProfile,
     profileRegistry,
     ui,
     graph,
-    tabs,
+    tabGroups,
   };
 }

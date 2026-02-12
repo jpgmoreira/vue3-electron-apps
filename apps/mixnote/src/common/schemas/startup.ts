@@ -8,5 +8,5 @@ export type StartupData = {
   profileRegistry: ProfileRegistry;
   ui: UISettings | null;
   graph: GraphRecord[] | null;
-  tabs: TabGroup[] | null;
+  tabGroups: TabGroup[] | null;
 };

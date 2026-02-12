@@ -6,3 +6,7 @@ import { TabGroup } from '@common/schemas/tabs';
 ipcMain.handle(InvokeChannels.refetchTabs, (_: IpcMainInvokeEvent): TabGroup[] => {
   return tabsManager.getGroups();
 });
+
+ipcMain.handle(InvokeChannels.updateTabs, (_: IpcMainInvokeEvent, tabs: TabGroup[]) => {
+  return tabsManager.updateGroups(tabs);
+});

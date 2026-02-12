@@ -1,0 +1,146 @@
+/* =========================
+   Tab Groups
+   ========================= */
+
+.theme-dark .notes-view .tab-group {
+  position: relative;
+}
+
+/* =========================
+   Active Tab Group
+   ========================= */
+
+.theme-dark .notes-view .tab-group.active::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background-color: #0087e7;
+  pointer-events: none;
+}
+
+.theme-dark .notes-view .tab-group.active > div > .flex.flex-wrap {
+  background: #272727;
+  border-bottom-color: rgba(0, 135, 231, 0.7);
+}
+
+/* =========================
+   Tab Headers Container
+   ========================= */
+
+.theme-dark .notes-view .tab-group > div > .flex.flex-wrap {
+  background: #232323;
+  border-bottom: 1px solid #41464b;
+  padding: 4px 4px 0;
+  gap: 2px;
+}
+
+/* =========================
+   Individual Tab Header
+   ========================= */
+
+.theme-dark .notes-view .tab-header {
+  align-items: center;
+  gap: 8px;
+  padding: 4px 6px 4px 10px;
+  background: transparent;
+  border: 1px solid transparent;
+  border-bottom: none;
+  color: #d0d0d0;
+  font-size: 13px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.theme-dark .notes-view .tab-header:hover {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+/* Active tab */
+.theme-dark .notes-view .tab-header.active {
+  background: #3b3b3b;
+  border: 1px solid #41464b;
+  border-bottom: none;
+  color: #ffffff;
+}
+
+/* Preview tab */
+.theme-dark .notes-view .tab-header.preview .tab-title {
+  font-style: italic;
+  opacity: 0.7;
+}
+
+/* =========================
+   Tab Title
+   ========================= */
+
+.theme-dark .notes-view .tab-title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Close button (x) */
+.theme-dark .notes-view .tab-header .lucide {
+  width: 14px;
+}
+
+.theme-dark .notes-view .tab-header span:last-child {
+  opacity: 0.5;
+  padding-left: 4px;
+}
+
+.theme-dark .notes-view .tab-header span:last-child:hover {
+  opacity: 1;
+}
+
+.theme-dark .notes-view .tab-header span:last-child:hover * {
+  color: #ff6b6b;
+}
+
+/* =========================
+   Tab Group Buttons
+   ========================= */
+
+.theme-dark .notes-view .tab-actions button {
+  background: transparent;
+  border: none;
+  padding: 4px 8px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.theme-dark .notes-view .tab-actions .lucide *,
+.theme-dark .notes-view .tab-header .lucide * {
+  color: #aaa;
+}
+.theme-dark .notes-view .tab-actions .lucide {
+  width: 17px;
+}
+
+.theme-dark .notes-view .tab-group button:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+/* =========================
+   Tab Content Area
+   ========================= */
+
+.theme-dark .notes-view .tab-group .grow {
+  background: #232323;
+  color: #e0e0e0;
+  font-size: 14px;
+  line-height: 1.6;
+  overflow: auto;
+}
+
+.theme-dark .notes-view .tab-group .grow pre,
+.theme-dark .notes-view .tab-group .grow code {
+  background: #282828;
+  padding: 12px;
+  border-radius: 6px;
+  border: 1px solid #41464b;
+}
