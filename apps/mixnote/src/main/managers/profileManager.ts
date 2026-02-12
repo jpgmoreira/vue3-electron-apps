@@ -134,8 +134,8 @@ export class ProfileManager {
     record.notes += n;
   }
 
-  public logout() {
-    this.emitter.emit(CommonEvents.clearProfileData);
+  public async logout() {
+    await this.emitter.emit(CommonEvents.clearProfileData);
     this.currProfileProxy = null;
     this.registryProxy!.proxy.currProfileId = null;
   }

@@ -54,8 +54,8 @@ ipcMain.handle(InvokeChannels.login, async (_, profileId: string): Promise<AuthR
   }
 });
 
-ipcMain.handle(InvokeChannels.logout, () => {
-  profileManager.logout();
+ipcMain.handle(InvokeChannels.logout, async () => {
+  await profileManager.logout();
 });
 
 ipcMain.handle(InvokeChannels.refetchProfile, (): ProfileRegistry => {

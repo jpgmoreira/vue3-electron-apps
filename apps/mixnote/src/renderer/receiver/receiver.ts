@@ -5,8 +5,8 @@ import { OnChannels } from '@preload/channels/on';
 import { router } from '@renderer/router/router';
 import { eventEmitter } from '@renderer/events/emitter';
 
-window.api.on(OnChannels.loadStartupData, (data: StartupData) => {
-  eventEmitter.emit(CommonEvents.loadInitialData, data);
+window.api.on(OnChannels.loadStartupData, async (data: StartupData) => {
+  await eventEmitter.emit(CommonEvents.loadInitialData, data);
   document.documentElement.classList.add('theme-dark');
   if (!data.currProfile) {
     document.title = APP_NAME;

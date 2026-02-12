@@ -1,4 +1,4 @@
-type Listener = (...args: any[]) => void;
+type Listener = (...args: any[]) => void | Promise<void>;
 
 export class EventEmitter {
   private listeners = new Map<string, Listener[]>();
@@ -18,9 +18,11 @@ export class EventEmitter {
     );
   }
 
-  emit(event: string, ...args: any[]): void {
+  async emit(event: string, ...args: any[]): Promise<void> {
     const arr = this.listeners.get(event);
     if (!arr) return;
-    arr.forEach((l) => l(...args));
+    for (const l of arr) {
+      await l(...args);
+    }
   }
 }

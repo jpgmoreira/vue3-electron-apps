@@ -20,7 +20,7 @@ export const useProfileStore = defineStore('profile', {
     async createProfile(name: string) {
       const result = await window.api.invoke<AuthResponseDTO>(InvokeChannels.createProfile, name);
       if (result.status === 'success') {
-        eventEmitter.emit(CommonEvents.loadInitialData, result.data);
+        await eventEmitter.emit(CommonEvents.loadInitialData, result.data);
       }
       return result;
     },
@@ -49,12 +49,12 @@ export const useProfileStore = defineStore('profile', {
     async login(profileId: string) {
       const result = await window.api.invoke<AuthResponseDTO>(InvokeChannels.login, profileId);
       if (result.status === 'success') {
-        eventEmitter.emit(CommonEvents.loadInitialData, result.data);
+        await eventEmitter.emit(CommonEvents.loadInitialData, result.data);
       }
       return result;
     },
     async logout() {
-      eventEmitter.emit(CommonEvents.clearProfileData);
+      await eventEmitter.emit(CommonEvents.clearProfileData);
       this.currProfile = null;
       await window.api.invoke(InvokeChannels.logout);
     },

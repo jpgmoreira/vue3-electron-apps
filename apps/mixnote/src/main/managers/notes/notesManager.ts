@@ -53,7 +53,8 @@ export class NotesManager {
 
   public getNote(noteId: string): Note {
     const dirPath = this.guard(noteId);
-    return JSON.parse(fs.readFileSync(dirPath, 'utf-8')) as Note;
+    const notePath = path.join(dirPath, `${noteId}.json`);
+    return JSON.parse(fs.readFileSync(notePath, 'utf-8')) as Note;
   }
 
   public clear() {
