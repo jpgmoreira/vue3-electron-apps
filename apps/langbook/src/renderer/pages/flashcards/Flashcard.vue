@@ -109,6 +109,7 @@
 <style scoped>
   .flashcard :deep(img) {
     display: inline-block;
+    pointer-events: none;
   }
   .flashcard :deep(span) {
     color: inherit;
