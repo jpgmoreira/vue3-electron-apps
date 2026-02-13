@@ -1,3 +1,4 @@
+import { ensureDirExists } from '@interapp/utils/fileUtils';
 import { genHash } from '@interapp/utils/utils';
 import fs from 'fs';
 import path from 'path';
@@ -46,5 +47,6 @@ async function saveHttpSrc(src: string, fPath: string) {
 }
 
 function saveBuffer(buffer: Buffer, fPath: string) {
+  ensureDirExists(path.dirname(fPath));
   fs.writeFileSync(fPath, buffer);
 }

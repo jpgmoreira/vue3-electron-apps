@@ -6,6 +6,15 @@ import { saveImage, extractBaseFromSrc } from './helpers';
 import { Note } from '@common/schemas/notes';
 
 export class NotesMediaManager {
+  // Necessary to recreate the regexes because they save state.
+  private getRegexes() {
+    return {
+      htmlImgRegex: /<img\b([^>]*?)\/?>/gi,
+      htmlAttrRegex: /([^\s=]+)=["']([^"']*)["']/g,
+      mdImgRegex: /!\[([^\]]*)\]\(([^)\s]+)(?:\s+"([^"]*)")?\)/g,
+    };
+  }
+
   /**
    * - Prepares all paths so that the front can use them.
    * - All image files here were already saved in the past, so here they
@@ -13,32 +22,35 @@ export class NotesMediaManager {
    * - Remember that the base property will contain only the file name with extension,
    *   as saved inside of the note folder.
    */
-  // public preparePaths(card: Card, profileId: string) {
-  //   const mediaDir = this.buildMediaDir(card.id, profileId);
-  //   for (const media of card.media) {
-  //     if (!media.base) throw new Error('Media without base!');
-  //     const fName = path.join(mediaDir, media.base);
-  //     media.path = `safe-file://${fName}`;
-  //   }
-  //   for (const field of CARD_RTE_FIELDS) {
-  //     const html = parse(card[field]);
-  //     const imgs = html.querySelectorAll('img');
-  //     if (!imgs.length) continue;
-  //     for (const img of imgs) {
-  //       const base = img.getAttribute('data-base');
-  //       if (!base) throw new Error('Image without data-base attribute!');
-  //       const fName = path.join(mediaDir, base);
-  //       img.setAttribute('src', `safe-file://${fName}`);
-  //     }
-  //     card[field] = html.toString();
-  //   }
-  // }
+  public preparePaths(note: Note, dirPath: string) {
+    const { htmlImgRegex, htmlAttrRegex } = this.getRegexes();
+    const result = note.body.replace(htmlImgRegex, (_: string, attrs: string): string => {
+      const parsed: Record<string, string> = {};
+      let match: RegExpExecArray | null;
+      while ((match = htmlAttrRegex.exec(attrs)) !== null) {
+        const [, key, value] = match;
+        parsed[key] = value;
+      }
+      const base = parsed['data-base'];
+      if (!base) {
+        throw new Error('<img> is missing data-base attribute in preparePaths()');
+      }
+      parsed.src = `safe-file://${dirPath}/${base}`;
+      const newTag =
+        '<img ' +
+        Object.entries(parsed)
+          .map(([k, v]) => `${k}="${v}"`)
+          .join(' ') +
+        ' />';
+      return newTag;
+    });
+    note.body = result;
+  }
 
   private processHtmlImages(content: string) {
-    const htmlImgRegex = /<img\b([^>]*?)\/?>/gi;
-    const htmlAttrRegex = /([^\s=]+)=["']([^"']*)["']/g;
     const bases: string[] = [];
     const sources: string[] = [];
+    const { htmlImgRegex, htmlAttrRegex } = this.getRegexes();
     const result = content.replace(htmlImgRegex, (_: string, attrs: string): string => {
       const parsed: Record<string, string> = {};
       let match: RegExpExecArray | null;
@@ -65,9 +77,9 @@ export class NotesMediaManager {
 
   private processMarkdownImages(content: string) {
     // ![alt](src "title")
-    const mdImgRegex = /!\[([^\]]*)\]\(([^)\s]+)(?:\s+"([^"]*)")?\)/g;
     const bases: string[] = [];
     const sources: string[] = [];
+    const { mdImgRegex } = this.getRegexes();
     const result = content.replace(
       mdImgRegex,
       (_: string, alt: string, src: string, title?: string): string => {

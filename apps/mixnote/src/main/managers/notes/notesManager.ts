@@ -58,7 +58,9 @@ export class NotesManager {
   public getNote(noteId: string): Note {
     const dirPath = this.guard(noteId);
     const notePath = path.join(dirPath, `${noteId}.json`);
-    return JSON.parse(fs.readFileSync(notePath, 'utf-8')) as Note;
+    const note = JSON.parse(fs.readFileSync(notePath, 'utf-8')) as Note;
+    this.mediaManager.preparePaths(note, dirPath);
+    return note;
   }
 
   private atomicallySaveNote(note: Note) {
