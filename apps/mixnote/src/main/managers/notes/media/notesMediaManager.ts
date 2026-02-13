@@ -1,7 +1,6 @@
 import { DATA_DIR } from '@main/constants';
 import path from 'path';
 import fs from 'fs';
-import { listFilesInDir } from '@interapp/utils/fileUtils';
 import { saveImage, extractBaseFromSrc } from './helpers';
 import { Note } from '@common/schemas/notes';
 
