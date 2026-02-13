@@ -36,6 +36,7 @@ export class NotesMediaManager {
         throw new Error('<img> is missing data-base attribute in preparePaths()');
       }
       parsed.src = `safe-file://${dirPath}/${base}`;
+      delete parsed['data-base'];
       const newTag =
         '<img ' +
         Object.entries(parsed)
