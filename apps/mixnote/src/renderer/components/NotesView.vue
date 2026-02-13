@@ -3,7 +3,7 @@
   import { useTabsStore } from '@renderer/store/tabs';
   import { storeToRefs } from 'pinia';
   import { TabGroup } from '@common/schemas/tabs';
-  import { randomId } from '@interapp/utils/utils';
+  import { randomId, throttle } from '@interapp/utils/utils';
   import { Columns2Icon, AlignHorizontalDistributeCenterIcon, XIcon } from 'lucide-vue-next';
   import { useNotesStore } from '@renderer/store/notes';
   import EditorContainer from './EditorContainer.vue';
@@ -172,6 +172,7 @@
       }
     }
   }
+  const windownMouseMoveThrottled = throttle(windowMouseMove, 100);
   function windowMouseUp() {
     resize.isResizing = false;
     document.body.style.cursor = '';
@@ -179,11 +180,11 @@
   }
   onMounted(() => {
     window.addEventListener('mouseup', windowMouseUp);
-    window.addEventListener('mousemove', windowMouseMove);
+    window.addEventListener('mousemove', windownMouseMoveThrottled);
   });
   onBeforeUnmount(() => {
     window.removeEventListener('mouseup', windowMouseUp);
-    window.removeEventListener('mousemove', windowMouseMove);
+    window.removeEventListener('mousemove', windownMouseMoveThrottled);
   });
 </script>
 
