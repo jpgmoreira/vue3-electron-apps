@@ -64,6 +64,7 @@ export class NotesMediaManager {
       bases.push(base);
       sources.push(src);
       parsed['data-base'] = base;
+      delete parsed.src;
       const newTag: string =
         '<img ' +
         Object.entries(parsed)
@@ -88,7 +89,6 @@ export class NotesMediaManager {
         bases.push(base);
         sources.push(src);
         const parsed: Record<string, string> = {
-          src,
           alt,
           'data-base': base,
         };
