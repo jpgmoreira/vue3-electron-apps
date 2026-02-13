@@ -7,16 +7,24 @@ import { getEmptyNote, Note } from '@common/schemas/notes';
 import { ensureDirExists } from '@interapp/utils/fileUtils';
 import { ProfileManager } from '../profileManager';
 import { TabsManager } from '../tabsManager';
+import { NotesMediaManager } from './media/notesMediaManager';
 
 export class NotesManager {
   private profileId: string | null = null;
   private profileManager: ProfileManager;
   private tabsManager: TabsManager;
+  private mediaManager: NotesMediaManager;
 
-  constructor(emitter: EventEmitter, profileManager: ProfileManager, tabsManager: TabsManager) {
+  constructor(
+    emitter: EventEmitter,
+    profileManager: ProfileManager,
+    tabsManager: TabsManager,
+    mediaManager: NotesMediaManager
+  ) {
     emitter.on(CommonEvents.clearProfileData, () => this.clear());
     this.profileManager = profileManager;
     this.tabsManager = tabsManager;
+    this.mediaManager = mediaManager;
   }
 
   private guard(noteId: string) {
@@ -62,8 +70,9 @@ export class NotesManager {
     fs.renameSync(tmpPath, fPath);
   }
 
-  public updateNote(note: Note) {
-    // TODO: Process note images.
+  public async updateNote(note: Note) {
+    if (!this.profileId) throw new Error('Profile not initialized.');
+    await this.mediaManager.noteWasUpdated(note, this.profileId);
     this.atomicallySaveNote(note);
   }
 

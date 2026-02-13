@@ -22,6 +22,6 @@ ipcMain.handle(InvokeChannels.getNote, (_: IpcMainInvokeEvent, noteId: string): 
   return notesManager.getNote(noteId);
 });
 
-ipcMain.handle(InvokeChannels.updateNote, (_: IpcMainInvokeEvent, note: Note) => {
-  notesManager.updateNote(note);
+ipcMain.handle(InvokeChannels.updateNote, async (_: IpcMainInvokeEvent, note: Note) => {
+  await notesManager.updateNote(note);
 });

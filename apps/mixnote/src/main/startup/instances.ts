@@ -6,6 +6,7 @@ import { WindowManager } from '@main/managers/windowManager';
 import { TabsManager } from '@main/managers/tabsManager';
 import { NodeCounterManager } from '@main/managers/nodeCounterManager';
 import { NotesManager } from '@main/managers/notes/notesManager';
+import { NotesMediaManager } from '@main/managers/notes/media/notesMediaManager';
 
 const emitter = new EventEmitter();
 export const windowManager = new WindowManager();
@@ -14,4 +15,11 @@ export const uiManager = new UIManager(emitter);
 export const graphManager = new GraphManager(emitter);
 export const tabsManager = new TabsManager(emitter);
 export const nodeCounterManager = new NodeCounterManager(emitter);
-export const notesManager = new NotesManager(emitter, profileManager, tabsManager);
+
+const notesMediaManager = new NotesMediaManager();
+export const notesManager = new NotesManager(
+  emitter,
+  profileManager,
+  tabsManager,
+  notesMediaManager
+);
