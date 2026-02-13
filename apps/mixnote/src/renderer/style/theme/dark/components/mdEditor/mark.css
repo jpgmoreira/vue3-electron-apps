@@ -1,0 +1,446 @@
+/* --------------------------------------------------
+   MARK SYSTEM — Dark Theme
+   Supports: bg, background, color, size
+   Sizes: 1 to 10
+-------------------------------------------------- */
+
+.theme-dark .md-editor .md-editor-preview mark[bg],
+.theme-dark .md-editor .md-editor-preview mark[background],
+.theme-dark .md-editor .md-editor-preview mark[color] {
+  padding: 0 2px;
+  border-radius: 2px;
+}
+
+/* ----------------------------
+   SIZE SYSTEM (1 to 7)
+---------------------------- */
+.theme-dark .md-editor .md-editor-preview mark[size='1'] {
+  font-size: 0.75em;
+}
+.theme-dark .md-editor .md-editor-preview mark[size='2'] {
+  font-size: 0.875em;
+}
+.theme-dark .md-editor .md-editor-preview mark[size='3'] {
+  font-size: 1em;
+}
+.theme-dark .md-editor .md-editor-preview mark[size='4'] {
+  font-size: 1.125em;
+}
+.theme-dark .md-editor .md-editor-preview mark[size='5'] {
+  font-size: 1.25em;
+}
+.theme-dark .md-editor .md-editor-preview mark[size='6'] {
+  font-size: 1.5em;
+}
+.theme-dark .md-editor .md-editor-preview mark[size='7'] {
+  font-size: 2em;
+}
+.theme-dark .md-editor .md-editor-preview mark[size='8'] {
+  font-size: 2.125em;
+}
+.theme-dark .md-editor .md-editor-preview mark[size='9'] {
+  font-size: 2.25em;
+}
+.theme-dark .md-editor .md-editor-preview mark[size='10'] {
+  font-size: 2.5em;
+}
+
+/* ----------------------------
+   COLOR SET (auto-generated)
+---------------------------- */
+
+/* RED */
+.theme-dark .md-editor .md-editor-preview mark[bg='#7f1d1d'],
+.theme-dark .md-editor .md-editor-preview mark[background='#7f1d1d'] {
+  background-color: #7f1d1d;
+}
+.theme-dark .md-editor .md-editor-preview mark[color='#7f1d1d'] {
+  color: #7f1d1d;
+}
+
+.theme-dark .md-editor .md-editor-preview mark[bg='#b91c1c'],
+.theme-dark .md-editor .md-editor-preview mark[background='#b91c1c'] {
+  background-color: #b91c1c;
+}
+.theme-dark .md-editor .md-editor-preview mark[color='#b91c1c'] {
+  color: #b91c1c;
+}
+
+.theme-dark .md-editor .md-editor-preview mark[bg='#ef4444'],
+.theme-dark .md-editor .md-editor-preview mark[background='#ef4444'] {
+  background-color: #ef4444;
+}
+.theme-dark .md-editor .md-editor-preview mark[color='#ef4444'] {
+  color: #ef4444;
+}
+
+.theme-dark .md-editor .md-editor-preview mark[bg='#fca5a5'],
+.theme-dark .md-editor .md-editor-preview mark[background='#fca5a5'] {
+  background-color: #fca5a5;
+}
+.theme-dark .md-editor .md-editor-preview mark[color='#fca5a5'] {
+  color: #fca5a5;
+}
+
+/* BLUE */
+.theme-dark .md-editor .md-editor-preview mark[bg='#1e40af'],
+.theme-dark .md-editor .md-editor-preview mark[background='#1e40af'] {
+  background-color: #1e40af;
+}
+.theme-dark .md-editor .md-editor-preview mark[color='#1e40af'] {
+  color: #1e40af;
+}
+
+.theme-dark .md-editor .md-editor-preview mark[bg='#2563eb'],
+.theme-dark .md-editor .md-editor-preview mark[background='#2563eb'] {
+  background-color: #2563eb;
+}
+.theme-dark .md-editor .md-editor-preview mark[color='#2563eb'] {
+  color: #2563eb;
+}
+
+.theme-dark .md-editor .md-editor-preview mark[bg='#60a5fa'],
+.theme-dark .md-editor .md-editor-preview mark[background='#60a5fa'] {
+  background-color: #60a5fa;
+}
+.theme-dark .md-editor .md-editor-preview mark[color='#60a5fa'] {
+  color: #60a5fa;
+}
+
+.theme-dark .md-editor .md-editor-preview mark[bg='#bfdbfe'],
+.theme-dark .md-editor .md-editor-preview mark[background='#bfdbfe'] {
+  background-color: #bfdbfe;
+}
+.theme-dark .md-editor .md-editor-preview mark[color='#bfdbfe'] {
+  color: #bfdbfe;
+}
+
+/* YELLOW */
+.theme-dark .md-editor .md-editor-preview mark[bg='#a16207'],
+.theme-dark .md-editor .md-editor-preview mark[background='#a16207'] {
+  background-color: #a16207;
+}
+.theme-dark .md-editor .md-editor-preview mark[color='#a16207'] {
+  color: #a16207;
+}
+
+.theme-dark .md-editor .md-editor-preview mark[bg='#eab308'],
+.theme-dark .md-editor .md-editor-preview mark[background='#eab308'] {
+  background-color: #eab308;
+}
+.theme-dark .md-editor .md-editor-preview mark[color='#eab308'] {
+  color: #eab308;
+}
+
+.theme-dark .md-editor .md-editor-preview mark[bg='#fde047'],
+.theme-dark .md-editor .md-editor-preview mark[background='#fde047'] {
+  background-color: #fde047;
+}
+.theme-dark .md-editor .md-editor-preview mark[color='#fde047'] {
+  color: #fde047;
+}
+
+.theme-dark .md-editor .md-editor-preview mark[bg='#fef9c3'],
+.theme-dark .md-editor .md-editor-preview mark[background='#fef9c3'] {
+  background-color: #fef9c3;
+}
+.theme-dark .md-editor .md-editor-preview mark[color='#fef9c3'] {
+  color: #fef9c3;
+}
+
+/* ORANGE */
+.theme-dark .md-editor .md-editor-preview mark[bg='#9a3412'],
+.theme-dark .md-editor .md-editor-preview mark[background='#9a3412'] {
+  background-color: #9a3412;
+}
+.theme-dark .md-editor .md-editor-preview mark[color='#9a3412'] {
+  color: #9a3412;
+}
+
+.theme-dark .md-editor .md-editor-preview mark[bg='#ea580c'],
+.theme-dark .md-editor .md-editor-preview mark[background='#ea580c'] {
+  background-color: #ea580c;
+}
+.theme-dark .md-editor .md-editor-preview mark[color='#ea580c'] {
+  color: #ea580c;
+}
+
+.theme-dark .md-editor .md-editor-preview mark[bg='#fb923c'],
+.theme-dark .md-editor .md-editor-preview mark[background='#fb923c'] {
+  background-color: #fb923c;
+}
+.theme-dark .md-editor .md-editor-preview mark[color='#fb923c'] {
+  color: #fb923c;
+}
+
+.theme-dark .md-editor .md-editor-preview mark[bg='#fed7aa'],
+.theme-dark .md-editor .md-editor-preview mark[background='#fed7aa'] {
+  background-color: #fed7aa;
+}
+.theme-dark .md-editor .md-editor-preview mark[color='#fed7aa'] {
+  color: #fed7aa;
+}
+
+/* CYAN */
+.theme-dark .md-editor .md-editor-preview mark[bg='#155e75'],
+.theme-dark .md-editor .md-editor-preview mark[background='#155e75'] {
+  background-color: #155e75;
+}
+.theme-dark .md-editor .md-editor-preview mark[color='#155e75'] {
+  color: #155e75;
+}
+
+.theme-dark .md-editor .md-editor-preview mark[bg='#0891b2'],
+.theme-dark .md-editor .md-editor-preview mark[background='#0891b2'] {
+  background-color: #0891b2;
+}
+.theme-dark .md-editor .md-editor-preview mark[color='#0891b2'] {
+  color: #0891b2;
+}
+
+.theme-dark .md-editor .md-editor-preview mark[bg='#22d3ee'],
+.theme-dark .md-editor .md-editor-preview mark[background='#22d3ee'] {
+  background-color: #22d3ee;
+}
+.theme-dark .md-editor .md-editor-preview mark[color='#22d3ee'] {
+  color: #22d3ee;
+}
+
+.theme-dark .md-editor .md-editor-preview mark[bg='#a5f3fc'],
+.theme-dark .md-editor .md-editor-preview mark[background='#a5f3fc'] {
+  background-color: #a5f3fc;
+}
+.theme-dark .md-editor .md-editor-preview mark[color='#a5f3fc'] {
+  color: #a5f3fc;
+}
+
+/* GREEN */
+.theme-dark .md-editor .md-editor-preview mark[bg='#14532d'],
+.theme-dark .md-editor .md-editor-preview mark[background='#14532d'] {
+  background-color: #14532d;
+}
+.theme-dark .md-editor .md-editor-preview mark[color='#14532d'] {
+  color: #14532d;
+}
+
+.theme-dark .md-editor .md-editor-preview mark[bg='#15803d'],
+.theme-dark .md-editor .md-editor-preview mark[background='#15803d'] {
+  background-color: #15803d;
+}
+.theme-dark .md-editor .md-editor-preview mark[color='#15803d'] {
+  color: #15803d;
+}
+
+.theme-dark .md-editor .md-editor-preview mark[bg='#22c55e'],
+.theme-dark .md-editor .md-editor-preview mark[background='#22c55e'] {
+  background-color: #22c55e;
+}
+.theme-dark .md-editor .md-editor-preview mark[color='#22c55e'] {
+  color: #22c55e;
+}
+
+.theme-dark .md-editor .md-editor-preview mark[bg='#bbf7d0'],
+.theme-dark .md-editor .md-editor-preview mark[background='#bbf7d0'] {
+  background-color: #bbf7d0;
+}
+.theme-dark .md-editor .md-editor-preview mark[color='#bbf7d0'] {
+  color: #bbf7d0;
+}
+
+/* LIME */
+.theme-dark .md-editor .md-editor-preview mark[bg='#3f6212'],
+.theme-dark .md-editor .md-editor-preview mark[background='#3f6212'] {
+  background-color: #3f6212;
+}
+.theme-dark .md-editor .md-editor-preview mark[color='#3f6212'] {
+  color: #3f6212;
+}
+
+.theme-dark .md-editor .md-editor-preview mark[bg='#65a30d'],
+.theme-dark .md-editor .md-editor-preview mark[background='#65a30d'] {
+  background-color: #65a30d;
+}
+.theme-dark .md-editor .md-editor-preview mark[color='#65a30d'] {
+  color: #65a30d;
+}
+
+.theme-dark .md-editor .md-editor-preview mark[bg='#a3e635'],
+.theme-dark .md-editor .md-editor-preview mark[background='#a3e635'] {
+  background-color: #a3e635;
+}
+.theme-dark .md-editor .md-editor-preview mark[color='#a3e635'] {
+  color: #a3e635;
+}
+
+.theme-dark .md-editor .md-editor-preview mark[bg='#d9f99d'],
+.theme-dark .md-editor .md-editor-preview mark[background='#d9f99d'] {
+  background-color: #d9f99d;
+}
+.theme-dark .md-editor .md-editor-preview mark[color='#d9f99d'] {
+  color: #d9f99d;
+}
+
+/* PINK */
+.theme-dark .md-editor .md-editor-preview mark[bg='#9d174d'],
+.theme-dark .md-editor .md-editor-preview mark[background='#9d174d'] {
+  background-color: #9d174d;
+}
+.theme-dark .md-editor .md-editor-preview mark[color='#9d174d'] {
+  color: #9d174d;
+}
+
+.theme-dark .md-editor .md-editor-preview mark[bg='#db2777'],
+.theme-dark .md-editor .md-editor-preview mark[background='#db2777'] {
+  background-color: #db2777;
+}
+.theme-dark .md-editor .md-editor-preview mark[color='#db2777'] {
+  color: #db2777;
+}
+
+.theme-dark .md-editor .md-editor-preview mark[bg='#f472b6'],
+.theme-dark .md-editor .md-editor-preview mark[background='#f472b6'] {
+  background-color: #f472b6;
+}
+.theme-dark .md-editor .md-editor-preview mark[color='#f472b6'] {
+  color: #f472b6;
+}
+
+.theme-dark .md-editor .md-editor-preview mark[bg='#fbcfe8'],
+.theme-dark .md-editor .md-editor-preview mark[background='#fbcfe8'] {
+  background-color: #fbcfe8;
+}
+.theme-dark .md-editor .md-editor-preview mark[color='#fbcfe8'] {
+  color: #fbcfe8;
+}
+
+/* PURPLE */
+.theme-dark .md-editor .md-editor-preview mark[bg='#6b21a8'],
+.theme-dark .md-editor .md-editor-preview mark[background='#6b21a8'] {
+  background-color: #6b21a8;
+}
+.theme-dark .md-editor .md-editor-preview mark[color='#6b21a8'] {
+  color: #6b21a8;
+}
+
+.theme-dark .md-editor .md-editor-preview mark[bg='#9333ea'],
+.theme-dark .md-editor .md-editor-preview mark[background='#9333ea'] {
+  background-color: #9333ea;
+}
+.theme-dark .md-editor .md-editor-preview mark[color='#9333ea'] {
+  color: #9333ea;
+}
+
+.theme-dark .md-editor .md-editor-preview mark[bg='#c084fc'],
+.theme-dark .md-editor .md-editor-preview mark[background='#c084fc'] {
+  background-color: #c084fc;
+}
+.theme-dark .md-editor .md-editor-preview mark[color='#c084fc'] {
+  color: #c084fc;
+}
+
+.theme-dark .md-editor .md-editor-preview mark[bg='#e9d5ff'],
+.theme-dark .md-editor .md-editor-preview mark[background='#e9d5ff'] {
+  background-color: #e9d5ff;
+}
+.theme-dark .md-editor .md-editor-preview mark[color='#e9d5ff'] {
+  color: #e9d5ff;
+}
+
+/* GRAY */
+.theme-dark .md-editor .md-editor-preview mark[bg='#1f2937'],
+.theme-dark .md-editor .md-editor-preview mark[background='#1f2937'] {
+  background-color: #1f2937;
+}
+.theme-dark .md-editor .md-editor-preview mark[color='#1f2937'] {
+  color: #1f2937;
+}
+
+.theme-dark .md-editor .md-editor-preview mark[bg='#4b5563'],
+.theme-dark .md-editor .md-editor-preview mark[background='#4b5563'] {
+  background-color: #4b5563;
+}
+.theme-dark .md-editor .md-editor-preview mark[color='#4b5563'] {
+  color: #4b5563;
+}
+
+.theme-dark .md-editor .md-editor-preview mark[bg='#9ca3af'],
+.theme-dark .md-editor .md-editor-preview mark[background='#9ca3af'] {
+  background-color: #9ca3af;
+}
+.theme-dark .md-editor .md-editor-preview mark[color='#9ca3af'] {
+  color: #9ca3af;
+}
+
+.theme-dark .md-editor .md-editor-preview mark[bg='#e5e7eb'],
+.theme-dark .md-editor .md-editor-preview mark[background='#e5e7eb'] {
+  background-color: #e5e7eb;
+}
+.theme-dark .md-editor .md-editor-preview mark[color='#e5e7eb'] {
+  color: #e5e7eb;
+}
+
+/* DEFAULT */
+.theme-dark .md-editor .md-editor-preview mark[bg='#ededf0'],
+.theme-dark .md-editor .md-editor-preview mark[background='#ededf0'] {
+  background-color: #ededf0;
+}
+.theme-dark .md-editor .md-editor-preview mark[color='#ededf0'] {
+  color: #ededf0;
+}
+
+.theme-dark .md-editor .md-editor-preview mark[bg='#222'],
+.theme-dark .md-editor .md-editor-preview mark[background='#222'] {
+  background-color: #222;
+}
+.theme-dark .md-editor .md-editor-preview mark[color='#222'] {
+  color: #222;
+}
+
+.theme-dark .md-editor .md-editor-preview mark[bg='#000'],
+.theme-dark .md-editor .md-editor-preview mark[background='#000'] {
+  background-color: #000;
+}
+.theme-dark .md-editor .md-editor-preview mark[color='#000'] {
+  color: #000;
+}
+
+.theme-dark .md-editor .md-editor-preview mark[bg='#fff'],
+.theme-dark .md-editor .md-editor-preview mark[background='#fff'] {
+  background-color: #fff;
+}
+.theme-dark .md-editor .md-editor-preview mark[color='#fff'] {
+  color: #fff;
+}
+
+/* PRIMARY (named colors) */
+.theme-dark .md-editor .md-editor-preview mark[bg='red'],
+.theme-dark .md-editor .md-editor-preview mark[background='red'] {
+  background-color: red;
+}
+.theme-dark .md-editor .md-editor-preview mark[color='red'] {
+  color: red;
+}
+
+.theme-dark .md-editor .md-editor-preview mark[bg='green'],
+.theme-dark .md-editor .md-editor-preview mark[background='green'] {
+  background-color: green;
+}
+.theme-dark .md-editor .md-editor-preview mark[color='green'] {
+  color: green;
+}
+
+.theme-dark .md-editor .md-editor-preview mark[bg='blue'],
+.theme-dark .md-editor .md-editor-preview mark[background='blue'] {
+  background-color: blue;
+}
+.theme-dark .md-editor .md-editor-preview mark[color='blue'] {
+  color: blue;
+}
+
+.theme-dark .md-editor .md-editor-preview mark[bg='yellow'],
+.theme-dark .md-editor .md-editor-preview mark[background='yellow'] {
+  background-color: yellow;
+}
+.theme-dark .md-editor .md-editor-preview mark[color='yellow'] {
+  color: yellow;
+}
