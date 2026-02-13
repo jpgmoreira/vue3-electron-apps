@@ -114,15 +114,22 @@ export class NotesMediaManager {
     const allBases = [...htmlResult.bases, ...markdownResult.bases];
     const allSources = [...htmlResult.sources, ...markdownResult.sources];
     const noteDir = this.buildNoteDir(note.id, profileId);
-    const allOldFiles = listFilesInDir(noteDir);
     const allNewFiles = allBases.map((b) => path.resolve(noteDir, b));
-    // Delete old files that were removed from the note:
-    for (const file of allOldFiles) {
-      if (file.endsWith('.json')) continue;
-      if (!allNewFiles.includes(file)) {
-        fs.unlinkSync(file);
-      }
-    }
+
+    // -- I have decided to keep old removed files from the notes,
+    //      because if I immediately removed them, it would break
+    //      the "undo" functionality in the notes, in the case where
+    //      the user removed a safe-file image, then did undo
+    //      (the image would have gone and the path would not exist anymore).
+    //    Thus, I decided to never delete removed images.
+    // const allOldFiles = listFilesInDir(noteDir);
+    // for (const file of allOldFiles) {
+    //   if (file.endsWith('.json')) continue;
+    //   if (!allNewFiles.includes(file)) {
+    //     fs.unlinkSync(file);
+    //   }
+    // }
+
     // Save new files:
     for (let i = 0; i < allBases.length; i++) {
       const fPath = allNewFiles[i];
