@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-  import { ref, useTemplateRef } from 'vue';
+  import { ref, computed, useTemplateRef } from 'vue';
   import { Note } from '@common/schemas/notes';
   import { parseTimestamp } from '@interapp/utils/dateUtils';
   import MdEditor from './MdEditor/MdEditor.vue';
@@ -8,6 +8,7 @@
   const notesStore = useNotesStore();
   const focus = ref(false);
   const headRef = useTemplateRef('head-ref');
+  const bucket = computed(() => Boolean(props.note.bucket));
   function toggleFocus() {
     focus.value = !focus.value;
   }
@@ -18,6 +19,11 @@
   }
   function updateNoteBody(value: string) {
     notesStore.updateCachedNoteBody(props.note.id, value);
+  }
+  function setNoteBucket(e: Event) {
+    const target = e.target as HTMLInputElement;
+    const checked = target.checked;
+    notesStore.setCachedNoteBucket(props.note.id, checked);
   }
 </script>
 
@@ -35,7 +41,7 @@
           <div class="min-w-0 overflow-hidden">
             <div class="flex gap-1 items-center whitespace-nowrap truncate">
               <b>Review bucket:</b>
-              <input type="checkbox" :checked="props.note.bucket" />
+              <input type="checkbox" :checked="bucket" @change="setNoteBucket" />
             </div>
           </div>
         </div>

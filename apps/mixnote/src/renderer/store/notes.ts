@@ -35,11 +35,17 @@ export const useNotesStore = defineStore('notes', {
       note.lastModified = Date.now();
       this.persistNote(note);
     },
-    updateCachedNoteBody(noteId, content: string) {
+    updateCachedNoteBody(noteId: string, content: string) {
       const note = this.notes[noteId];
       if (!note) throw new Error(`Update cached note body: Note id not found! ${noteId}`);
       note.body = content;
       note.lastModified = Date.now();
+      this.persistNote(note);
+    },
+    setCachedNoteBucket(noteId: string, value: boolean) {
+      const note = this.notes[noteId];
+      if (!note) throw new Error(`Set cached note bucket: Note id not found! ${noteId}`);
+      note.bucket = value;
       this.persistNote(note);
     },
     persistNote(note: Note) {
