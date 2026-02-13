@@ -1,4 +1,3 @@
-import { FileProxy } from '@interapp/utils/fileProxy';
 import { DATA_DIR } from '@main/constants';
 import { EventEmitter } from '@interapp/events/eventEmitter';
 import { CommonEvents } from '@interapp/events/commonEvents';
@@ -37,10 +36,7 @@ export class NotesManager {
     if (!this.profileId) throw new Error('Profile not initialized.');
     const now = Date.now();
     const note = getEmptyNote(name, now);
-    const dirPath = path.join(DATA_DIR, 'profileData', this.profileId, 'notes', note.id);
-    ensureDirExists(dirPath);
-    const fPath = path.join(dirPath, `${note.id}.json`);
-    new FileProxy(fPath, note);
+    this.atomicallySaveNote(note);
     return note;
   }
 
