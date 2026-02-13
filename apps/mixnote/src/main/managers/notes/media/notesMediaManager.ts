@@ -14,6 +14,7 @@ export class NotesMediaManager {
     };
   }
 
+  // back -> front.
   /**
    * - Prepares all paths so that the front can use them.
    * - All image files here were already saved in the past, so here they
@@ -47,6 +48,7 @@ export class NotesMediaManager {
     note.body = result;
   }
 
+  // front -> back.
   private processHtmlImages(content: string) {
     const bases: string[] = [];
     const sources: string[] = [];
@@ -76,6 +78,7 @@ export class NotesMediaManager {
     return { bases, sources, result };
   }
 
+  // front -> back.
   private processMarkdownImages(content: string) {
     // ![alt](src "title")
     const bases: string[] = [];
@@ -107,6 +110,7 @@ export class NotesMediaManager {
     return { bases, sources, result };
   }
 
+  // front -> back.
   public async noteWasUpdated(note: Note, profileId: string) {
     const htmlResult = this.processHtmlImages(note.body);
     const markdownResult = this.processMarkdownImages(htmlResult.result);
