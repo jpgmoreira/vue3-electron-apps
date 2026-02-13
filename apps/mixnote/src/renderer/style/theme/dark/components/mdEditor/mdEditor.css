@@ -18,14 +18,14 @@
 
 .theme-dark .md-editor {
   --md-bk-color: #1f1f1f;
-  --md-color: #ccc;
+  --md-color: #eee;
   --md-border-color: #525252;
 }
 
 .theme-dark .md-editor * {
   --md-theme-code-block-color: #c7d6e7;
   --md-theme-code-block-bg-color: #181818 !important;
-  --md-theme-color: #ccc !important;
+  --md-theme-color: #eee !important;
 }
 
 /* Links */
