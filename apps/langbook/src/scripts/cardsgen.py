@@ -23,7 +23,7 @@ def create_cards(count, db_path="cards.sqlite"):
       media TEXT NOT NULL,
       allowReversed BOOLEAN NOT NULL DEFAULT FALSE,
       createdAt INTEGER NOT NULL,
-      lastReviewedAt INTEGER,
+      lastReviewedAt INTEGER NOT NULL,
       sessions TEXT NOT NULL,
       tags TEXT NOT NULL,
       frequency TEXT NOT NULL,
@@ -47,9 +47,9 @@ def create_cards(count, db_path="cards.sqlite"):
                 id, front, back, extra, media, allowReversed, createdAt,
                 lastReviewedAt, sessions, tags, frequency, bucket, height
             )
-            VALUES (?, ?, ?, ?, '[]', 0, ?, NULL, ?, '[]', 'normal', 0, 141)
+            VALUES (?, ?, ?, ?, '[]', 0, ?, ?, ?, '[]', 'normal', 0, 141)
         """,
-            (card_id, front, back, extra, now, json.dumps([session_id])),
+            (card_id, front, back, extra, now, now, json.dumps([session_id])),
         )
 
     conn.commit()

@@ -12,7 +12,7 @@ export type Card = {
   media: MediaFile[];
   allowReversed: boolean;
   createdAt: number;
-  lastReviewedAt: number | null;
+  lastReviewedAt: number;
   sessions: string[];
   tags: string[];
   frequency: CardFrequency;
@@ -34,7 +34,7 @@ export type DBCard = {
   media: string;
   allowReversed: boolean;
   createdAt: number;
-  lastReviewedAt: number | null;
+  lastReviewedAt: number;
   sessions: string;
   tags: string;
   frequency: string;
@@ -43,6 +43,7 @@ export type DBCard = {
 };
 
 export function getEmptyCard(id: string): Card {
+  const now = Date.now();
   return {
     id,
     front: '',
@@ -50,8 +51,8 @@ export function getEmptyCard(id: string): Card {
     extra: '',
     media: [],
     allowReversed: false,
-    createdAt: Date.now(),
-    lastReviewedAt: null,
+    createdAt: now,
+    lastReviewedAt: now,
     sessions: [],
     tags: [],
     frequency: 'normal',

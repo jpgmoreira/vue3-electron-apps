@@ -28,7 +28,7 @@ export class CardsDbManager {
       media TEXT NOT NULL,
       allowReversed BOOLEAN NOT NULL DEFAULT FALSE,
       createdAt INTEGER NOT NULL,
-      lastReviewedAt INTEGER,
+      lastReviewedAt INTEGER NOT NULL,
       sessions TEXT NOT NULL,
       tags TEXT NOT NULL,
       frequency TEXT NOT NULL,
