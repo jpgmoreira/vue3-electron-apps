@@ -5,9 +5,10 @@ import path from 'path';
 
 export async function saveImage(src: string, fPath: string) {
   if (isSafeFile(src)) {
-    throw new Error('Trying to save an already saved image!');
-  }
-  if (isBase64(src)) {
+    // When copying a safe-file image between notes.
+    const srcPath = src.replace('safe-file://', '');
+    fs.copyFileSync(srcPath, fPath);
+  } else if (isBase64(src)) {
     saveBase64src(src, fPath);
   } else if (isHttp(src)) {
     await saveHttpSrc(src, fPath);

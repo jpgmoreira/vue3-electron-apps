@@ -142,7 +142,7 @@ export class NotesMediaManager {
       const fPath = allNewFiles[i];
       const source = allSources[i];
       if (fs.existsSync(fPath)) continue;
-      // Recover undo safe-file removal:
+      // Recover undo removal:
       const basename = path.basename(fPath);
       const pathInTrash = path.join(trashDir, basename);
       if (fs.existsSync(pathInTrash)) {
