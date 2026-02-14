@@ -3,6 +3,7 @@ import path from 'path';
 import fs from 'fs';
 import { saveImage, extractBaseFromSrc } from './helpers';
 import { Note } from '@common/schemas/notes';
+import { ensureDirExists, listFilesInDir } from '@interapp/utils/fileUtils';
 
 export class NotesMediaManager {
   // Necessary to recreate the regexes because they save state.
@@ -117,33 +118,48 @@ export class NotesMediaManager {
     const allBases = [...htmlResult.bases, ...markdownResult.bases];
     const allSources = [...htmlResult.sources, ...markdownResult.sources];
     const noteDir = this.buildNoteDir(note.id, profileId);
+    const trashDir = this.buildTrashDir(profileId);
     const allNewFiles = allBases.map((b) => path.resolve(noteDir, b));
+    const allOldFiles = listFilesInDir(noteDir);
 
-    // -- I have decided to keep removed files from the notes,
-    //      because if I immediately delete them, it would break
-    //      the "undo" functionality in the notes, in the case where
-    //      the user removed a safe-file image, then did undo
-    //      (the image would have gone and the path would not exist anymore).
-    //    Thus, I decided to never delete removed images.
-    // const allOldFiles = listFilesInDir(noteDir);
-    // for (const file of allOldFiles) {
-    //   if (file.endsWith('.json')) continue;
-    //   if (!allNewFiles.includes(file)) {
-    //     fs.unlinkSync(file);
-    //   }
-    // }
+    // Send removed files to the trash:
+    for (const file of allOldFiles) {
+      if (file.endsWith('.json')) continue;
+      if (!allNewFiles.includes(file)) {
+        const basename = path.basename(file);
+        const pathInTrash = path.join(trashDir, basename);
+        if (fs.existsSync(pathInTrash)) {
+          fs.rmSync(file);
+        } else {
+          ensureDirExists(trashDir);
+          fs.renameSync(file, pathInTrash);
+        }
+      }
+    }
 
     // Save new files:
     for (let i = 0; i < allBases.length; i++) {
       const fPath = allNewFiles[i];
       const source = allSources[i];
       if (fs.existsSync(fPath)) continue;
+      // Recover undo safe-file removal:
+      const basename = path.basename(fPath);
+      const pathInTrash = path.join(trashDir, basename);
+      if (fs.existsSync(pathInTrash)) {
+        fs.renameSync(pathInTrash, fPath);
+        continue;
+      }
+      // Save:
       await saveImage(source, fPath);
     }
+
     note.body = markdownResult.result;
   }
 
   private buildNoteDir(noteId: string, profileId: string) {
     return path.join(DATA_DIR, 'profileData', profileId, 'notes', noteId);
+  }
+  private buildTrashDir(profileId: string) {
+    return path.join(DATA_DIR, 'profileData', profileId, 'trash');
   }
 }

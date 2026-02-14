@@ -109,6 +109,7 @@ export class NotesManager {
     const fPath = path.join(dirPath, `${note.id}.json`);
     const tmpPath = path.join(dirPath, `${note.id}.json.tmp`);
     fs.writeFileSync(tmpPath, JSON.stringify(note), 'utf-8');
+    if (fs.existsSync(fPath)) fs.rmSync(fPath);
     fs.renameSync(tmpPath, fPath);
   }
 

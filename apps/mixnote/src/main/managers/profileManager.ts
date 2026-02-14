@@ -37,9 +37,12 @@ export class ProfileManager {
     const record = this.findProfileRecord(profileId);
     if (!record) throw new Error('Profile record not found!');
     record.lastAccess = Date.now();
-    const profilePath = path.join(DATA_DIR, 'profileData', profileId, 'profile.json');
-    this.currProfileProxy = new FileProxy(profilePath, getEmptyProfile(record.id, record.name));
+    const profilePath = path.join(DATA_DIR, 'profileData', profileId);
+    const profileJsonPath = path.join(profilePath, 'profile.json');
+    const trashPath = path.join(profilePath, 'trash');
+    this.currProfileProxy = new FileProxy(profileJsonPath, getEmptyProfile(record.id, record.name));
     this.registryProxy!.proxy.currProfileId = profileId;
+    fs.rmSync(trashPath, { recursive: true, force: true });
   }
 
   public getCurrProfile() {
