@@ -9,6 +9,8 @@ import { ProfileManager } from '../profileManager';
 import { TabsManager } from '../tabsManager';
 import { NotesMediaManager } from './media/notesMediaManager';
 import { FlashcardsManager } from './flashcardsManager';
+import { BooleanMap, FrequencyMap, TimestampMap } from '@common/schemas/maps';
+import { FileProxy } from '@interapp/utils/fileProxy';
 
 export class NotesManager {
   private profileId: string | null = null;
@@ -16,6 +18,10 @@ export class NotesManager {
   private tabsManager: TabsManager;
   private mediaManager: NotesMediaManager;
   private flashcardsManager: FlashcardsManager;
+
+  private lastModified: FileProxy<TimestampMap> | null = null;
+  private frequencies: FileProxy<FrequencyMap> | null = null;
+  private bucket: FileProxy<BooleanMap> | null = null;
 
   constructor(
     emitter: EventEmitter,
@@ -40,23 +46,45 @@ export class NotesManager {
     return dirPath;
   }
 
+  private guardMaps() {
+    if (!this.lastModified) throw new Error('lastModified not set!');
+    if (!this.frequencies) throw new Error('frequencies not set!');
+    if (!this.bucket) throw new Error('bucket not set!');
+  }
+
   public loadProfile(profileId: string) {
     this.profileId = profileId;
+    const dirPath = path.join(DATA_DIR, 'profileData', this.profileId);
+    const lastModifiedPath = path.join(dirPath, 'lastModified.json');
+    const frequenciesPath = path.join(dirPath, 'frequencies.json');
+    const bucketPath = path.join(dirPath, 'bucket.json');
+    this.lastModified = new FileProxy(lastModifiedPath, {});
+    this.frequencies = new FileProxy(frequenciesPath, {});
+    this.bucket = new FileProxy(bucketPath, {});
+    this.flashcardsManager.setMaps(this.lastModified.target, this.frequencies.target);
   }
 
   public createNote(name: string): Note {
     if (!this.profileId) throw new Error('Profile not initialized.');
+    this.guardMaps();
     const now = Date.now();
     const note = getEmptyNote(name, now);
     this.atomicallySaveNote(note);
+    this.lastModified!.proxy[note.id] = note.lastModified;
+    this.frequencies!.proxy[note.id] = note.frequency;
+    this.bucket!.proxy[note.id] = note.bucket;
     return note;
   }
 
   public deleteNote(noteId: string) {
+    this.guardMaps();
     const dirPath = this.guard(noteId);
     fs.rmSync(dirPath, { recursive: true, force: true });
     this.profileManager.addNotes(-1);
     this.tabsManager.noteWasDeleted(noteId);
+    delete this.lastModified!.proxy[noteId];
+    delete this.frequencies!.proxy[noteId];
+    delete this.bucket!.proxy[noteId];
   }
 
   public getNote(noteId: string): Note {
@@ -78,12 +106,29 @@ export class NotesManager {
 
   public async updateNote(note: Note) {
     if (!this.profileId) throw new Error('Profile not initialized.');
+    this.guardMaps();
     await this.mediaManager.noteWasUpdated(note, this.profileId);
     this.atomicallySaveNote(note);
+    const lastModifiedProxy = this.lastModified!.proxy;
+    const frequenciesProxy = this.frequencies!.proxy;
+    const bucketProxy = this.bucket!.proxy;
+    if (note.lastModified !== lastModifiedProxy[note.id]) {
+      lastModifiedProxy[note.id] = note.lastModified;
+    }
+    if (note.frequency !== frequenciesProxy[note.id]) {
+      frequenciesProxy[note.id] = note.frequency;
+    }
+    const noteBucket = Boolean(note.bucket);
+    if (noteBucket !== bucketProxy[note.id]) {
+      bucketProxy[note.id] = noteBucket;
+    }
   }
 
   public clear() {
-    this.profileId = null;
     this.flashcardsManager.clear();
+    this.profileId = null;
+    this.lastModified = null;
+    this.frequencies = null;
+    this.bucket = null;
   }
 }

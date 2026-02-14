@@ -1,6 +1,7 @@
 import { NoteFrequency } from '@common/schemas/notes';
 import { cloneDeep, deepFreeze } from '@interapp/utils/utils';
 import { SettingsManager } from '../settingsManager';
+import { FrequencyMap, TimestampMap } from '@common/schemas/maps';
 
 const EMPTY_QUEUES = deepFreeze({
   normal: [],
@@ -13,26 +14,24 @@ export class FlashcardsManager {
   private lowCounter = 0;
   private highCounter = 0;
   private settingsManager: SettingsManager;
-  private lastModified: Record<string, number> | null = null;
-  private createdAt: Record<string, number> | null = null;
-  private frequencies: Record<string, NoteFrequency> | null = null;
+
+  private lastModified: TimestampMap | null = null;
+  private frequencies: FrequencyMap | null = null;
 
   constructor(settingsManager: SettingsManager) {
     this.settingsManager = settingsManager;
   }
 
   private compare(a: string, b: string) {
-    if (!this.lastModified || !this.createdAt) {
-      throw new Error('compare() error!');
+    if (!this.lastModified) {
+      throw new Error('compare(): lastModified map not set!');
     }
     const aLast = this.lastModified[a];
     const bLast = this.lastModified[b];
-    const aCreated = this.createdAt[a];
-    const bCreated = this.createdAt[b];
-    if (aLast !== null && bLast !== null) return aLast - bLast;
-    if (aLast === null && bLast !== null) return -1;
-    if (aLast !== null && bLast === null) return 1;
-    return aCreated - bCreated;
+    if (!aLast || !bLast) {
+      throw new Error('compare(): Note lastModified not set!');
+    }
+    return aLast - bLast;
   }
 
   public recomputeQueues(filtered: string[]) {
@@ -41,9 +40,15 @@ export class FlashcardsManager {
     }
     const frequencies = this.frequencies;
     this.queues = cloneDeep(EMPTY_QUEUES);
-    this.queues.high = filtered.filter((s) => frequencies[s] === 'high').sort(this.compare);
-    this.queues.normal = filtered.filter((s) => frequencies[s] === 'normal').sort(this.compare);
-    this.queues.low = filtered.filter((s) => frequencies[s] === 'low').sort(this.compare);
+    this.queues.high = filtered
+      .filter((s) => frequencies[s] === 'high')
+      .sort((a, b) => this.compare(a, b));
+    this.queues.normal = filtered
+      .filter((s) => frequencies[s] === 'normal')
+      .sort((a, b) => this.compare(a, b));
+    this.queues.low = filtered
+      .filter((s) => frequencies[s] === 'low')
+      .sort((a, b) => this.compare(a, b));
   }
 
   private chooseQueue(): NoteFrequency | null {
@@ -77,9 +82,16 @@ export class FlashcardsManager {
     return noteId;
   }
 
+  public setMaps(lastModified: TimestampMap, frequencies: FrequencyMap) {
+    this.lastModified = lastModified;
+    this.frequencies = frequencies;
+  }
+
   public clear() {
     this.queues = cloneDeep(EMPTY_QUEUES);
     this.highCounter = 0;
     this.lowCounter = 0;
+    this.lastModified = null;
+    this.frequencies = null;
   }
 }
