@@ -9,6 +9,7 @@ import { NotesManager } from '@main/managers/notes/notesManager';
 import { NotesMediaManager } from '@main/managers/notes/media/notesMediaManager';
 import { FlashcardsManager } from '@main/managers/notes/flashcardsManager';
 import { SettingsManager } from '@main/managers/settingsManager';
+import { explorerManager } from '@interapp/components/Explorer/main/instances/instances';
 
 const emitter = new EventEmitter();
 export const windowManager = new WindowManager();
@@ -26,5 +27,6 @@ export const notesManager = new NotesManager(
   profileManager,
   tabsManager,
   notesMediaManager,
-  flashcardsManager
+  flashcardsManager,
+  explorerManager
 );

@@ -11,6 +11,8 @@ import { NotesMediaManager } from './media/notesMediaManager';
 import { FlashcardsManager } from './flashcardsManager';
 import { BooleanMap, FrequencyMap, TimestampMap } from '@common/schemas/maps';
 import { FileProxy } from '@interapp/utils/fileProxy';
+import { Statistics } from '@common/schemas/statistics';
+import { ExplorerManager } from '@interapp/components/Explorer/main/explorerManager';
 
 export class NotesManager {
   private profileId: string | null = null;
@@ -18,6 +20,7 @@ export class NotesManager {
   private tabsManager: TabsManager;
   private mediaManager: NotesMediaManager;
   private flashcardsManager: FlashcardsManager;
+  private explorerManager: ExplorerManager;
 
   private lastReviewedAt: FileProxy<TimestampMap> | null = null;
   private frequencies: FileProxy<FrequencyMap> | null = null;
@@ -28,13 +31,15 @@ export class NotesManager {
     profileManager: ProfileManager,
     tabsManager: TabsManager,
     mediaManager: NotesMediaManager,
-    flashcardsManager: FlashcardsManager
+    flashcardsManager: FlashcardsManager,
+    explorerManager: ExplorerManager
   ) {
     emitter.on(CommonEvents.clearProfileData, () => this.clear());
     this.profileManager = profileManager;
     this.tabsManager = tabsManager;
     this.mediaManager = mediaManager;
     this.flashcardsManager = flashcardsManager;
+    this.explorerManager = explorerManager;
   }
 
   private guard(noteId: string) {
@@ -130,6 +135,37 @@ export class NotesManager {
     if (!nextId) return null;
     this.lastReviewedAt!.proxy[nextId] = Date.now();
     return this.getNote(nextId);
+  }
+
+  public getStatistics(): Statistics {
+    this.guardMaps();
+    const frequencies = this.frequencies!.target;
+    const bucket = this.bucket!.target;
+    const allIds = new Set(Object.keys(frequencies));
+    const selectedNodes = this.explorerManager.getSelectedNodes();
+    const filteredIds = selectedNodes.filter((n) => allIds.has(n));
+    const total = allIds.size;
+    const totalBucket = Object.values(bucket).filter(Boolean).length;
+    const totalLow = Object.values(frequencies).filter((v) => v === 'low').length;
+    const totalHigh = Object.values(frequencies).filter((v) => v === 'high').length;
+    const totalNormal = Object.values(frequencies).filter((v) => v === 'normal').length;
+    const filtered = filteredIds.length;
+    const filteredBucket = filteredIds.filter((v) => bucket[v]).length;
+    const filteredLow = filteredIds.filter((v) => frequencies[v] === 'low').length;
+    const filteredHigh = filteredIds.filter((v) => frequencies[v] === 'high').length;
+    const filteredNormal = filteredIds.filter((v) => frequencies[v] === 'normal').length;
+    return {
+      total,
+      totalBucket,
+      totalLow,
+      totalHigh,
+      totalNormal,
+      filtered,
+      filteredBucket,
+      filteredLow,
+      filteredHigh,
+      filteredNormal,
+    };
   }
 
   public clear() {

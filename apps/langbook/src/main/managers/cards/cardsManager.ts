@@ -179,7 +179,7 @@ export class CardsManager {
 
   public getStatistics(): Statistics {
     const allCards = Object.values(this.cardsMap);
-    const totalCards = allCards.length;
+    const total = allCards.length;
     const totalBucket = allCards.filter((c) => c.bucket).length;
     const totalLow = allCards.filter((c) => c.frequency === 'low').length;
     const totalHigh = allCards.filter((c) => c.frequency === 'high').length;
@@ -190,7 +190,7 @@ export class CardsManager {
     const filteredHigh = this.filtered.filter((c) => c.frequency === 'high').length;
     const filteredNormal = this.filtered.filter((c) => c.frequency === 'normal').length;
     return {
-      totalCards,
+      total,
       totalBucket,
       totalLow,
       totalHigh,

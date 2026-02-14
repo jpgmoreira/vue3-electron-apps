@@ -115,7 +115,7 @@
         <h2>Overall statistics</h2>
         <div>
           <span>Total number of cards</span>
-          <b>{{ statistics.totalCards }}</b>
+          <b>{{ statistics.total }}</b>
         </div>
         <div>
           <span>Total number of cards in the review bucket</span>
