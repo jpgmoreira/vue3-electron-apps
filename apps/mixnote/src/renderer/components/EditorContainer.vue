@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-  import { ref, computed, useTemplateRef } from 'vue';
+  import { ref, useTemplateRef } from 'vue';
   import { Note } from '@common/schemas/notes';
   import { parseTimestamp } from '@interapp/utils/dateUtils';
   import MdEditor from './MdEditor/MdEditor.vue';
@@ -8,7 +8,6 @@
   const notesStore = useNotesStore();
   const focus = ref(false);
   const headRef = useTemplateRef('head-ref');
-  const bucket = computed(() => Boolean(props.note.bucket));
   function toggleFocus() {
     focus.value = !focus.value;
   }
@@ -41,7 +40,7 @@
           <div class="min-w-0 overflow-hidden">
             <div class="flex gap-1 items-center whitespace-nowrap truncate">
               <b>Review bucket:</b>
-              <input type="checkbox" :checked="bucket" @change="setNoteBucket" />
+              <input type="checkbox" :checked="props.note.bucket" @change="setNoteBucket" />
             </div>
           </div>
         </div>

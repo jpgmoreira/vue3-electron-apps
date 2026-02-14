@@ -83,7 +83,7 @@ export function genHash(str: string) {
 }
 
 /**
- * Builds a randomized id based on a name and millisecond-based unix timestamp.
+ * Builds a deterministic id based on a name and millisecond-based unix timestamp.
  * The id will contain only lower-case alphanumeric characters and underscores.
  */
 export function buildId(name: string, timestamp: number) {

@@ -3,7 +3,7 @@ import { EventEmitter } from '@interapp/events/eventEmitter';
 import { CommonEvents } from '@interapp/events/commonEvents';
 import path from 'path';
 import fs from 'fs';
-import { getEmptyNote, Note } from '@common/schemas/notes';
+import { getEmptyNote, getEmptyPersistentNote, Note, PersistentNote } from '@common/schemas/notes';
 import { ensureDirExists } from '@interapp/utils/fileUtils';
 import { ProfileManager } from '../profileManager';
 import { TabsManager } from '../tabsManager';
@@ -81,10 +81,11 @@ export class NotesManager {
     this.guardMaps();
     const now = Date.now();
     const note = getEmptyNote(name, now);
+    const persistent = getEmptyPersistentNote(name, now);
     const dirPath = path.join(DATA_DIR, 'profileData', this.profileId, 'notes', note.id);
     ensureDirExists(dirPath);
     const fPath = path.join(dirPath, `${note.id}.json`);
-    fs.writeFileSync(fPath, JSON.stringify(note), 'utf-8');
+    fs.writeFileSync(fPath, JSON.stringify(persistent), 'utf-8');
     this.lastReviewedAt!.proxy[note.id] = now;
     this.frequencies!.proxy[note.id] = note.frequency;
     this.bucket!.proxy[note.id] = note.bucket;
@@ -103,9 +104,15 @@ export class NotesManager {
   }
 
   public getNote(noteId: string): Note {
+    this.guardMaps();
     const dirPath = this.guard(noteId);
     const notePath = path.join(dirPath, `${noteId}.json`);
-    const note = JSON.parse(fs.readFileSync(notePath, 'utf-8')) as Note;
+    const persistent = JSON.parse(fs.readFileSync(notePath, 'utf-8')) as PersistentNote;
+    const note: Note = {
+      ...persistent,
+      bucket: this.bucket![noteId],
+      frequency: this.frequencies![noteId],
+    };
     this.mediaManager.preparePaths(note, dirPath);
     return note;
   }
@@ -115,7 +122,8 @@ export class NotesManager {
     ensureDirExists(dirPath);
     const fPath = path.join(dirPath, `${note.id}.json`);
     const tmpPath = path.join(dirPath, `${note.id}.json.tmp`);
-    fs.writeFileSync(tmpPath, JSON.stringify(note), 'utf-8');
+    const { frequency, bucket, ...persistent } = note;
+    fs.writeFileSync(tmpPath, JSON.stringify(persistent), 'utf-8');
     if (fs.existsSync(fPath)) fs.rmSync(fPath);
     fs.renameSync(tmpPath, fPath);
   }
@@ -130,9 +138,8 @@ export class NotesManager {
     if (note.frequency !== frequenciesProxy[note.id]) {
       frequenciesProxy[note.id] = note.frequency;
     }
-    const noteBucket = Boolean(note.bucket);
-    if (noteBucket !== bucketProxy[note.id]) {
-      bucketProxy[note.id] = noteBucket;
+    if (note.bucket !== bucketProxy[note.id]) {
+      bucketProxy[note.id] = note.bucket;
     }
   }
 
