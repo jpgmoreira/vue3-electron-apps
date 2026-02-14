@@ -7,19 +7,19 @@ import { cloneDeep } from '@interapp/utils/utils';
 export const useNotesStore = defineStore('notes', {
   state: () => ({
     // This notes cache is used only for the editor, not the flashcards!
-    // To avoid race-condition problems, I do not clear the cache.
-    // By the application normal usage I can assume it will never store a very
-    //   large number of notes.
+    // To avoid race-condition problems, I do not clear the cache when closing a note.
+    // By the application normal usage I can assume it will never store a very large number of notes.
+    // The entire cache is refetched in the case where you clear the bucket or frequency properties
+    //   of the selected cards in the pre-flashcards window.
     notes: {} as Record<string, Note>,
     timers: {} as Record<string, ReturnType<typeof setTimeout> | undefined>,
+    isFetchingCache: false,
   }),
   actions: {
     async initFromStartupData(data: StartupData) {
       if (data.tabGroups) {
         const noteIds = data.tabGroups.map((g) => g.tabs.map((t) => t.noteId)).flat();
-        for (const noteId of noteIds) {
-          await this.fetchNote(noteId);
-        }
+        await this.refetchCache(noteIds);
       }
     },
     getNoteFromCache(noteId: string): Note {
@@ -57,7 +57,7 @@ export const useNotesStore = defineStore('notes', {
     async renameNote(noteId: string, newName: string) {
       // Rename came from the Explorer component.
       // Note can be present or absent in the cache.
-      // Do not clear the cache by design decision.
+      // Do not clear the cache here.
       const note = await this.fetchNote(noteId);
       note.name = newName;
       this.persistNote(note);
@@ -68,8 +68,21 @@ export const useNotesStore = defineStore('notes', {
       this.notes[noteId] = note;
       return note;
     },
+    async refetchCache(noteIds: string[]) {
+      if (this.isFetchingCache) return;
+      try {
+        this.isFetchingCache = true;
+        this.clear();
+        for (const noteId of noteIds) {
+          await this.fetchNote(noteId);
+        }
+      } finally {
+        this.isFetchingCache = false;
+      }
+    },
     clear() {
       this.notes = {};
+      this.timers = {};
     },
   },
 });

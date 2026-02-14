@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-  import { onBeforeUnmount, onMounted, reactive, useTemplateRef, watch } from 'vue';
+  import { computed, onBeforeUnmount, onMounted, reactive, useTemplateRef, watch } from 'vue';
   import { useTabsStore } from '@renderer/store/tabs';
   import { storeToRefs } from 'pinia';
   import { TabGroup } from '@common/schemas/tabs';
@@ -17,6 +17,8 @@
   const { tabGroups } = storeToRefs(tabsStore);
 
   const groupsContainer = useTemplateRef('groups-container');
+
+  const isFetchingCache = computed(() => notesStore.isFetchingCache);
 
   const resize = reactive({
     isResizing: false,
@@ -189,7 +191,11 @@
 </script>
 
 <template>
-  <div class="notes-view flex absolute inset-0 overflow-hidden" ref="groups-container">
+  <div
+    class="notes-view flex absolute inset-0 overflow-hidden"
+    v-if="!isFetchingCache"
+    ref="groups-container"
+  >
     <!-- Tab groups -->
     <div
       v-for="(group, index) in tabGroups"

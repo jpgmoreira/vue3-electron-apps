@@ -13,10 +13,14 @@
   import { YesOrNo } from '@interapp/types/yesOrNo';
   import { NoteFrequency } from '@common/schemas/notes';
   import PreFlashcardsModals from './PreFlashcardsModals.vue';
+  import { useNotesStore } from '@renderer/store/notes';
+  import { useTabsStore } from '@renderer/store/tabs';
 
   const statisticsStore = useStatisticsStore();
   const settingsStore = useSettingsStore();
   const filtersStore = useFiltersStore();
+  const notesStore = useNotesStore();
+  const tabsStore = useTabsStore();
 
   const statistics = computed(() => statisticsStore.statistics);
   const bucketFilter = computed(() => filtersStore.filters.bucket);
@@ -80,6 +84,12 @@
     modalsRef.value.show('low', statistics.value.filteredLow);
   }
 
+  function cleared() {
+    fetchStatistics();
+    const noteIds = tabsStore.tabGroups.map((g) => g.tabs.map((t) => t.noteId)).flat();
+    notesStore.refetchCache(noteIds);
+  }
+
   onMounted(() => {
     fetchStatistics();
   });
@@ -87,7 +97,7 @@
 
 <template>
   <div class="settings-page">
-    <PreFlashcardsModals ref="modal" @cleared="fetchStatistics" />
+    <PreFlashcardsModals ref="modal" @cleared="cleared" />
     <Header />
     <div class="content">
       <div class="flex justify-between">
