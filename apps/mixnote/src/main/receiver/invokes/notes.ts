@@ -2,6 +2,7 @@ import { ipcMain, IpcMainInvokeEvent } from 'electron';
 import { InvokeChannels } from '@preload/channels/invoke';
 import { nodeCounterManager, notesManager, profileManager } from '@main/startup/instances';
 import { Note } from '@common/schemas/notes';
+import { Statistics } from '@common/schemas/statistics';
 
 ipcMain.handle(InvokeChannels.createFolder, (_: IpcMainInvokeEvent): number => {
   const number = nodeCounterManager.getCounter().nextDir;
@@ -25,3 +26,18 @@ ipcMain.handle(InvokeChannels.getNote, (_: IpcMainInvokeEvent, noteId: string): 
 ipcMain.handle(InvokeChannels.updateNote, async (_: IpcMainInvokeEvent, note: Note) => {
   await notesManager.updateNote(note);
 });
+
+ipcMain.handle(InvokeChannels.getStatistics, (_: IpcMainInvokeEvent): Statistics => {
+  return notesManager.getStatistics();
+});
+
+ipcMain.handle(InvokeChannels.recomputeQueues, (_: IpcMainInvokeEvent) => {
+  notesManager.recomputeQueues();
+});
+
+ipcMain.handle(
+  InvokeChannels.getFlashcard,
+  (_: IpcMainInvokeEvent, noteId: string | null): Promise<Note | null> => {
+    return notesManager.getFlashcard(noteId);
+  }
+);

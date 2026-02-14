@@ -211,6 +211,11 @@ export class NotesManager {
     return cloneDeep(this.filters.target);
   }
 
+  public updateFilters(filters: Filters) {
+    if (!this.filters) throw new Error('Filters not set!');
+    Object.assign(this.filters.proxy, filters);
+  }
+
   public recomputeQueues() {
     this.filter();
     this.flashcardsManager.recomputeQueues(this.filtered);

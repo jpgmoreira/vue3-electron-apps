@@ -4,6 +4,7 @@ import {
   nodeCounterManager,
   notesManager,
   profileManager,
+  settingsManager,
   tabsManager,
   uiManager,
 } from './instances';
@@ -14,6 +15,8 @@ import path from 'path';
 import { UISettings } from '@common/schemas/ui';
 import { GraphRecord } from '@common/schemas/graph';
 import { TabGroup } from '@common/schemas/tabs';
+import { Settings } from '@common/schemas/settings';
+import { Filters } from '@common/schemas/filters';
 
 export async function loadStartupData(): Promise<StartupData> {
   const currProfile = profileManager.getCurrProfile();
@@ -21,11 +24,14 @@ export async function loadStartupData(): Promise<StartupData> {
   let ui: UISettings | null = null;
   let graph: GraphRecord[] | null = null;
   let tabGroups: TabGroup[] | null = null;
+  let settings: Settings | null = null;
+  let filters: Filters | null = null;
   if (currProfile) {
     const profileDir = path.resolve(DATA_DIR, 'profileData', currProfile.id);
     // The order of initialization below is important.
     uiManager.loadProfile(currProfile.id);
     nodeCounterManager.loadProfile(currProfile.id);
+    settingsManager.loadProfile(currProfile.id);
     notesManager.loadProfile(currProfile.id);
     tabsManager.loadProfile(currProfile.id);
     const treePath = path.join(profileDir, 'tree.json');
@@ -38,6 +44,8 @@ export async function loadStartupData(): Promise<StartupData> {
     ui = uiManager.getUISettings();
     graph = await graphManager.loadProfile(currProfile.id);
     tabGroups = tabsManager.getGroups();
+    settings = settingsManager.getSettings();
+    filters = notesManager.getFilters();
   }
   return {
     currProfile,
@@ -45,5 +53,7 @@ export async function loadStartupData(): Promise<StartupData> {
     ui,
     graph,
     tabGroups,
+    settings,
+    filters,
   };
 }

@@ -19,7 +19,7 @@ export const graphManager = new GraphManager(emitter);
 export const tabsManager = new TabsManager(emitter);
 export const nodeCounterManager = new NodeCounterManager(emitter);
 
-const settingsManager = new SettingsManager(emitter);
+export const settingsManager = new SettingsManager(emitter);
 const flashcardsManager = new FlashcardsManager(settingsManager);
 const notesMediaManager = new NotesMediaManager();
 export const notesManager = new NotesManager(

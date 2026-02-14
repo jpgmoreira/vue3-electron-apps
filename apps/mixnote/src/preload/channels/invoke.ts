@@ -13,18 +13,12 @@ export enum InvokeChannels {
   updateTabs = 'update-tabs',
   getNote = 'get-note',
   updateNote = 'update-note',
-  // ----------------------------------
+  getStatistics = 'get-statistics',
+  recomputeQueues = 'recompute-queues',
+  getFlashcard = 'get-flashcard',
   updateSettings = 'update-settings',
   updateFilters = 'update-filters',
-  createCard = 'create-card',
-  deleteCard = 'delete-card',
-  updateCard = 'update-card',
-  refetchSessions = 'refetch-sessions',
-  refetchTags = 'refetch-tags',
-  refetchFilters = 'refetch-filters',
-  getCardsPage = 'get-cards-page',
-  getStatistics = 'get-statistics',
+  //
   clearFilteredBucket = 'clear-filtered-bucket',
   clearFilteredFrequency = 'clear-filtered-frequency',
-  getFlashcard = 'get-flashcard',
 }
