@@ -8,6 +8,7 @@ import { useUIStore } from '@renderer/store/uiStore';
 import { useNotesStore } from '@renderer/store/notes';
 import { useSettingsStore } from '@renderer/store/settings';
 import { useFiltersStore } from '@renderer/store/filters';
+import { useStatisticsStore } from '@renderer/store/statistics';
 
 eventEmitter.on(CommonEvents.loadInitialData, async (data: StartupData) => {
   useProfileStore().initFromStartupData(data);
@@ -26,4 +27,5 @@ eventEmitter.on(CommonEvents.clearProfileData, () => {
   useSettingsStore().clear();
   useFiltersStore().clear();
   useNotesStore().clear();
+  useStatisticsStore().clear();
 });

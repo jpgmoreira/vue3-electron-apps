@@ -1,39 +1,42 @@
 <script lang="ts" setup>
-  import { onMounted, ref, useTemplateRef, computed } from 'vue';
-  import { useSettingsStore } from '@renderer/store/settings';
+  import { ref, computed, onMounted } from 'vue';
   import Header from '@renderer/components/Header.vue';
+  import { useStatisticsStore } from '@renderer/store/statistics';
+  import { useSettingsStore } from '@renderer/store/settings';
   import {
     DEFAULT_HIGH_FREQUENCY_INTERVAL,
     DEFAULT_LOW_FREQUENCY_INTERVAL,
   } from '@common/constants';
-  import PreFlashcardsModals from './PreFlashcardsModals.vue';
-  import { useFlashcardsStore } from '@renderer/store/flashcards';
-  import { useStatisticsStore } from '@renderer/store/statistics';
-  import { useRouter } from 'vue-router';
+  import SelectionList from '@interapp/components/SelectionList.vue';
+  import { FREQUENCY_OPTIONS, YES_OR_NO_OPTIONS } from '@renderer/helpers/options';
+  import { useFiltersStore } from '@renderer/store/filters';
 
-  const settingsStore = useSettingsStore();
-  const flashcardsStore = useFlashcardsStore();
   const statisticsStore = useStatisticsStore();
-
-  const router = useRouter();
+  const settingsStore = useSettingsStore();
+  const filtersStore = useFiltersStore();
 
   const statistics = computed(() => statisticsStore.statistics);
+  const bucketFilter = computed(() => filtersStore.filters.bucket);
+  const frequencyFilter = computed(() => filtersStore.filters.frequencies);
 
   const lowInterval = ref(settingsStore.settings.lowInterval);
   const highInterval = ref(settingsStore.settings.highInterval);
-  const modalsRef = useTemplateRef('modal');
 
   const emptyBucketTooltip = computed(() =>
-    statistics.value.filteredBucket ? '' : 'There are no filtered cards in the bucket'
+    statistics.value.filteredBucket ? '' : 'There are no filtered notes in the bucket'
   );
 
   const clearHighTooltip = computed(() =>
-    statistics.value.filteredHigh ? '' : 'There are no filtered cards with high frequency'
+    statistics.value.filteredHigh ? '' : 'There are no filtered notes with high frequency'
   );
 
   const clearLowTooltip = computed(() =>
-    statistics.value.filteredLow ? '' : 'There are no filtered cards with low frequency'
+    statistics.value.filteredLow ? '' : 'There are no filtered notes with low frequency'
   );
+
+  function fetchStatistics() {
+    statisticsStore.refetch();
+  }
 
   function updateSettings() {
     settingsStore.updateSettings({
@@ -48,29 +51,11 @@
     updateSettings();
   }
 
-  function emptyBucket() {
-    if (!modalsRef.value) throw new Error('Modal ref not set!');
-    modalsRef.value.show('bucket', statistics.value.filteredBucket);
-  }
+  function emptyBucket() {}
 
-  function clearHigh() {
-    if (!modalsRef.value) throw new Error('Modal ref not set!');
-    modalsRef.value.show('high', statistics.value.filteredHigh);
-  }
+  function clearHigh() {}
 
-  function clearLow() {
-    if (!modalsRef.value) throw new Error('Modal ref not set!');
-    modalsRef.value.show('low', statistics.value.filteredLow);
-  }
-
-  function fetchStatistics() {
-    statisticsStore.refetch();
-  }
-
-  function goFlashcards() {
-    flashcardsStore.reset();
-    router.push('/flashcards');
-  }
+  function clearLow() {}
 
   onMounted(() => {
     fetchStatistics();
@@ -79,59 +64,30 @@
 
 <template>
   <div class="settings-page">
-    <PreFlashcardsModals ref="modal" @cleared="fetchStatistics" />
     <Header />
     <div class="content">
       <div class="flex justify-between">
         <h1>Flashcards study</h1>
-        <button type="button" class="btn btn-primary" @click="goFlashcards">Start</button>
+        <button type="button" class="btn btn-primary">Start</button>
       </div>
 
       <section>
-        <h2>Selected cards</h2>
+        <h2>Filters</h2>
         <div>
-          <span>Selected cards</span>
-          <b>{{ statistics.filtered }}</b>
+          <span>Review bucket</span>
+          <SelectionList
+            :options="[...YES_OR_NO_OPTIONS]"
+            :selected="bucketFilter"
+            @toggle="filtersStore.toggleBucket"
+          />
         </div>
         <div>
-          <span>Selected cards in the review bucket</span>
-          <b>{{ statistics.filteredBucket }}</b>
-        </div>
-        <div>
-          <span>Selected cards with low frequency</span>
-          <b>{{ statistics.filteredLow }}</b>
-        </div>
-        <div>
-          <span>Selected cards with high frequency</span>
-          <b>{{ statistics.filteredHigh }}</b>
-        </div>
-        <div>
-          <span>Selected cards with normal frequency</span>
-          <b>{{ statistics.filteredNormal }}</b>
-        </div>
-      </section>
-
-      <section>
-        <h2>Overall statistics</h2>
-        <div>
-          <span>Total number of cards</span>
-          <b>{{ statistics.total }}</b>
-        </div>
-        <div>
-          <span>Total number of cards in the review bucket</span>
-          <b>{{ statistics.totalBucket }}</b>
-        </div>
-        <div>
-          <span>Total number of low frequency cards</span>
-          <b>{{ statistics.totalLow }}</b>
-        </div>
-        <div>
-          <span>Total number of high frequency cards</span>
-          <b>{{ statistics.totalHigh }}</b>
-        </div>
-        <div>
-          <span>Total number of normal frequency cards</span>
-          <b>{{ statistics.totalNormal }}</b>
+          <span>Frequency</span>
+          <SelectionList
+            :options="[...FREQUENCY_OPTIONS]"
+            :selected="frequencyFilter"
+            @toggle="filtersStore.toggleFrequency"
+          />
         </div>
       </section>
 
@@ -151,9 +107,57 @@
       </section>
 
       <section>
+        <h2>Selected notes</h2>
+        <div>
+          <span>Selected notes</span>
+          <b>{{ statistics.filtered }}</b>
+        </div>
+        <div>
+          <span>Selected notes in the review bucket</span>
+          <b>{{ statistics.filteredBucket }}</b>
+        </div>
+        <div>
+          <span>Selected notes with low frequency</span>
+          <b>{{ statistics.filteredLow }}</b>
+        </div>
+        <div>
+          <span>Selected notes with high frequency</span>
+          <b>{{ statistics.filteredHigh }}</b>
+        </div>
+        <div>
+          <span>Selected notes with normal frequency</span>
+          <b>{{ statistics.filteredNormal }}</b>
+        </div>
+      </section>
+
+      <section>
+        <h2>Overall statistics</h2>
+        <div>
+          <span>Total number of notes</span>
+          <b>{{ statistics.total }}</b>
+        </div>
+        <div>
+          <span>Total number of notes in the review bucket</span>
+          <b>{{ statistics.totalBucket }}</b>
+        </div>
+        <div>
+          <span>Total number of low frequency notes</span>
+          <b>{{ statistics.totalLow }}</b>
+        </div>
+        <div>
+          <span>Total number of high frequency notes</span>
+          <b>{{ statistics.totalHigh }}</b>
+        </div>
+        <div>
+          <span>Total number of normal frequency notes</span>
+          <b>{{ statistics.totalNormal }}</b>
+        </div>
+      </section>
+
+      <section>
         <h2>Clear</h2>
         <div>
-          <span>Empty review bucket for selected cards</span>
+          <span>Empty review bucket for selected notes</span>
           <button
             type="button"
             class="btn-warning"
@@ -165,7 +169,7 @@
           </button>
         </div>
         <div>
-          <span>Clear high-frequency selected cards</span>
+          <span>Clear high-frequency selected notes</span>
           <button
             type="button"
             class="btn-warning"
@@ -177,7 +181,7 @@
           </button>
         </div>
         <div>
-          <span>Clear low-frequency selected cards</span>
+          <span>Clear low-frequency selected notes</span>
           <button
             type="button"
             class="btn-warning"

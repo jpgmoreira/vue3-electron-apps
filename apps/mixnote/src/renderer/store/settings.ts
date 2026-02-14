@@ -7,6 +7,7 @@ import { cloneDeep } from '@interapp/utils/utils';
 export const useSettingsStore = defineStore('settings', {
   state: () => ({
     settings: getEmptySettings(),
+    timer: undefined as ReturnType<typeof setTimeout> | undefined,
   }),
   actions: {
     initFromStartupData(data: StartupData) {
@@ -16,7 +17,10 @@ export const useSettingsStore = defineStore('settings', {
     },
     updateSettings(settings: Partial<Settings>) {
       Object.assign(this.settings, settings);
-      window.api.invoke(InvokeChannels.updateSettings, cloneDeep(this.settings));
+      clearTimeout(this.timer);
+      this.timer = setTimeout(() => {
+        window.api.invoke(InvokeChannels.updateSettings, cloneDeep(this.settings));
+      }, 500);
     },
     clear() {
       this.settings = getEmptySettings();
