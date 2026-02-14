@@ -1,7 +1,7 @@
 import { ipcMain, IpcMainInvokeEvent } from 'electron';
 import { InvokeChannels } from '@preload/channels/invoke';
 import { nodeCounterManager, notesManager, profileManager } from '@main/startup/instances';
-import { Note } from '@common/schemas/notes';
+import { Note, NoteFrequency } from '@common/schemas/notes';
 import { Statistics } from '@common/schemas/statistics';
 
 ipcMain.handle(InvokeChannels.createFolder, (_: IpcMainInvokeEvent): number => {
@@ -46,6 +46,9 @@ ipcMain.handle(InvokeChannels.clearFilteredBucket, (_: IpcMainInvokeEvent) => {
   notesManager.clearFilteredBucket();
 });
 
-ipcMain.handle(InvokeChannels.clearFilteredFrequency, (_: IpcMainInvokeEvent) => {
-  notesManager.clearFilteredFrequency();
-});
+ipcMain.handle(
+  InvokeChannels.clearFilteredFrequency,
+  (_: IpcMainInvokeEvent, frequency: NoteFrequency) => {
+    notesManager.clearFilteredFrequency(frequency);
+  }
+);

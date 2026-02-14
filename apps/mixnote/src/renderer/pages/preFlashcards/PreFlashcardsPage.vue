@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-  import { ref, computed, onMounted } from 'vue';
+  import { ref, computed, onMounted, useTemplateRef } from 'vue';
   import Header from '@renderer/components/Header.vue';
   import { useStatisticsStore } from '@renderer/store/statistics';
   import { useSettingsStore } from '@renderer/store/settings';
@@ -12,6 +12,7 @@
   import { useFiltersStore } from '@renderer/store/filters';
   import { YesOrNo } from '@interapp/types/yesOrNo';
   import { NoteFrequency } from '@common/schemas/notes';
+  import PreFlashcardsModals from './PreFlashcardsModals.vue';
 
   const statisticsStore = useStatisticsStore();
   const settingsStore = useSettingsStore();
@@ -23,6 +24,7 @@
 
   const lowInterval = ref(settingsStore.settings.lowInterval);
   const highInterval = ref(settingsStore.settings.highInterval);
+  const modalsRef = useTemplateRef('modal');
 
   const emptyBucketTooltip = computed(() =>
     statistics.value.filteredBucket ? '' : 'There are no filtered notes in the bucket'
@@ -63,11 +65,20 @@
     fetchStatistics();
   }
 
-  function emptyBucket() {}
+  function emptyBucket() {
+    if (!modalsRef.value) throw new Error('Modal ref not set!');
+    modalsRef.value.show('bucket', statistics.value.filteredBucket);
+  }
 
-  function clearHigh() {}
+  function clearHigh() {
+    if (!modalsRef.value) throw new Error('Modal ref not set!');
+    modalsRef.value.show('high', statistics.value.filteredHigh);
+  }
 
-  function clearLow() {}
+  function clearLow() {
+    if (!modalsRef.value) throw new Error('Modal ref not set!');
+    modalsRef.value.show('low', statistics.value.filteredLow);
+  }
 
   onMounted(() => {
     fetchStatistics();
@@ -76,6 +87,7 @@
 
 <template>
   <div class="settings-page">
+    <PreFlashcardsModals ref="modal" @cleared="fetchStatistics" />
     <Header />
     <div class="content">
       <div class="flex justify-between">

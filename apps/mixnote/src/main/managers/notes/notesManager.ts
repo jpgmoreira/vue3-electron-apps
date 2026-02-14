@@ -3,7 +3,13 @@ import { EventEmitter } from '@interapp/events/eventEmitter';
 import { CommonEvents } from '@interapp/events/commonEvents';
 import path from 'path';
 import fs from 'fs';
-import { getEmptyNote, getEmptyPersistentNote, Note, PersistentNote } from '@common/schemas/notes';
+import {
+  getEmptyNote,
+  getEmptyPersistentNote,
+  Note,
+  NoteFrequency,
+  PersistentNote,
+} from '@common/schemas/notes';
 import { ensureDirExists } from '@interapp/utils/fileUtils';
 import { ProfileManager } from '../profileManager';
 import { TabsManager } from '../tabsManager';
@@ -237,10 +243,13 @@ export class NotesManager {
     }
   }
 
-  public clearFilteredFrequency() {
+  public clearFilteredFrequency(frequency: NoteFrequency) {
     this.guardMaps();
     for (const id of this.filtered) {
-      this.frequencies!.proxy[id] = 'normal';
+      const proxy = this.frequencies!.proxy;
+      if (proxy[id] === frequency) {
+        proxy[id] = 'normal';
+      }
     }
   }
 
