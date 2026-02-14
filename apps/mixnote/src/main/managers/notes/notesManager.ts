@@ -19,7 +19,7 @@ export class NotesManager {
   private mediaManager: NotesMediaManager;
   private flashcardsManager: FlashcardsManager;
 
-  private lastReviewed: FileProxy<TimestampMap> | null = null;
+  private lastReviewedAt: FileProxy<TimestampMap> | null = null;
   private frequencies: FileProxy<FrequencyMap> | null = null;
   private bucket: FileProxy<BooleanMap> | null = null;
 
@@ -47,7 +47,7 @@ export class NotesManager {
   }
 
   private guardMaps() {
-    if (!this.lastReviewed) throw new Error('lastReviewed not set!');
+    if (!this.lastReviewedAt) throw new Error('lastReviewedAt not set!');
     if (!this.frequencies) throw new Error('frequencies not set!');
     if (!this.bucket) throw new Error('bucket not set!');
   }
@@ -55,13 +55,13 @@ export class NotesManager {
   public loadProfile(profileId: string) {
     this.profileId = profileId;
     const dirPath = path.join(DATA_DIR, 'profileData', this.profileId);
-    const lastReviewedPath = path.join(dirPath, 'lastReviewed.json');
+    const lastReviewedPath = path.join(dirPath, 'lastReviewedAt.json');
     const frequenciesPath = path.join(dirPath, 'frequencies.json');
     const bucketPath = path.join(dirPath, 'bucket.json');
-    this.lastReviewed = new FileProxy(lastReviewedPath, {});
+    this.lastReviewedAt = new FileProxy(lastReviewedPath, {});
     this.frequencies = new FileProxy(frequenciesPath, {});
     this.bucket = new FileProxy(bucketPath, {});
-    this.flashcardsManager.setMaps(this.lastReviewed.target, this.frequencies.target);
+    this.flashcardsManager.setMaps(this.lastReviewedAt.target, this.frequencies.target);
   }
 
   public createNote(name: string): Note {
@@ -73,7 +73,7 @@ export class NotesManager {
     ensureDirExists(dirPath);
     const fPath = path.join(dirPath, `${note.id}.json`);
     fs.writeFileSync(fPath, JSON.stringify(note), 'utf-8');
-    this.lastReviewed!.proxy[note.id] = now;
+    this.lastReviewedAt!.proxy[note.id] = now;
     this.frequencies!.proxy[note.id] = note.frequency;
     this.bucket!.proxy[note.id] = note.bucket;
     return note;
@@ -85,7 +85,7 @@ export class NotesManager {
     fs.rmSync(dirPath, { recursive: true, force: true });
     this.profileManager.addNotes(-1);
     this.tabsManager.noteWasDeleted(noteId);
-    delete this.lastReviewed!.proxy[noteId];
+    delete this.lastReviewedAt!.proxy[noteId];
     delete this.frequencies!.proxy[noteId];
     delete this.bucket!.proxy[noteId];
   }
@@ -128,14 +128,14 @@ export class NotesManager {
     if (noteId) return this.getNote(noteId);
     const nextId = this.flashcardsManager.getNextFlashcard();
     if (!nextId) return null;
-    this.lastReviewed!.proxy[nextId] = Date.now();
+    this.lastReviewedAt!.proxy[nextId] = Date.now();
     return this.getNote(nextId);
   }
 
   public clear() {
     this.flashcardsManager.clear();
     this.profileId = null;
-    this.lastReviewed = null;
+    this.lastReviewedAt = null;
     this.frequencies = null;
     this.bucket = null;
   }

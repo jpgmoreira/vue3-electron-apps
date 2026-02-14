@@ -15,7 +15,7 @@ export class FlashcardsManager {
   private highCounter = 0;
   private settingsManager: SettingsManager;
 
-  private lastReviewed: TimestampMap | null = null;
+  private lastReviewedAt: TimestampMap | null = null;
   private frequencies: FrequencyMap | null = null;
 
   constructor(settingsManager: SettingsManager) {
@@ -23,13 +23,13 @@ export class FlashcardsManager {
   }
 
   private compare(a: string, b: string) {
-    if (!this.lastReviewed) {
-      throw new Error('compare(): lastReviewed map not set!');
+    if (!this.lastReviewedAt) {
+      throw new Error('compare(): lastReviewedAt map not set!');
     }
-    const aLast = this.lastReviewed[a];
-    const bLast = this.lastReviewed[b];
+    const aLast = this.lastReviewedAt[a];
+    const bLast = this.lastReviewedAt[b];
     if (!aLast || !bLast) {
-      throw new Error('compare(): Note lastReviewed not set!');
+      throw new Error('compare(): Note lastReviewedAt not set!');
     }
     return aLast - bLast;
   }
@@ -82,8 +82,8 @@ export class FlashcardsManager {
     return noteId;
   }
 
-  public setMaps(lastReviewed: TimestampMap, frequencies: FrequencyMap) {
-    this.lastReviewed = lastReviewed;
+  public setMaps(lastReviewedAt: TimestampMap, frequencies: FrequencyMap) {
+    this.lastReviewedAt = lastReviewedAt;
     this.frequencies = frequencies;
   }
 
@@ -91,7 +91,7 @@ export class FlashcardsManager {
     this.queues = cloneDeep(EMPTY_QUEUES);
     this.highCounter = 0;
     this.lowCounter = 0;
-    this.lastReviewed = null;
+    this.lastReviewedAt = null;
     this.frequencies = null;
   }
 }
