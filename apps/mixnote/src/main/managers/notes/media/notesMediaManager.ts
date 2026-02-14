@@ -118,7 +118,7 @@ export class NotesMediaManager {
     const allBases = [...htmlResult.bases, ...markdownResult.bases];
     const allSources = [...htmlResult.sources, ...markdownResult.sources];
     const noteDir = this.buildNoteDir(note.id, profileId);
-    const trashDir = this.buildTrashDir(profileId);
+    const trashDir = this.buildTrashDir(note.id, profileId);
     const allNewFiles = allBases.map((b) => path.resolve(noteDir, b));
     const allOldFiles = listFilesInDir(noteDir);
 
@@ -159,7 +159,7 @@ export class NotesMediaManager {
   private buildNoteDir(noteId: string, profileId: string) {
     return path.join(DATA_DIR, 'profileData', profileId, 'notes', noteId);
   }
-  private buildTrashDir(profileId: string) {
-    return path.join(DATA_DIR, 'profileData', profileId, 'trash');
+  private buildTrashDir(noteId: string, profileId: string) {
+    return path.join(DATA_DIR, 'profileData', profileId, 'trash', noteId);
   }
 }
