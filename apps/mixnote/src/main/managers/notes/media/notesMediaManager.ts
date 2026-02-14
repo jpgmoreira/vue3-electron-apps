@@ -119,8 +119,8 @@ export class NotesMediaManager {
     const noteDir = this.buildNoteDir(note.id, profileId);
     const allNewFiles = allBases.map((b) => path.resolve(noteDir, b));
 
-    // -- I have decided to keep old removed files from the notes,
-    //      because if I immediately removed them, it would break
+    // -- I have decided to keep removed files from the notes,
+    //      because if I immediately delete them, it would break
     //      the "undo" functionality in the notes, in the case where
     //      the user removed a safe-file image, then did undo
     //      (the image would have gone and the path would not exist anymore).

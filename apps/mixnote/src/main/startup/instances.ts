@@ -7,6 +7,8 @@ import { TabsManager } from '@main/managers/tabsManager';
 import { NodeCounterManager } from '@main/managers/nodeCounterManager';
 import { NotesManager } from '@main/managers/notes/notesManager';
 import { NotesMediaManager } from '@main/managers/notes/media/notesMediaManager';
+import { FlashcardsManager } from '@main/managers/notes/flashcardsManager';
+import { SettingsManager } from '@main/managers/settingsManager';
 
 const emitter = new EventEmitter();
 export const windowManager = new WindowManager();
@@ -16,10 +18,13 @@ export const graphManager = new GraphManager(emitter);
 export const tabsManager = new TabsManager(emitter);
 export const nodeCounterManager = new NodeCounterManager(emitter);
 
+const settingsManager = new SettingsManager(emitter);
+const flashcardsManager = new FlashcardsManager(settingsManager);
 const notesMediaManager = new NotesMediaManager();
 export const notesManager = new NotesManager(
   emitter,
   profileManager,
   tabsManager,
-  notesMediaManager
+  notesMediaManager,
+  flashcardsManager
 );

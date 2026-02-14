@@ -8,23 +8,27 @@ import { ensureDirExists } from '@interapp/utils/fileUtils';
 import { ProfileManager } from '../profileManager';
 import { TabsManager } from '../tabsManager';
 import { NotesMediaManager } from './media/notesMediaManager';
+import { FlashcardsManager } from './flashcardsManager';
 
 export class NotesManager {
   private profileId: string | null = null;
   private profileManager: ProfileManager;
   private tabsManager: TabsManager;
   private mediaManager: NotesMediaManager;
+  private flashcardsManager: FlashcardsManager;
 
   constructor(
     emitter: EventEmitter,
     profileManager: ProfileManager,
     tabsManager: TabsManager,
-    mediaManager: NotesMediaManager
+    mediaManager: NotesMediaManager,
+    flashcardsManager: FlashcardsManager
   ) {
     emitter.on(CommonEvents.clearProfileData, () => this.clear());
     this.profileManager = profileManager;
     this.tabsManager = tabsManager;
     this.mediaManager = mediaManager;
+    this.flashcardsManager = flashcardsManager;
   }
 
   private guard(noteId: string) {
@@ -80,5 +84,6 @@ export class NotesManager {
 
   public clear() {
     this.profileId = null;
+    this.flashcardsManager.clear();
   }
 }
