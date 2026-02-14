@@ -6,7 +6,7 @@ export type Note = {
   id: string;
   name: string;
   createdAt: number;
-  lastModified: number;
+  lastModifiedAt: number;
   head: string;
   body: string;
   frequency: NoteFrequency;
@@ -19,7 +19,7 @@ export function getEmptyNote(name: string, timestamp: number): Note {
     id: noteId,
     name,
     createdAt: timestamp,
-    lastModified: timestamp,
+    lastModifiedAt: timestamp,
     head: '',
     body: '',
     frequency: 'normal',

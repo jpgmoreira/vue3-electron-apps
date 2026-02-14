@@ -55,7 +55,7 @@
           <div class="min-w-0 overflow-hidden">
             <div class="whitespace-nowrap truncate">
               <b>Last modified:</b>
-              {{ parseTimestamp(props.note.lastModified) }}
+              {{ parseTimestamp(props.note.lastModifiedAt) }}
             </div>
           </div>
         </div>

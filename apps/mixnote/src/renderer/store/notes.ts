@@ -32,14 +32,14 @@ export const useNotesStore = defineStore('notes', {
       const note = this.notes[noteId];
       if (!note) throw new Error(`Update cached note head: Note id not found! ${noteId}`);
       note.head = content;
-      note.lastModified = Date.now();
+      note.lastModifiedAt = Date.now();
       this.persistNote(note);
     },
     updateCachedNoteBody(noteId: string, content: string) {
       const note = this.notes[noteId];
       if (!note) throw new Error(`Update cached note body: Note id not found! ${noteId}`);
       note.body = content;
-      note.lastModified = Date.now();
+      note.lastModifiedAt = Date.now();
       this.persistNote(note);
     },
     setCachedNoteBucket(noteId: string, value: boolean) {
