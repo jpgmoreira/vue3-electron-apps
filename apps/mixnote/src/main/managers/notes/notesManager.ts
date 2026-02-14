@@ -13,6 +13,8 @@ import { BooleanMap, FrequencyMap, TimestampMap } from '@common/schemas/maps';
 import { FileProxy } from '@interapp/utils/fileProxy';
 import { Statistics } from '@common/schemas/statistics';
 import { ExplorerManager } from '@interapp/components/Explorer/main/explorerManager';
+import { Filters, getEmptyFilters } from '@common/schemas/filters';
+import { cloneDeep } from '@interapp/utils/utils';
 
 export class NotesManager {
   private profileId: string | null = null;
@@ -25,6 +27,9 @@ export class NotesManager {
   private lastReviewedAt: FileProxy<TimestampMap> | null = null;
   private frequencies: FileProxy<FrequencyMap> | null = null;
   private bucket: FileProxy<BooleanMap> | null = null;
+  private filters: FileProxy<Filters> | null = null;
+
+  private filtered: string[] = [];
 
   constructor(
     emitter: EventEmitter,
@@ -63,9 +68,11 @@ export class NotesManager {
     const lastReviewedPath = path.join(dirPath, 'lastReviewedAt.json');
     const frequenciesPath = path.join(dirPath, 'frequencies.json');
     const bucketPath = path.join(dirPath, 'bucket.json');
+    const filtersPath = path.join(dirPath, 'filters.json');
     this.lastReviewedAt = new FileProxy(lastReviewedPath, {});
     this.frequencies = new FileProxy(frequenciesPath, {});
     this.bucket = new FileProxy(bucketPath, {});
+    this.filters = new FileProxy(filtersPath, getEmptyFilters());
     this.flashcardsManager.setMaps(this.lastReviewedAt.target, this.frequencies.target);
   }
 
@@ -140,21 +147,19 @@ export class NotesManager {
 
   public getStatistics(): Statistics {
     this.guardMaps();
+    this.filter();
     const frequencies = this.frequencies!.target;
     const bucket = this.bucket!.target;
-    const allIds = new Set(Object.keys(frequencies));
-    const selectedNodes = this.explorerManager.getSelectedNodes();
-    const filteredIds = selectedNodes.filter((n) => allIds.has(n));
-    const total = allIds.size;
+    const total = Object.keys(frequencies).length;
     const totalBucket = Object.values(bucket).filter(Boolean).length;
     const totalLow = Object.values(frequencies).filter((v) => v === 'low').length;
     const totalHigh = Object.values(frequencies).filter((v) => v === 'high').length;
     const totalNormal = Object.values(frequencies).filter((v) => v === 'normal').length;
-    const filtered = filteredIds.length;
-    const filteredBucket = filteredIds.filter((v) => bucket[v]).length;
-    const filteredLow = filteredIds.filter((v) => frequencies[v] === 'low').length;
-    const filteredHigh = filteredIds.filter((v) => frequencies[v] === 'high').length;
-    const filteredNormal = filteredIds.filter((v) => frequencies[v] === 'normal').length;
+    const filtered = this.filtered.length;
+    const filteredBucket = this.filtered.filter((v) => bucket[v]).length;
+    const filteredLow = this.filtered.filter((v) => frequencies[v] === 'low').length;
+    const filteredHigh = this.filtered.filter((v) => frequencies[v] === 'high').length;
+    const filteredNormal = this.filtered.filter((v) => frequencies[v] === 'normal').length;
     return {
       total,
       totalBucket,
@@ -169,11 +174,54 @@ export class NotesManager {
     };
   }
 
+  private filter() {
+    this.guardMaps();
+    if (!this.filters) throw new Error('Filters not set!');
+    const filters = this.filters.target;
+    const allIds = new Set(Object.keys(this.frequencies!.target));
+    const selectedNodes = this.explorerManager.getSelectedNodes();
+    // Explorer:
+    const explorer = selectedNodes.filter((n) => allIds.has(n));
+    // Bucket:
+    const yes = filters.bucket.includes('yes');
+    const no = filters.bucket.includes('no');
+    const bucket = explorer.filter((id) => {
+      if (!filters.bucket.length) return true;
+      if (this.bucket![id] && yes) return true;
+      if (!this.bucket![id] && no) return true;
+      return false;
+    });
+    // Frequencies:
+    const low = filters.frequencies.includes('low');
+    const high = filters.frequencies.includes('high');
+    const normal = filters.frequencies.includes('normal');
+    const frequencies = bucket.filter((id) => {
+      if (!filters.frequencies.length) return true;
+      if (this.frequencies![id] === 'low' && low) return true;
+      if (this.frequencies![id] === 'high' && high) return true;
+      if (this.frequencies![id] === 'normal' && normal) return true;
+      return false;
+    });
+    // Set filtered:
+    this.filtered = frequencies;
+  }
+
+  public getFilters(): Filters {
+    if (!this.filters) throw new Error('Filters not set!');
+    return cloneDeep(this.filters.target);
+  }
+
+  public recomputeQueues() {
+    this.filter();
+    this.flashcardsManager.recomputeQueues(this.filtered);
+  }
+
   public clear() {
     this.flashcardsManager.clear();
     this.profileId = null;
     this.lastReviewedAt = null;
     this.frequencies = null;
     this.bucket = null;
+    this.filters = null;
   }
 }
