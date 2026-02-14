@@ -18,6 +18,7 @@
   import { useNotesStore } from '@renderer/store/notes';
   import { useRoute } from 'vue-router';
   import PreFlashcards from '@renderer/components/preFlashcards/PreFlashcards.vue';
+  import { useStatisticsStore } from '@renderer/store/statistics';
 
   const route = useRoute();
 
@@ -27,6 +28,7 @@
   const profileStore = useProfileStore();
   const tabsStore = useTabsStore();
   const notesStore = useNotesStore();
+  const statisticsStore = useStatisticsStore();
 
   const resizing = ref(false);
   const explorerWidth = ref(uiStore.settings.explorerWidth);
@@ -40,9 +42,15 @@
   }
 
   function explorerNodeClick(node: Node) {
-    if (node.type === 'file') {
-      tabsStore.explorerNoteClicked(node.id);
+    if (view.value === 'notes') {
+      if (node.type === 'file') {
+        tabsStore.explorerNoteClicked(node.id);
+      }
     }
+  }
+
+  function notesSelectionChanged() {
+    statisticsStore.refetch();
   }
 
   async function beforeCreateNode(type: NodeType, callback: CreateNodeCallback) {
@@ -115,6 +123,7 @@
           @before-delete-selected="beforeDeleteMultiple"
           @node-click="explorerNodeClick"
           @rename-file="renameNote"
+          @file-selection-changed="notesSelectionChanged"
           :checkbox="view === 'flashcards'"
           :selectionOnly="view === 'flashcards'"
         />

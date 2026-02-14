@@ -290,6 +290,7 @@
       localKeys
     );
     updateTree(newTree);
+    emit('node-click', node, keys);
   }
 
   async function clearSelection() {
@@ -341,12 +342,6 @@
       lastScrollTop.value
     );
     updateTree(newTree);
-  }
-
-  // --- Node click: ---
-
-  function nodeClick(node: Node) {
-    emit('node-click', node, keys);
   }
 
   // --- Movement: ---
@@ -569,13 +564,7 @@
             ></span>
 
             <div class="flex items-center">
-              <div
-                class="flex items-center"
-                @click="
-                  handleSelection(node);
-                  nodeClick(node);
-                "
-              >
+              <div class="flex items-center" @click="handleSelection(node)">
                 <input
                   v-if="props.checkbox"
                   type="checkbox"

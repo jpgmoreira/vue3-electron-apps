@@ -16,7 +16,6 @@
   font-size: 0.9rem;
   display: flex;
   flex-direction: column;
-  gap: 10px;
   background: #1f2223;
   border-radius: 6px;
   padding: 16px;
@@ -28,15 +27,19 @@
   align-items: center;
   justify-content: space-between;
   transition: background 0.2s ease;
-  padding: 3px 8px;
-  border-radius: 5px;
+  padding: 5px 8px;
 }
 
 .theme-dark .settings-page section > div:hover {
   background: #292d2e;
 }
 
+.theme-dark .settings-page section > div + div {
+  border-top: 1px solid #404647;
+}
+
 .theme-dark .settings-page section h2 {
   font-size: 16px;
   font-weight: bold;
+  padding-bottom: 10px;
 }
