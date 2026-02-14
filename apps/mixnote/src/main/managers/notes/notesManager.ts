@@ -110,8 +110,8 @@ export class NotesManager {
     const persistent = JSON.parse(fs.readFileSync(notePath, 'utf-8')) as PersistentNote;
     const note: Note = {
       ...persistent,
-      bucket: this.bucket![noteId],
-      frequency: this.frequencies![noteId],
+      bucket: this.bucket!.target[noteId],
+      frequency: this.frequencies!.target[noteId],
     };
     this.mediaManager.preparePaths(note, dirPath);
     return note;
@@ -187,30 +187,32 @@ export class NotesManager {
     const filters = this.filters.target;
     const allIds = new Set(Object.keys(this.frequencies!.target));
     const selectedNodes = this.explorerManager.getSelectedNodes();
+    const bucket = this.bucket!.target;
+    const frequencies = this.frequencies!.target;
     // Explorer:
-    const explorer = selectedNodes.filter((n) => allIds.has(n));
+    const explorerIds = selectedNodes.filter((n) => allIds.has(n));
     // Bucket:
     const yes = filters.bucket.includes('yes');
     const no = filters.bucket.includes('no');
-    const bucket = explorer.filter((id) => {
+    const bucketIds = explorerIds.filter((id) => {
       if (!filters.bucket.length) return true;
-      if (this.bucket![id] && yes) return true;
-      if (!this.bucket![id] && no) return true;
+      if (bucket[id] && yes) return true;
+      if (!bucket[id] && no) return true;
       return false;
     });
     // Frequencies:
     const low = filters.frequencies.includes('low');
     const high = filters.frequencies.includes('high');
     const normal = filters.frequencies.includes('normal');
-    const frequencies = bucket.filter((id) => {
+    const frequencyIds = bucketIds.filter((id) => {
       if (!filters.frequencies.length) return true;
-      if (this.frequencies![id] === 'low' && low) return true;
-      if (this.frequencies![id] === 'high' && high) return true;
-      if (this.frequencies![id] === 'normal' && normal) return true;
+      if (frequencies[id] === 'low' && low) return true;
+      if (frequencies[id] === 'high' && high) return true;
+      if (frequencies[id] === 'normal' && normal) return true;
       return false;
     });
     // Set filtered:
-    this.filtered = frequencies;
+    this.filtered = frequencyIds;
   }
 
   public getFilters(): Filters {
@@ -226,6 +228,20 @@ export class NotesManager {
   public recomputeQueues() {
     this.filter();
     this.flashcardsManager.recomputeQueues(this.filtered);
+  }
+
+  public clearFilteredBucket() {
+    this.guardMaps();
+    for (const id of this.filtered) {
+      this.bucket!.proxy[id] = false;
+    }
+  }
+
+  public clearFilteredFrequency() {
+    this.guardMaps();
+    for (const id of this.filtered) {
+      this.frequencies!.proxy[id] = 'normal';
+    }
   }
 
   public clear() {

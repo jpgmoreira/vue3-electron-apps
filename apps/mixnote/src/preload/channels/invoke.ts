@@ -18,7 +18,6 @@ export enum InvokeChannels {
   getFlashcard = 'get-flashcard',
   updateSettings = 'update-settings',
   updateFilters = 'update-filters',
-  //
   clearFilteredBucket = 'clear-filtered-bucket',
   clearFilteredFrequency = 'clear-filtered-frequency',
 }

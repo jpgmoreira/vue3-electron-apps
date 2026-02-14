@@ -41,3 +41,11 @@ ipcMain.handle(
     return notesManager.getFlashcard(noteId);
   }
 );
+
+ipcMain.handle(InvokeChannels.clearFilteredBucket, (_: IpcMainInvokeEvent) => {
+  notesManager.clearFilteredBucket();
+});
+
+ipcMain.handle(InvokeChannels.clearFilteredFrequency, (_: IpcMainInvokeEvent) => {
+  notesManager.clearFilteredFrequency();
+});
