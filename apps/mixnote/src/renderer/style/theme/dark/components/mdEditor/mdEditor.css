@@ -20,6 +20,10 @@
   --md-bk-color: #1f1f1f;
   --md-color: #eee;
   --md-border-color: #525252;
+  --md-scrollbar-bg-color: transparent;
+  --md-scrollbar-thumb-color: #353535;
+  --md-scrollbar-thumb-hover-color: #494949;
+  --md-scrollbar-thumb-active-color: #494949;
 }
 
 .theme-dark .md-editor * {

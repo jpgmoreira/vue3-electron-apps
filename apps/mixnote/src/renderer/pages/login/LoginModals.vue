@@ -50,7 +50,10 @@
     } else if (result.status === 'success') {
       clear();
       document.title = `${name}@${APP_NAME}`;
-      router.replace('/notes');
+      router.replace({
+        name: 'explorer',
+        params: { view: 'notes' },
+      });
     }
   }
   async function rename() {

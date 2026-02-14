@@ -6,8 +6,12 @@
 <template>
   <Header class="flex justify-between">
     <div class="flex">
-      <HeaderButton to="/notes">Notes</HeaderButton>
-      <HeaderButton to="/pre-flashcards">Flashcards</HeaderButton>
+      <RouterLink class="nav-btn" :to="{ name: 'explorer', params: { view: 'notes' } }">
+        Notes
+      </RouterLink>
+      <RouterLink class="nav-btn" :to="{ name: 'explorer', params: { view: 'flashcards' } }">
+        Flashcards
+      </RouterLink>
     </div>
     <div class="flex">
       <HeaderButton to="/graph">Graph</HeaderButton>

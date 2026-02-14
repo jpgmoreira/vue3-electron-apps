@@ -13,6 +13,8 @@ window.api.on(OnChannels.loadStartupData, async (data: StartupData) => {
     return router.replace('/login');
   }
   document.title = `${data.currProfile.name}@${APP_NAME}`;
-  if (!data.ui) throw new Error('UI settings not set!');
-  return router.replace(data.ui.page);
+  return router.replace({
+    name: 'explorer',
+    params: { view: 'notes' },
+  });
 });

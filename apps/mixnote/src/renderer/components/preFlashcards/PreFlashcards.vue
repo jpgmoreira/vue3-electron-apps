@@ -1,6 +1,5 @@
 <script lang="ts" setup>
   import { ref, computed, onMounted, useTemplateRef } from 'vue';
-  import Header from '@renderer/components/Header.vue';
   import { useStatisticsStore } from '@renderer/store/statistics';
   import { useSettingsStore } from '@renderer/store/settings';
   import {
@@ -96,9 +95,8 @@
 </script>
 
 <template>
-  <div class="settings-page">
+  <div class="settings-page absolute inset-0 overflow-auto">
     <PreFlashcardsModals ref="modal" @cleared="cleared" />
-    <Header />
     <div class="content">
       <div class="flex justify-between">
         <h1>Flashcards study</h1>

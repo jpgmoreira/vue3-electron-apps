@@ -29,8 +29,10 @@
       toastStore.showToast(result.message, 'error');
     } else if (result.status === 'success') {
       document.title = `${name}@${APP_NAME}`;
-      if (!result.data.ui) throw new Error('UI not set!');
-      router.replace(result.data.ui.page);
+      router.replace({
+        name: 'explorer',
+        params: { view: 'notes' },
+      });
     }
   }
 </script>

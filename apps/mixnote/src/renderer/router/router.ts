@@ -1,9 +1,8 @@
 import { createMemoryHistory, createRouter } from 'vue-router';
 import LoginPage from '@renderer/pages/login/LoginPage.vue';
-import PreFlashcardsPage from '@renderer/pages/preFlashcards/PreFlashcardsPage.vue';
 import GraphPage from '@renderer/pages/GraphPage.vue';
 import SettingsPage from '@renderer/pages/SettingsPage.vue';
-import NotesPage from '@renderer/pages/notes/NotesPage.vue';
+import ExplorerPage from '@renderer/pages/explorer/ExplorerPage.vue';
 
 const routes = [
   {
@@ -11,12 +10,9 @@ const routes = [
     component: LoginPage,
   },
   {
-    path: '/notes',
-    component: NotesPage,
-  },
-  {
-    path: '/pre-flashcards',
-    component: PreFlashcardsPage,
+    path: '/explorer/:view',
+    name: 'explorer',
+    component: ExplorerPage,
   },
   {
     path: '/graph',

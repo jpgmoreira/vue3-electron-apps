@@ -137,9 +137,6 @@
     margin: 3px !important;
   }
   /* Resizer */
-  .md-editor-custom-scrollbar__track {
-    display: none !important;
-  }
   .md-editor-resize-operate {
     height: 100%;
     padding: 2px;

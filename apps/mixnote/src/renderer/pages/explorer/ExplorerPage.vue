@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-  import { ref, onMounted, onBeforeUnmount, useTemplateRef } from 'vue';
+  import { ref, onMounted, onBeforeUnmount, useTemplateRef, computed } from 'vue';
   import Header from '@renderer/components/Header.vue';
   import { useUIStore } from '@renderer/store/uiStore';
   import Explorer, {
@@ -12,10 +12,16 @@
   import { Note } from '@common/schemas/notes';
   import { Node } from '@interapp/components/Explorer/common/tree';
   import { useProfileStore } from '@renderer/store/profile';
-  import NotesModals from './NotesModals.vue';
+  import ExplorerModals from './ExplorerModals.vue';
   import { useTabsStore } from '@renderer/store/tabs';
   import NotesView from '@renderer/components/NotesView.vue';
   import { useNotesStore } from '@renderer/store/notes';
+  import { useRoute } from 'vue-router';
+  import PreFlashcards from '@renderer/components/preFlashcards/PreFlashcards.vue';
+
+  const route = useRoute();
+
+  const view = computed(() => route.params.view);
 
   const uiStore = useUIStore();
   const profileStore = useProfileStore();
@@ -95,9 +101,9 @@
 </script>
 
 <template>
-  <div class="notes-page flex flex-col h-screen overflow-hidden" :class="{ resizing }">
+  <div class="explorer-page flex flex-col h-screen overflow-hidden" :class="{ resizing }">
     <Header />
-    <NotesModals ref="modals" @deleted="deletionHappened" />
+    <ExplorerModals ref="modals" @deleted="deletionHappened" />
     <div class="flex grow">
       <div :style="{ width: `${explorerWidth}px` }">
         <Explorer
@@ -109,18 +115,21 @@
           @before-delete-selected="beforeDeleteMultiple"
           @node-click="explorerNodeClick"
           @rename-file="renameNote"
+          :checkbox="view === 'flashcards'"
+          :selectionOnly="view === 'flashcards'"
         />
       </div>
       <div class="custom-resizer" @mousedown="resizing = true"></div>
       <div class="grow relative">
-        <NotesView />
+        <NotesView v-if="view === 'notes'" />
+        <PreFlashcards v-else />
       </div>
     </div>
   </div>
 </template>
 
 <style scoped>
-  .notes-page.resizing {
+  .explorer-page.resizing {
     cursor: col-resize;
   }
 </style>
