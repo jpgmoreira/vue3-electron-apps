@@ -9,7 +9,6 @@ import { YesOrNo } from '@interapp/types/yesOrNo';
 export const useFiltersStore = defineStore('filters', {
   state: () => ({
     filters: getEmptyFilters(),
-    timer: undefined as ReturnType<typeof setTimeout> | undefined,
   }),
   actions: {
     initFromStartupData(data: StartupData) {
@@ -21,19 +20,16 @@ export const useFiltersStore = defineStore('filters', {
       if (arr.includes(value)) arrayRemove(arr, value);
       else arr.push(value);
     },
-    toggleFrequency(value: NoteFrequency) {
+    async toggleFrequency(value: NoteFrequency) {
       this.toggle(this.filters.frequencies, value);
-      this.persistFilters();
+      await this.persistFilters();
     },
-    toggleBucket(value: YesOrNo) {
+    async toggleBucket(value: YesOrNo) {
       this.toggle(this.filters.bucket, value);
-      this.persistFilters();
+      await this.persistFilters();
     },
-    persistFilters() {
-      clearTimeout(this.timer);
-      this.timer = setTimeout(() => {
-        window.api.invoke(InvokeChannels.updateFilters, cloneDeep(this.filters));
-      }, 500);
+    async persistFilters() {
+      await window.api.invoke(InvokeChannels.updateFilters, cloneDeep(this.filters));
     },
     clear() {
       this.filters = getEmptyFilters();

@@ -10,6 +10,8 @@
   import SelectionList from '@interapp/components/SelectionList.vue';
   import { FREQUENCY_OPTIONS, YES_OR_NO_OPTIONS } from '@renderer/helpers/options';
   import { useFiltersStore } from '@renderer/store/filters';
+  import { YesOrNo } from '@interapp/types/yesOrNo';
+  import { NoteFrequency } from '@common/schemas/notes';
 
   const statisticsStore = useStatisticsStore();
   const settingsStore = useSettingsStore();
@@ -51,6 +53,16 @@
     updateSettings();
   }
 
+  async function toggleBucket(value: YesOrNo) {
+    await filtersStore.toggleBucket(value);
+    fetchStatistics();
+  }
+
+  async function toggleFrequency(value: NoteFrequency) {
+    await filtersStore.toggleFrequency(value);
+    fetchStatistics();
+  }
+
   function emptyBucket() {}
 
   function clearHigh() {}
@@ -78,7 +90,7 @@
           <SelectionList
             :options="[...YES_OR_NO_OPTIONS]"
             :selected="bucketFilter"
-            @toggle="filtersStore.toggleBucket"
+            @toggle="toggleBucket"
           />
         </div>
         <div>
@@ -86,23 +98,8 @@
           <SelectionList
             :options="[...FREQUENCY_OPTIONS]"
             :selected="frequencyFilter"
-            @toggle="filtersStore.toggleFrequency"
+            @toggle="toggleFrequency"
           />
-        </div>
-      </section>
-
-      <section>
-        <h2>Intervals</h2>
-        <div>
-          <span>High frequency interval</span>
-          <input type="number" v-model="highInterval" @change="updateSettings" />
-        </div>
-        <div>
-          <span>Low frequency interval</span>
-          <input type="number" v-model="lowInterval" @change="updateSettings" />
-        </div>
-        <div class="flex">
-          <button type="button" class="ml-auto btn-primary" @click="resetIntervals">Reset</button>
         </div>
       </section>
 
@@ -151,6 +148,21 @@
         <div>
           <span>Total number of normal frequency notes</span>
           <b>{{ statistics.totalNormal }}</b>
+        </div>
+      </section>
+
+      <section>
+        <h2>Intervals</h2>
+        <div>
+          <span>High frequency interval</span>
+          <input type="number" v-model="highInterval" @change="updateSettings" />
+        </div>
+        <div>
+          <span>Low frequency interval</span>
+          <input type="number" v-model="lowInterval" @change="updateSettings" />
+        </div>
+        <div class="flex">
+          <button type="button" class="ml-auto btn-primary" @click="resetIntervals">Reset</button>
         </div>
       </section>
 
