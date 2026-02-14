@@ -31,3 +31,11 @@
   background-color: #4a80c2;
   color: white;
 }
+
+.theme-dark .selection-list.small {
+  font-size: 13px;
+  line-height: 1;
+}
+.theme-dark .selection-list.small > div {
+  padding: 4px 3px;
+}

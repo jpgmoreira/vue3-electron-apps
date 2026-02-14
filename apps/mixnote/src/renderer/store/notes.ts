@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 import { StartupData } from '@common/schemas/startup';
-import { Note } from '@common/schemas/notes';
+import { Note, NoteFrequency } from '@common/schemas/notes';
 import { InvokeChannels } from '@preload/channels/invoke';
 import { cloneDeep } from '@interapp/utils/utils';
 
@@ -46,6 +46,12 @@ export const useNotesStore = defineStore('notes', {
       const note = this.notes[noteId];
       if (!note) throw new Error(`Set cached note bucket: Note id not found! ${noteId}`);
       note.bucket = value;
+      this.persistNote(note);
+    },
+    setCachedNoteFrequency(noteId: string, frequency: NoteFrequency) {
+      const note = this.notes[noteId];
+      if (!note) throw new Error(`Set cached note frequency: Note id not found! ${noteId}`);
+      note.frequency = frequency;
       this.persistNote(note);
     },
     persistNote(note: Note) {

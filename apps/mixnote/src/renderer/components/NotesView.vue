@@ -174,7 +174,7 @@
       }
     }
   }
-  const windownMouseMoveThrottled = throttle(windowMouseMove, 100);
+  const windownMouseMoveThrottled = throttle(windowMouseMove, 30);
   function windowMouseUp() {
     resize.isResizing = false;
     document.body.style.cursor = '';
