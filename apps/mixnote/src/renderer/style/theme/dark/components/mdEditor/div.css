@@ -1,0 +1,411 @@
+/* --------------------------------------------------
+   DIV COLOR SYSTEM — Dark Theme
+   Supports: bg, background, color
+-------------------------------------------------- */
+
+.theme-dark .md-editor .md-editor-preview div[bg],
+.theme-dark .md-editor .md-editor-preview div[background],
+.theme-dark .md-editor .md-editor-preview div[color] {
+  min-height: 1rem;
+  display: block;
+}
+
+/* ----------------------------
+   COLOR SET (auto-generated)
+---------------------------- */
+
+/* RED */
+.theme-dark .md-editor .md-editor-preview div[bg='#7f1d1d'],
+.theme-dark .md-editor .md-editor-preview div[background='#7f1d1d'] {
+  background-color: #7f1d1d;
+}
+.theme-dark .md-editor .md-editor-preview div[color='#7f1d1d'] {
+  color: #7f1d1d;
+}
+
+.theme-dark .md-editor .md-editor-preview div[bg='#b91c1c'],
+.theme-dark .md-editor .md-editor-preview div[background='#b91c1c'] {
+  background-color: #b91c1c;
+}
+.theme-dark .md-editor .md-editor-preview div[color='#b91c1c'] {
+  color: #b91c1c;
+}
+
+.theme-dark .md-editor .md-editor-preview div[bg='#ef4444'],
+.theme-dark .md-editor .md-editor-preview div[background='#ef4444'] {
+  background-color: #ef4444;
+}
+.theme-dark .md-editor .md-editor-preview div[color='#ef4444'] {
+  color: #ef4444;
+}
+
+.theme-dark .md-editor .md-editor-preview div[bg='#fca5a5'],
+.theme-dark .md-editor .md-editor-preview div[background='#fca5a5'] {
+  background-color: #fca5a5;
+}
+.theme-dark .md-editor .md-editor-preview div[color='#fca5a5'] {
+  color: #fca5a5;
+}
+
+/* BLUE */
+.theme-dark .md-editor .md-editor-preview div[bg='#1e40af'],
+.theme-dark .md-editor .md-editor-preview div[background='#1e40af'] {
+  background-color: #1e40af;
+}
+.theme-dark .md-editor .md-editor-preview div[color='#1e40af'] {
+  color: #1e40af;
+}
+
+.theme-dark .md-editor .md-editor-preview div[bg='#2563eb'],
+.theme-dark .md-editor .md-editor-preview div[background='#2563eb'] {
+  background-color: #2563eb;
+}
+.theme-dark .md-editor .md-editor-preview div[color='#2563eb'] {
+  color: #2563eb;
+}
+
+.theme-dark .md-editor .md-editor-preview div[bg='#60a5fa'],
+.theme-dark .md-editor .md-editor-preview div[background='#60a5fa'] {
+  background-color: #60a5fa;
+}
+.theme-dark .md-editor .md-editor-preview div[color='#60a5fa'] {
+  color: #60a5fa;
+}
+
+.theme-dark .md-editor .md-editor-preview div[bg='#bfdbfe'],
+.theme-dark .md-editor .md-editor-preview div[background='#bfdbfe'] {
+  background-color: #bfdbfe;
+}
+.theme-dark .md-editor .md-editor-preview div[color='#bfdbfe'] {
+  color: #bfdbfe;
+}
+
+/* YELLOW */
+.theme-dark .md-editor .md-editor-preview div[bg='#a16207'],
+.theme-dark .md-editor .md-editor-preview div[background='#a16207'] {
+  background-color: #a16207;
+}
+.theme-dark .md-editor .md-editor-preview div[color='#a16207'] {
+  color: #a16207;
+}
+
+.theme-dark .md-editor .md-editor-preview div[bg='#eab308'],
+.theme-dark .md-editor .md-editor-preview div[background='#eab308'] {
+  background-color: #eab308;
+}
+.theme-dark .md-editor .md-editor-preview div[color='#eab308'] {
+  color: #eab308;
+}
+
+.theme-dark .md-editor .md-editor-preview div[bg='#fde047'],
+.theme-dark .md-editor .md-editor-preview div[background='#fde047'] {
+  background-color: #fde047;
+}
+.theme-dark .md-editor .md-editor-preview div[color='#fde047'] {
+  color: #fde047;
+}
+
+.theme-dark .md-editor .md-editor-preview div[bg='#fef9c3'],
+.theme-dark .md-editor .md-editor-preview div[background='#fef9c3'] {
+  background-color: #fef9c3;
+}
+.theme-dark .md-editor .md-editor-preview div[color='#fef9c3'] {
+  color: #fef9c3;
+}
+
+/* ORANGE */
+.theme-dark .md-editor .md-editor-preview div[bg='#9a3412'],
+.theme-dark .md-editor .md-editor-preview div[background='#9a3412'] {
+  background-color: #9a3412;
+}
+.theme-dark .md-editor .md-editor-preview div[color='#9a3412'] {
+  color: #9a3412;
+}
+
+.theme-dark .md-editor .md-editor-preview div[bg='#ea580c'],
+.theme-dark .md-editor .md-editor-preview div[background='#ea580c'] {
+  background-color: #ea580c;
+}
+.theme-dark .md-editor .md-editor-preview div[color='#ea580c'] {
+  color: #ea580c;
+}
+
+.theme-dark .md-editor .md-editor-preview div[bg='#fb923c'],
+.theme-dark .md-editor .md-editor-preview div[background='#fb923c'] {
+  background-color: #fb923c;
+}
+.theme-dark .md-editor .md-editor-preview div[color='#fb923c'] {
+  color: #fb923c;
+}
+
+.theme-dark .md-editor .md-editor-preview div[bg='#fed7aa'],
+.theme-dark .md-editor .md-editor-preview div[background='#fed7aa'] {
+  background-color: #fed7aa;
+}
+.theme-dark .md-editor .md-editor-preview div[color='#fed7aa'] {
+  color: #fed7aa;
+}
+
+/* CYAN */
+.theme-dark .md-editor .md-editor-preview div[bg='#155e75'],
+.theme-dark .md-editor .md-editor-preview div[background='#155e75'] {
+  background-color: #155e75;
+}
+.theme-dark .md-editor .md-editor-preview div[color='#155e75'] {
+  color: #155e75;
+}
+
+.theme-dark .md-editor .md-editor-preview div[bg='#0891b2'],
+.theme-dark .md-editor .md-editor-preview div[background='#0891b2'] {
+  background-color: #0891b2;
+}
+.theme-dark .md-editor .md-editor-preview div[color='#0891b2'] {
+  color: #0891b2;
+}
+
+.theme-dark .md-editor .md-editor-preview div[bg='#22d3ee'],
+.theme-dark .md-editor .md-editor-preview div[background='#22d3ee'] {
+  background-color: #22d3ee;
+}
+.theme-dark .md-editor .md-editor-preview div[color='#22d3ee'] {
+  color: #22d3ee;
+}
+
+.theme-dark .md-editor .md-editor-preview div[bg='#a5f3fc'],
+.theme-dark .md-editor .md-editor-preview div[background='#a5f3fc'] {
+  background-color: #a5f3fc;
+}
+.theme-dark .md-editor .md-editor-preview div[color='#a5f3fc'] {
+  color: #a5f3fc;
+}
+
+/* GREEN */
+.theme-dark .md-editor .md-editor-preview div[bg='#14532d'],
+.theme-dark .md-editor .md-editor-preview div[background='#14532d'] {
+  background-color: #14532d;
+}
+.theme-dark .md-editor .md-editor-preview div[color='#14532d'] {
+  color: #14532d;
+}
+
+.theme-dark .md-editor .md-editor-preview div[bg='#15803d'],
+.theme-dark .md-editor .md-editor-preview div[background='#15803d'] {
+  background-color: #15803d;
+}
+.theme-dark .md-editor .md-editor-preview div[color='#15803d'] {
+  color: #15803d;
+}
+
+.theme-dark .md-editor .md-editor-preview div[bg='#22c55e'],
+.theme-dark .md-editor .md-editor-preview div[background='#22c55e'] {
+  background-color: #22c55e;
+}
+.theme-dark .md-editor .md-editor-preview div[color='#22c55e'] {
+  color: #22c55e;
+}
+
+.theme-dark .md-editor .md-editor-preview div[bg='#bbf7d0'],
+.theme-dark .md-editor .md-editor-preview div[background='#bbf7d0'] {
+  background-color: #bbf7d0;
+}
+.theme-dark .md-editor .md-editor-preview div[color='#bbf7d0'] {
+  color: #bbf7d0;
+}
+
+/* LIME */
+.theme-dark .md-editor .md-editor-preview div[bg='#3f6212'],
+.theme-dark .md-editor .md-editor-preview div[background='#3f6212'] {
+  background-color: #3f6212;
+}
+.theme-dark .md-editor .md-editor-preview div[color='#3f6212'] {
+  color: #3f6212;
+}
+
+.theme-dark .md-editor .md-editor-preview div[bg='#65a30d'],
+.theme-dark .md-editor .md-editor-preview div[background='#65a30d'] {
+  background-color: #65a30d;
+}
+.theme-dark .md-editor .md-editor-preview div[color='#65a30d'] {
+  color: #65a30d;
+}
+
+.theme-dark .md-editor .md-editor-preview div[bg='#a3e635'],
+.theme-dark .md-editor .md-editor-preview div[background='#a3e635'] {
+  background-color: #a3e635;
+}
+.theme-dark .md-editor .md-editor-preview div[color='#a3e635'] {
+  color: #a3e635;
+}
+
+.theme-dark .md-editor .md-editor-preview div[bg='#d9f99d'],
+.theme-dark .md-editor .md-editor-preview div[background='#d9f99d'] {
+  background-color: #d9f99d;
+}
+.theme-dark .md-editor .md-editor-preview div[color='#d9f99d'] {
+  color: #d9f99d;
+}
+
+/* PINK */
+.theme-dark .md-editor .md-editor-preview div[bg='#9d174d'],
+.theme-dark .md-editor .md-editor-preview div[background='#9d174d'] {
+  background-color: #9d174d;
+}
+.theme-dark .md-editor .md-editor-preview div[color='#9d174d'] {
+  color: #9d174d;
+}
+
+.theme-dark .md-editor .md-editor-preview div[bg='#db2777'],
+.theme-dark .md-editor .md-editor-preview div[background='#db2777'] {
+  background-color: #db2777;
+}
+.theme-dark .md-editor .md-editor-preview div[color='#db2777'] {
+  color: #db2777;
+}
+
+.theme-dark .md-editor .md-editor-preview div[bg='#f472b6'],
+.theme-dark .md-editor .md-editor-preview div[background='#f472b6'] {
+  background-color: #f472b6;
+}
+.theme-dark .md-editor .md-editor-preview div[color='#f472b6'] {
+  color: #f472b6;
+}
+
+.theme-dark .md-editor .md-editor-preview div[bg='#fbcfe8'],
+.theme-dark .md-editor .md-editor-preview div[background='#fbcfe8'] {
+  background-color: #fbcfe8;
+}
+.theme-dark .md-editor .md-editor-preview div[color='#fbcfe8'] {
+  color: #fbcfe8;
+}
+
+/* PURPLE */
+.theme-dark .md-editor .md-editor-preview div[bg='#6b21a8'],
+.theme-dark .md-editor .md-editor-preview div[background='#6b21a8'] {
+  background-color: #6b21a8;
+}
+.theme-dark .md-editor .md-editor-preview div[color='#6b21a8'] {
+  color: #6b21a8;
+}
+
+.theme-dark .md-editor .md-editor-preview div[bg='#9333ea'],
+.theme-dark .md-editor .md-editor-preview div[background='#9333ea'] {
+  background-color: #9333ea;
+}
+.theme-dark .md-editor .md-editor-preview div[color='#9333ea'] {
+  color: #9333ea;
+}
+
+.theme-dark .md-editor .md-editor-preview div[bg='#c084fc'],
+.theme-dark .md-editor .md-editor-preview div[background='#c084fc'] {
+  background-color: #c084fc;
+}
+.theme-dark .md-editor .md-editor-preview div[color='#c084fc'] {
+  color: #c084fc;
+}
+
+.theme-dark .md-editor .md-editor-preview div[bg='#e9d5ff'],
+.theme-dark .md-editor .md-editor-preview div[background='#e9d5ff'] {
+  background-color: #e9d5ff;
+}
+.theme-dark .md-editor .md-editor-preview div[color='#e9d5ff'] {
+  color: #e9d5ff;
+}
+
+/* GRAY */
+.theme-dark .md-editor .md-editor-preview div[bg='#1f2937'],
+.theme-dark .md-editor .md-editor-preview div[background='#1f2937'] {
+  background-color: #1f2937;
+}
+.theme-dark .md-editor .md-editor-preview div[color='#1f2937'] {
+  color: #1f2937;
+}
+
+.theme-dark .md-editor .md-editor-preview div[bg='#4b5563'],
+.theme-dark .md-editor .md-editor-preview div[background='#4b5563'] {
+  background-color: #4b5563;
+}
+.theme-dark .md-editor .md-editor-preview div[color='#4b5563'] {
+  color: #4b5563;
+}
+
+.theme-dark .md-editor .md-editor-preview div[bg='#9ca3af'],
+.theme-dark .md-editor .md-editor-preview div[background='#9ca3af'] {
+  background-color: #9ca3af;
+}
+.theme-dark .md-editor .md-editor-preview div[color='#9ca3af'] {
+  color: #9ca3af;
+}
+
+.theme-dark .md-editor .md-editor-preview div[bg='#e5e7eb'],
+.theme-dark .md-editor .md-editor-preview div[background='#e5e7eb'] {
+  background-color: #e5e7eb;
+}
+.theme-dark .md-editor .md-editor-preview div[color='#e5e7eb'] {
+  color: #e5e7eb;
+}
+
+/* DEFAULT */
+.theme-dark .md-editor .md-editor-preview div[bg='#ededf0'],
+.theme-dark .md-editor .md-editor-preview div[background='#ededf0'] {
+  background-color: #ededf0;
+}
+.theme-dark .md-editor .md-editor-preview div[color='#ededf0'] {
+  color: #ededf0;
+}
+
+.theme-dark .md-editor .md-editor-preview div[bg='#222'],
+.theme-dark .md-editor .md-editor-preview div[background='#222'] {
+  background-color: #222;
+}
+.theme-dark .md-editor .md-editor-preview div[color='#222'] {
+  color: #222;
+}
+
+.theme-dark .md-editor .md-editor-preview div[bg='#000'],
+.theme-dark .md-editor .md-editor-preview div[background='#000'] {
+  background-color: #000;
+}
+.theme-dark .md-editor .md-editor-preview div[color='#000'] {
+  color: #000;
+}
+
+.theme-dark .md-editor .md-editor-preview div[bg='#fff'],
+.theme-dark .md-editor .md-editor-preview div[background='#fff'] {
+  background-color: #fff;
+}
+.theme-dark .md-editor .md-editor-preview div[color='#fff'] {
+  color: #fff;
+}
+
+/* PRIMARY (named colors) */
+.theme-dark .md-editor .md-editor-preview div[bg='red'],
+.theme-dark .md-editor .md-editor-preview div[background='red'] {
+  background-color: red;
+}
+.theme-dark .md-editor .md-editor-preview div[color='red'] {
+  color: red;
+}
+
+.theme-dark .md-editor .md-editor-preview div[bg='green'],
+.theme-dark .md-editor .md-editor-preview div[background='green'] {
+  background-color: green;
+}
+.theme-dark .md-editor .md-editor-preview div[color='green'] {
+  color: green;
+}
+
+.theme-dark .md-editor .md-editor-preview div[bg='blue'],
+.theme-dark .md-editor .md-editor-preview div[background='blue'] {
+  background-color: blue;
+}
+.theme-dark .md-editor .md-editor-preview div[color='blue'] {
+  color: blue;
+}
+
+.theme-dark .md-editor .md-editor-preview div[bg='yellow'],
+.theme-dark .md-editor .md-editor-preview div[background='yellow'] {
+  background-color: yellow;
+}
+.theme-dark .md-editor .md-editor-preview div[color='yellow'] {
+  color: yellow;
+}
