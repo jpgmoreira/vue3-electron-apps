@@ -101,6 +101,31 @@
   outline: none;
 }
 
+/* Success */
+.theme-dark button.btn-success {
+  background-color: #16a34a;
+  color: white;
+  padding: 6px 10px;
+}
+.theme-dark button.btn-success:hover {
+  background-color: #15803d;
+}
+.theme-dark button.btn-success:active {
+  background-color: #166534;
+  transform: translateY(1px);
+}
+.theme-dark button.btn-success:focus {
+  outline: 2px solid #4ade80;
+  outline-offset: 1px;
+}
+.theme-dark button.btn-success:disabled {
+  background-color: #14532d;
+  color: #d1d5db;
+  cursor: not-allowed;
+  transform: none;
+  outline: none;
+}
+
 /* Sizing */
 .theme-dark button.btn-small {
   padding: 3px 5px;

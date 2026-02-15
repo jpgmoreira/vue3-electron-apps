@@ -281,7 +281,7 @@
       <template v-else>
         <button type="button" class="btn-danger" @click="deleteClick">Delete</button>
         <button type="button" class="btn-warning" @click="cancel">Cancel</button>
-        <button type="button" class="btn-primary" @click="upsertCard(InvokeChannels.updateCard)">
+        <button type="button" class="btn-success" @click="upsertCard(InvokeChannels.updateCard)">
           Save
         </button>
       </template>

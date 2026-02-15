@@ -104,12 +104,19 @@
       <div>Bucket: {{ statistics.filteredBucket }}</div>
     </div>
     <footer class="custom-footer flex justify-evenly">
-      <button type="button" class="btn-primary" @click="goPrev" :disabled="cannotGoPrev">
-        Prev
-      </button>
-      <button type="button" class="btn-primary" @click="goNext" :disabled="!note">Next</button>
-      <button type="button" class="btn-primary" :disabled="!note" @click="startEdit">Edit</button>
-      <button type="button" class="btn-warning" @click="exit">Exit</button>
+      <template v-if="!isEditing">
+        <button type="button" class="btn-primary" @click="goPrev" :disabled="cannotGoPrev">
+          Prev
+        </button>
+        <button type="button" class="btn-primary" @click="goNext" :disabled="!note">Next</button>
+        <button type="button" class="btn-primary" :disabled="!note" @click="startEdit">Edit</button>
+        <button type="button" class="btn-warning" @click="exit">Exit</button>
+      </template>
+      <template v-else>
+        <button type="button" class="btn-danger">Delete</button>
+        <button type="button" class="btn-warning">Cancel</button>
+        <button type="button" class="btn-success">Save</button>
+      </template>
     </footer>
   </div>
 </template>
