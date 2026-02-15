@@ -47,16 +47,16 @@
 
 <template>
   <div class="flashcard" :class="card.frequency">
-    <div class="relative">
+    <div class="field relative">
       <div class="field-title">{{ frontTitle }}:</div>
       <div v-html="front"></div>
     </div>
     <template v-if="reveal">
-      <div v-if="back" class="relative">
+      <div v-if="back" class="field relative">
         <div class="field-title">{{ backTitle }}:</div>
         <div v-html="card.back"></div>
       </div>
-      <div v-if="card.extra" class="relative">
+      <div v-if="card.extra" class="field relative">
         <div class="field-title">Extra:</div>
         <div v-html="card.extra"></div>
       </div>

@@ -21,11 +21,17 @@
   padding-bottom: 15px;
 }
 
-.theme-dark .flashcard .field-title {
+.theme-dark .flashcard .field .field-title {
+  opacity: 0;
+  transition: opacity 0.2s ease;
   font-weight: bold;
   position: absolute;
   left: 0;
   color: #6fb0f8;
+}
+
+.theme-dark .flashcard .field:hover .field-title {
+  opacity: 1;
 }
 
 .theme-dark .flashcard .session-badge,
