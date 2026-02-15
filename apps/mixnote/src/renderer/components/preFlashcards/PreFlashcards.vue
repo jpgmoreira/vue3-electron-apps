@@ -14,12 +14,17 @@
   import PreFlashcardsModals from './PreFlashcardsModals.vue';
   import { useNotesStore } from '@renderer/store/notes';
   import { useTabsStore } from '@renderer/store/tabs';
+  import { useRouter } from 'vue-router';
+  import { useFlashcardsStore } from '@renderer/store/flashcards';
+
+  const router = useRouter();
 
   const statisticsStore = useStatisticsStore();
   const settingsStore = useSettingsStore();
   const filtersStore = useFiltersStore();
   const notesStore = useNotesStore();
   const tabsStore = useTabsStore();
+  const flashcardsStore = useFlashcardsStore();
 
   const statistics = computed(() => statisticsStore.statistics);
   const bucketFilter = computed(() => filtersStore.filters.bucket);
@@ -89,6 +94,11 @@
     notesStore.refetchCache(noteIds);
   }
 
+  function goFlashcards() {
+    flashcardsStore.reset();
+    router.push('/flashcards');
+  }
+
   onMounted(() => {
     fetchStatistics();
   });
@@ -100,7 +110,7 @@
     <div class="content">
       <div class="flex justify-between">
         <h1>Flashcards study</h1>
-        <button type="button" class="btn btn-primary">Start</button>
+        <button type="button" class="btn btn-primary" @click="goFlashcards">Start</button>
       </div>
 
       <section>
