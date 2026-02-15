@@ -7,6 +7,7 @@
   import { Note, NoteFrequency } from '@common/schemas/notes';
   import { InvokeChannels } from '@preload/channels/invoke';
   import { cloneDeep } from '@interapp/utils/utils';
+  import Flashcard from './Flashcard.vue';
 
   const router = useRouter();
 
@@ -103,14 +104,18 @@
 <template>
   <div class="flashcards-page flex flex-col h-screen select-none">
     <div class="grow relative">
-      <div class="flashcards-info">
-        <div>Seen: {{ seen }}</div>
-        <div>Total: {{ statistics.filtered }}</div>
-        <div>High: {{ statistics.filteredHigh }}</div>
-        <div>Low: {{ statistics.filteredLow }}</div>
-        <div>Normal: {{ statistics.filteredNormal }}</div>
-        <div>Bucket: {{ statistics.filteredBucket }}</div>
+      <div v-if="note" class="absolute inset-0 overflow-hidden">
+        <Flashcard :note="note" />
+        <div class="flashcards-info">
+          <div>Seen: {{ seen }}</div>
+          <div>Total: {{ statistics.filtered }}</div>
+          <div>High: {{ statistics.filteredHigh }}</div>
+          <div>Low: {{ statistics.filteredLow }}</div>
+          <div>Normal: {{ statistics.filteredNormal }}</div>
+          <div>Bucket: {{ statistics.filteredBucket }}</div>
+        </div>
       </div>
+      <div v-else-if="hasLoaded" class="absolute-center message-xl">No notes</div>
     </div>
     <footer class="custom-footer flex justify-evenly">
       <button type="button" class="btn-primary" @click="goPrev" :disabled="cannotGoPrev">
