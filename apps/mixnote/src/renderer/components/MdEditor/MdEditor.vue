@@ -7,6 +7,7 @@
 
   defineExpose({
     setPreviewOnly,
+    reset,
   });
 
   const emit = defineEmits<{
@@ -73,6 +74,10 @@
 
   function setPreviewOnly(value: boolean) {
     editorRef.value?.togglePreviewOnly(value);
+  }
+
+  function reset() {
+    content.value = props.initial;
   }
 
   watch(

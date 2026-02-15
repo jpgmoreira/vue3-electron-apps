@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-  import { ref, watch } from 'vue';
+  import { ref, useTemplateRef, watch } from 'vue';
   import { getEmptyNote, Note, NoteFrequency } from '@common/schemas/notes';
   import { FocusIcon } from 'lucide-vue-next';
   import { cloneDeep } from '@interapp/utils/utils';
@@ -11,10 +11,12 @@
   import { useNotesStore } from '@renderer/store/notes';
 
   const props = defineProps<{
-    note: Note;
+    note: Note | null;
     reveal: boolean;
     isEditing: boolean;
   }>();
+
+  const editorRef = useTemplateRef('editor-ref');
 
   const statisticsStore = useStatisticsStore();
   const notesStore = useNotesStore();
@@ -49,10 +51,23 @@
     await notesStore.refetchNote(clone.id);
   }
 
+  function reset() {
+    if (!props.note) throw new Error('Invalid prop note!');
+    localNote.value.head = props.note.head;
+    localNote.value.body = props.note.body;
+    editorRef.value?.reset();
+  }
+
+  defineExpose({
+    reset,
+  });
+
   watch(
     () => props.note,
-    (newValue: Note) => {
-      localNote.value = cloneDeep(newValue);
+    (newValue: Note | null) => {
+      if (newValue) {
+        localNote.value = cloneDeep(newValue);
+      }
       focus.value = false;
     },
     { deep: true, immediate: true }
@@ -84,6 +99,7 @@
     <!-- BODY -->
     <div class="body grow flex flex-col" v-if="reveal">
       <MdEditor
+        ref="editor-ref"
         class="grow"
         :initial="localNote.body"
         placeholder="BODY"

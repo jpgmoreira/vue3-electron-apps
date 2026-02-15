@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-  import { computed, onMounted, ref } from 'vue';
+  import { computed, onMounted, ref, useTemplateRef } from 'vue';
   import { useRouter } from 'vue-router';
   import { useFlashcardsStore } from '@renderer/store/flashcards';
   import { useStatisticsStore } from '@renderer/store/statistics';
@@ -15,6 +15,8 @@
 
   const statisticsStore = useStatisticsStore();
   const statistics = computed(() => statisticsStore.statistics);
+
+  const flashcardRef = useTemplateRef('flashcard-ref');
 
   const seen = computed(() => new Set(history.value).size);
 
@@ -70,6 +72,11 @@
     router.back();
   }
 
+  function cancel() {
+    flashcardRef.value?.reset();
+    isEditing.value = false;
+  }
+
   async function recomputeQueues() {
     await window.api.invoke(InvokeChannels.recomputeQueues);
   }
@@ -90,10 +97,10 @@
 <template>
   <div class="flashcards-page flex flex-col h-screen select-none">
     <div class="grow relative">
-      <div v-if="note" class="absolute inset-0 overflow-hidden">
-        <Flashcard :note="note" :reveal="reveal" :is-editing="isEditing" />
+      <div v-show="note" class="absolute inset-0 overflow-hidden">
+        <Flashcard ref="flashcard-ref" :note="note" :reveal="reveal" :is-editing="isEditing" />
       </div>
-      <div v-else-if="hasLoaded" class="absolute-center message-xl">No notes</div>
+      <div v-if="!note && hasLoaded" class="absolute-center message-xl">No notes</div>
     </div>
     <div v-if="note" class="flashcards-info">
       <div>Seen: {{ seen }}</div>
@@ -114,7 +121,7 @@
       </template>
       <template v-else>
         <button type="button" class="btn-danger">Delete</button>
-        <button type="button" class="btn-warning">Cancel</button>
+        <button type="button" class="btn-warning" @click="cancel">Cancel</button>
         <button type="button" class="btn-success">Save</button>
       </template>
     </footer>
