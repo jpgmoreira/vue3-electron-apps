@@ -105,17 +105,17 @@
   <div class="flashcards-page flex flex-col h-screen select-none">
     <div class="grow relative">
       <div v-if="note" class="absolute inset-0 overflow-hidden">
-        <Flashcard :note="note" />
-        <div class="flashcards-info">
-          <div>Seen: {{ seen }}</div>
-          <div>Total: {{ statistics.filtered }}</div>
-          <div>High: {{ statistics.filteredHigh }}</div>
-          <div>Low: {{ statistics.filteredLow }}</div>
-          <div>Normal: {{ statistics.filteredNormal }}</div>
-          <div>Bucket: {{ statistics.filteredBucket }}</div>
-        </div>
+        <Flashcard :note="note" :reveal="reveal" :is-editing="isEditing" />
       </div>
       <div v-else-if="hasLoaded" class="absolute-center message-xl">No notes</div>
+    </div>
+    <div v-if="note" class="flashcards-info">
+      <div>Seen: {{ seen }}</div>
+      <div>Total: {{ statistics.filtered }}</div>
+      <div>High: {{ statistics.filteredHigh }}</div>
+      <div>Low: {{ statistics.filteredLow }}</div>
+      <div>Normal: {{ statistics.filteredNormal }}</div>
+      <div>Bucket: {{ statistics.filteredBucket }}</div>
     </div>
     <footer class="custom-footer flex justify-evenly">
       <button type="button" class="btn-primary" @click="goPrev" :disabled="cannotGoPrev">

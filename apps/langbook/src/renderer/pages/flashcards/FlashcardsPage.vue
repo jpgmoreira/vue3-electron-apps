@@ -197,16 +197,16 @@
             @change-frequency="changeFrequency"
           />
         </div>
-        <div class="flashcards-info">
-          <div>Seen: {{ seen }}</div>
-          <div>Total: {{ statistics.filtered }}</div>
-          <div>High: {{ statistics.filteredHigh }}</div>
-          <div>Low: {{ statistics.filteredLow }}</div>
-          <div>Normal: {{ statistics.filteredNormal }}</div>
-          <div>Bucket: {{ statistics.filteredBucket }}</div>
-        </div>
       </div>
       <div v-else-if="hasLoaded" class="absolute-center message-xl">No cards</div>
+    </div>
+    <div v-if="card" class="flashcards-info">
+      <div>Seen: {{ seen }}</div>
+      <div>Total: {{ statistics.filtered }}</div>
+      <div>High: {{ statistics.filteredHigh }}</div>
+      <div>Low: {{ statistics.filteredLow }}</div>
+      <div>Normal: {{ statistics.filteredNormal }}</div>
+      <div>Bucket: {{ statistics.filteredBucket }}</div>
     </div>
     <footer class="custom-footer flex justify-evenly">
       <button type="button" class="btn-primary" @click="goPrev" :disabled="cannotGoPrev">
