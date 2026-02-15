@@ -38,6 +38,8 @@ export class CardsMediaManager {
       for (const img of imgs) {
         const el = img as unknown as HTMLElement;
         await this.saveRTEImage(el, mediaDir);
+        // Remove the "src" because it can be
+        // a very large base64 code.
         img.removeAttribute('src');
       }
       card[field] = html.toString();
@@ -63,6 +65,8 @@ export class CardsMediaManager {
           const el = img as unknown as HTMLElement;
           await this.saveRTEImage(el, mediaDir);
         }
+        // Remove the "src" because it can be
+        // a very large base64 code.
         img.removeAttribute('src');
         const base = img.getAttribute('data-base')!;
         allBases.push(base);

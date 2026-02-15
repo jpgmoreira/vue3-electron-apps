@@ -67,6 +67,8 @@ export class NotesMediaManager {
       bases.push(base);
       sources.push(src);
       parsed['data-base'] = base;
+      // Remove the "src" because it can be
+      // a very large base64 code.
       delete parsed.src;
       const newTag: string =
         '<img ' +
@@ -92,6 +94,8 @@ export class NotesMediaManager {
         const base = extractBaseFromSrc(src);
         bases.push(base);
         sources.push(src);
+        // Do not include the "src" because it can be
+        // a very large base64 code.
         const parsed: Record<string, string> = {
           alt,
           'data-base': base,
