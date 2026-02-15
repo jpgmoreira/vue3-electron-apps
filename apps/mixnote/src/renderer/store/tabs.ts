@@ -25,6 +25,9 @@ export const useTabsStore = defineStore('tabs', {
     setActiveTab(group: TabGroup, tabId: string) {
       group.tabs.forEach((tab) => (tab.active = tab.id === tabId));
     },
+    getOpenNoteIds() {
+      return this.tabGroups.map((g) => g.tabs.map((t) => t.noteId)).flat();
+    },
     async explorerNoteClicked(noteId: string) {
       if (!this.tabGroups.length) {
         throw new Error('No tab groups!');

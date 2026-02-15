@@ -90,7 +90,7 @@
 
   function cleared() {
     fetchStatistics();
-    const noteIds = tabsStore.tabGroups.map((g) => g.tabs.map((t) => t.noteId)).flat();
+    const noteIds = tabsStore.getOpenNoteIds();
     notesStore.refetchCache(noteIds);
   }
 

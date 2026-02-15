@@ -8,6 +8,7 @@
   import { FREQUENCY_OPTIONS } from '@renderer/helpers/options';
   import { InvokeChannels } from '@preload/channels/invoke';
   import { useStatisticsStore } from '@renderer/store/statistics';
+  import { useNotesStore } from '@renderer/store/notes';
 
   const props = defineProps<{
     note: Note;
@@ -16,6 +17,7 @@
   }>();
 
   const statisticsStore = useStatisticsStore();
+  const notesStore = useNotesStore();
 
   const focus = ref(false);
 
@@ -30,14 +32,21 @@
   }
 
   async function updateBucket() {
-    await window.api.invoke(InvokeChannels.updateNote, cloneDeep(localNote.value));
+    await updateNote();
     statisticsStore.refetch();
   }
 
   async function changeFrequency(frequency: NoteFrequency) {
     localNote.value.frequency = frequency;
-    await window.api.invoke(InvokeChannels.updateNote, cloneDeep(localNote.value));
-    statisticsStore.refetch();
+    await updateNote();
+    await statisticsStore.refetch();
+  }
+
+  async function updateNote() {
+    const clone = cloneDeep(localNote.value);
+    await window.api.invoke(InvokeChannels.updateNote, clone);
+    await window.api.invoke(InvokeChannels.recomputeQueues);
+    await notesStore.refetchNote(clone.id);
   }
 
   watch(
@@ -101,7 +110,7 @@
           name="bucket-input"
           type="checkbox"
           v-model="localNote.bucket"
-          @click="updateBucket"
+          @change="updateBucket"
         />
       </div>
     </div>
