@@ -7,6 +7,7 @@ import fs from 'fs';
 import { ensureDirExists, listFilesInDir } from '@interapp/utils/fileUtils';
 import { saveRTEImage } from './helpers';
 import { MediaFile } from '@interapp/types/mediaFile';
+import { cloneDeep } from '@interapp/utils/utils';
 
 export class CardsMediaManager {
   // front -> back.
@@ -97,6 +98,7 @@ export class CardsMediaManager {
   // back -> front.
   /**
    * - Prepares all paths, from media input and RTE, so that the front can use them.
+   * - Returns a copy of the card to avoid mutating the reference passed.
    * - All media files and RTE images here were already saved in the past, so here they
    *   are guaranteed to have the base property.
    * - Remember that the base property will contain only the file name with extension,
@@ -105,15 +107,16 @@ export class CardsMediaManager {
    *   the images, because I will use it in the back again to determine if the image
    *   was already saved or not.
    */
-  public preparePaths(card: Card, profileId: string) {
+  public preparePaths(card: Card, profileId: string): Card {
     const mediaDir = this.buildMediaDir(card.id, profileId);
-    for (const media of card.media) {
+    const cardCopy = cloneDeep(card);
+    for (const media of cardCopy.media) {
       if (!media.base) throw new Error('Media without base!');
       const fName = path.join(mediaDir, media.base);
       media.path = `safe-file://${fName}`;
     }
     for (const field of CARD_RTE_FIELDS) {
-      const html = parse(card[field]);
+      const html = parse(cardCopy[field]);
       const imgs = html.querySelectorAll('img');
       if (!imgs.length) continue;
       for (const img of imgs) {
@@ -122,8 +125,9 @@ export class CardsMediaManager {
         const fName = path.join(mediaDir, base);
         img.setAttribute('src', `safe-file://${fName}`);
       }
-      card[field] = html.toString();
+      cardCopy[field] = html.toString();
     }
+    return cardCopy;
   }
 
   private buildMediaDir(cardId: string, profileId: string) {

@@ -96,10 +96,9 @@ export class CardsManager {
       }
     }
     const first = Math.max(0, anchor - Math.floor(CARDS_PAGE_SIZE / 2));
-    const page = this.filtered.slice(first, first + CARDS_PAGE_SIZE);
-    for (const card of page) {
-      this.mediaManager.preparePaths(card, this.profileId);
-    }
+    const page = this.filtered
+      .slice(first, first + CARDS_PAGE_SIZE)
+      .map((c) => this.mediaManager.preparePaths(c, this.profileId!));
     return {
       page,
       totalHeight,
@@ -204,11 +203,19 @@ export class CardsManager {
   }
 
   public async getFlashcard(id: string | null): Promise<Card | null> {
-    if (id) return this.cardsMap[id];
-    const card = this.flashcardsManager.getNextFlashcard();
+    if (!this.profileId) throw new Error('Profile id not initialized!');
+    let card: Card | null = null;
+    if (id) {
+      card = this.cardsMap[id];
+    } else {
+      card = this.flashcardsManager.getNextFlashcard();
+      if (card) {
+        card.lastReviewedAt = Date.now();
+        await this.dbManager.updateCard(card);
+      }
+    }
     if (card) {
-      card.lastReviewedAt = Date.now();
-      await this.dbManager.updateCard(card);
+      card = this.mediaManager.preparePaths(card, this.profileId);
     }
     return card;
   }
