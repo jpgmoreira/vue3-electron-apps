@@ -114,12 +114,12 @@ export class NotesManager {
     const dirPath = this.guard(noteId);
     const notePath = path.join(dirPath, `${noteId}.json`);
     const persistent = JSON.parse(fs.readFileSync(notePath, 'utf-8')) as PersistentNote;
-    const note: Note = {
+    let note: Note = {
       ...persistent,
       bucket: this.bucket!.target[noteId],
       frequency: this.frequencies!.target[noteId],
     };
-    this.mediaManager.preparePaths(note, dirPath);
+    note = this.mediaManager.preparePaths(note, dirPath);
     return note;
   }
 

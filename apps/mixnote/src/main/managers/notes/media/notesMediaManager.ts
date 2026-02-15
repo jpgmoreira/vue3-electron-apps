@@ -4,6 +4,7 @@ import fs from 'fs';
 import { saveImage, extractBaseFromSrc } from './helpers';
 import { Note } from '@common/schemas/notes';
 import { ensureDirExists, listFilesInDir } from '@interapp/utils/fileUtils';
+import { cloneDeep } from '@interapp/utils/utils';
 
 export class NotesMediaManager {
   // Necessary to recreate the regexes because they save state.
@@ -18,14 +19,16 @@ export class NotesMediaManager {
   // back -> front.
   /**
    * - Prepares all paths so that the front can use them.
+   * - Returns a copy of the note to not mutate the reference in place.
    * - All image files here were already saved in the past, so here they
    *   are guaranteed to have the base property.
    * - Remember that the base property will contain only the file name with extension,
    *   as saved inside of the note folder.
    */
-  public preparePaths(note: Note, dirPath: string) {
+  public preparePaths(note: Note, dirPath: string): Note {
     const { htmlImgRegex, htmlAttrRegex } = this.getRegexes();
-    const result = note.body.replace(htmlImgRegex, (_: string, attrs: string): string => {
+    let noteCopy = cloneDeep(note);
+    const result = noteCopy.body.replace(htmlImgRegex, (_: string, attrs: string): string => {
       const parsed: Record<string, string> = {};
       let match: RegExpExecArray | null;
       while ((match = htmlAttrRegex.exec(attrs)) !== null) {
@@ -46,7 +49,8 @@ export class NotesMediaManager {
         ' />';
       return newTag;
     });
-    note.body = result;
+    noteCopy.body = result;
+    return noteCopy;
   }
 
   // front -> back.
