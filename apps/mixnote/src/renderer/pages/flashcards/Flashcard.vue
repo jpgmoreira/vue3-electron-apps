@@ -27,8 +27,13 @@
     () => props.note,
     (newValue: Note) => {
       localNote.value = cloneDeep(newValue);
+      focus.value = false;
     },
     { deep: true, immediate: true }
+  );
+  watch(
+    () => props.reveal,
+    () => (focus.value = false)
   );
 </script>
 
