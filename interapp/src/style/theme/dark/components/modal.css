@@ -9,6 +9,5 @@
   border-top: 1px solid #1b2125;
 }
 .theme-dark .modal-container .modal-backdrop {
-  background-color: rgba(0, 0, 0, 0.85);
-  backdrop-filter: blur(4px);
+  background-color: rgba(0, 0, 0, 0.95);
 }

@@ -58,7 +58,6 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    min-width: 60vw;
     border-radius: 5px;
     z-index: 99999;
     will-change: opacity, transform;
