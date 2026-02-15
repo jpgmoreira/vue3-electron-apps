@@ -11,7 +11,7 @@
     </div>
     <div class="flex">
       <HeaderButton to="/graph">Graph</HeaderButton>
-      <HeaderButton to="/settings">Settings</HeaderButton>
+      <HeaderButton to="/about">About</HeaderButton>
     </div>
   </Header>
 </template>
