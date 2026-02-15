@@ -63,11 +63,11 @@
     </template>
     <template #footer>
       <div class="flex justify-between">
-        <button type="button" class="btn-danger" @click="callback" :disabled="isDeleting">
-          Delete
-        </button>
         <button type="button" class="btn-warning" @click="close" :disabled="isDeleting">
           Cancel
+        </button>
+        <button type="button" class="btn-danger" @click="callback" :disabled="isDeleting">
+          Delete
         </button>
       </div>
     </template>
@@ -89,11 +89,11 @@
     </template>
     <template #footer>
       <div class="flex justify-between">
-        <button type="button" class="btn-danger" @click="callback" :disabled="isDeleting">
-          Delete
-        </button>
         <button type="button" class="btn-warning" @click="close" :disabled="isDeleting">
           Cancel
+        </button>
+        <button type="button" class="btn-danger" @click="callback" :disabled="isDeleting">
+          Delete
         </button>
       </div>
     </template>

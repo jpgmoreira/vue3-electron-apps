@@ -63,6 +63,9 @@
     </template>
     <template #footer>
       <div class="flex justify-between">
+        <button type="button" class="btn-primary" @click="close" :disabled="isRequesting">
+          Cancel
+        </button>
         <button
           type="button"
           class="btn-warning"
@@ -70,9 +73,6 @@
           :disabled="isRequesting"
         >
           Proceed
-        </button>
-        <button type="button" class="btn-primary" @click="close" :disabled="isRequesting">
-          Cancel
         </button>
       </div>
     </template>
@@ -91,6 +91,9 @@
     </template>
     <template #footer>
       <div class="flex justify-between">
+        <button type="button" class="btn-primary" @click="close" :disabled="isRequesting">
+          Cancel
+        </button>
         <button
           type="button"
           class="btn-warning"
@@ -98,9 +101,6 @@
           :disabled="isRequesting"
         >
           Proceed
-        </button>
-        <button type="button" class="btn-primary" @click="close" :disabled="isRequesting">
-          Cancel
         </button>
       </div>
     </template>
@@ -119,6 +119,9 @@
     </template>
     <template #footer>
       <div class="flex justify-between">
+        <button type="button" class="btn-primary" @click="close" :disabled="isRequesting">
+          Cancel
+        </button>
         <button
           type="button"
           class="btn-warning"
@@ -126,9 +129,6 @@
           :disabled="isRequesting"
         >
           Proceed
-        </button>
-        <button type="button" class="btn-primary" @click="close" :disabled="isRequesting">
-          Cancel
         </button>
       </div>
     </template>
