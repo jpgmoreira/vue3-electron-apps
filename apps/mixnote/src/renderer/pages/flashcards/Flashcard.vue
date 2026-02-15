@@ -1,15 +1,21 @@
 <script lang="ts" setup>
   import { ref, watch } from 'vue';
-  import { getEmptyNote, Note } from '@common/schemas/notes';
+  import { getEmptyNote, Note, NoteFrequency } from '@common/schemas/notes';
   import { FocusIcon } from 'lucide-vue-next';
   import { cloneDeep } from '@interapp/utils/utils';
   import MdEditor from '@renderer/components/MdEditor/MdEditor.vue';
+  import SelectionList from '@interapp/components/SelectionList.vue';
+  import { FREQUENCY_OPTIONS } from '@renderer/helpers/options';
+  import { InvokeChannels } from '@preload/channels/invoke';
+  import { useStatisticsStore } from '@renderer/store/statistics';
 
   const props = defineProps<{
     note: Note;
     reveal: boolean;
     isEditing: boolean;
   }>();
+
+  const statisticsStore = useStatisticsStore();
 
   const focus = ref(false);
 
@@ -21,6 +27,17 @@
 
   function updateNoteBody(value: string) {
     localNote.value.body = value;
+  }
+
+  async function updateBucket() {
+    await window.api.invoke(InvokeChannels.updateNote, cloneDeep(localNote.value));
+    statisticsStore.refetch();
+  }
+
+  async function changeFrequency(frequency: NoteFrequency) {
+    localNote.value.frequency = frequency;
+    await window.api.invoke(InvokeChannels.updateNote, cloneDeep(localNote.value));
+    statisticsStore.refetch();
   }
 
   watch(
@@ -64,6 +81,29 @@
         @toggle-focus-mode="toggleFocus"
         @on-change="updateNoteBody"
       />
+    </div>
+
+    <!-- META -->
+    <div v-if="reveal && !focus" class="flex justify-evenly">
+      <div class="flex items-center gap-1">
+        <span>Frequency:</span>
+        <SelectionList
+          class="small"
+          :options="[...FREQUENCY_OPTIONS]"
+          :selected="[localNote.frequency]"
+          @toggle="changeFrequency"
+        />
+      </div>
+      <div class="flex items-center gap-1">
+        <label for="bucket-input">Review bucket:</label>
+        <input
+          id="bucket-input"
+          name="bucket-input"
+          type="checkbox"
+          v-model="localNote.bucket"
+          @click="updateBucket"
+        />
+      </div>
     </div>
   </div>
 </template>

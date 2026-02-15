@@ -4,9 +4,8 @@
   import { useFlashcardsStore } from '@renderer/store/flashcards';
   import { useStatisticsStore } from '@renderer/store/statistics';
   import { storeToRefs } from 'pinia';
-  import { Note, NoteFrequency } from '@common/schemas/notes';
+  import { Note } from '@common/schemas/notes';
   import { InvokeChannels } from '@preload/channels/invoke';
-  import { cloneDeep } from '@interapp/utils/utils';
   import Flashcard from './Flashcard.vue';
 
   const router = useRouter();
@@ -61,19 +60,6 @@
     reveal.value = true;
     index.value--;
     note.value = await getFlashcard(history.value[index.value]);
-  }
-
-  async function updateBucket() {
-    if (!note.value) throw new Error('Toggle bucket: invalid note!');
-    await window.api.invoke(InvokeChannels.updateNote, cloneDeep(note.value));
-    statisticsStore.refetch();
-  }
-
-  async function changeFrequency(frequency: NoteFrequency) {
-    if (!note.value) throw new Error('Change frequency: invalid note!');
-    note.value.frequency = frequency;
-    await window.api.invoke(InvokeChannels.updateNote, cloneDeep(note.value));
-    statisticsStore.refetch();
   }
 
   function startEdit() {
