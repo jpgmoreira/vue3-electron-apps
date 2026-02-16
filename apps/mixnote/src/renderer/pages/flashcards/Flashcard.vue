@@ -90,10 +90,10 @@
 <template>
   <div
     class="flashcard flex flex-col absolute inset-0 overflow-y-auto"
-    :class="{ 'is-editing': isEditing }"
+    :class="{ 'is-editing': isEditing, focus }"
   >
     <!-- TOP -->
-    <div class="top flex justify-between items-end">
+    <div class="top flex justify-between items-center">
       <div class="opacity-50">{{ localNote.name }}</div>
       <FocusIcon v-if="reveal" class="focus-icon" @click="toggleFocus" />
     </div>
@@ -121,7 +121,7 @@
     </div>
 
     <!-- META -->
-    <div v-if="reveal && !focus" class="flex justify-evenly">
+    <div v-if="reveal && !focus" class="meta flex justify-evenly">
       <div class="flex items-center gap-1">
         <span>Frequency:</span>
         <SelectionList

@@ -1,8 +1,20 @@
+/* =========================================
+   FLASHCARD — BASE
+========================================= */
+
+.theme-dark .flashcard {
+  background: #121212;
+  padding: 0 10px;
+}
+
+/* =========================================
+   TOP BAR
+========================================= */
+
 .theme-dark .flashcard .top {
   font-size: 14px;
   line-height: 1;
-  padding: 0 8px;
-  min-height: 23px;
+  min-height: 28px;
 }
 
 .theme-dark .flashcard .focus-icon {
@@ -16,12 +28,97 @@
   opacity: 1;
 }
 
+/* =========================================
+   HEAD
+========================================= */
+
 .theme-dark .flashcard .head textarea {
-  field-sizing: content;
+  width: fit-content;
+  background: #1f1f1f;
+  border: none;
+  outline: none;
+  border-radius: 14px;
+  padding: 1rem 1.25rem;
+  font-size: 1.05rem;
   resize: none;
+  field-sizing: content;
+  text-align: center;
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+/* =========================================
+   BODY (MARKDOWN EDITOR)
+========================================= */
+
+.theme-dark .flashcard .body {
+  margin: 5px 0;
+  background: #1f1f1f;
+  border-radius: 18px;
+  padding: 12px 14px;
+  min-height: 350px;
+  box-shadow:
+    0 25px 40px -12px rgba(0, 0, 0, 0.55),
+    inset 0 1px 0 rgba(255, 255, 255, 0.03);
+  animation: flashcardFadeIn 0.18s ease-out;
 }
 
 .theme-dark .flashcard:not(.is-editing) .md-editor-toolbar-wrapper,
 .theme-dark .flashcard:not(.is-editing) .md-editor-footer {
   display: none;
+}
+
+/* =========================================
+   META — Frequency & Bucket
+========================================= */
+
+.theme-dark .flashcard .meta {
+  font-size: 0.9rem;
+  opacity: 0.9;
+  padding-bottom: 5px;
+}
+
+/* =========================================
+   FOCUS MODE (ZEN)
+========================================= */
+
+.theme-dark .flashcard.focus .body {
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 0;
+  box-shadow: none;
+  padding: 0;
+}
+
+/* =========================================
+   FREQUENCY COLOR STATES
+========================================= */
+.theme-dark .flashcard.low .head textarea,
+.theme-dark .flashcard.low .body {
+  background: rgba(160, 60, 60, 0.18) !important;
+  outline: 1px solid rgba(200, 80, 80, 0.55);
+  outline-offset: -1px;
+}
+
+.theme-dark .flashcard.high .head textarea,
+.theme-dark .flashcard.high .body {
+  background: rgba(60, 140, 90, 0.18) !important;
+  outline: 1px solid rgba(90, 200, 140, 0.55);
+  outline-offset: -1px;
+}
+
+/* =========================================
+   ANIMATIONS
+========================================= */
+@keyframes flashcardFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
