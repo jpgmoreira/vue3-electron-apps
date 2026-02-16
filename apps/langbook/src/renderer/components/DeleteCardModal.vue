@@ -4,6 +4,7 @@
   import { ref } from 'vue';
   import Modal from '@interapp/components/Modal.vue';
   import { sleep } from '@interapp/utils/utils';
+  import DeletionModal from '@interapp/components/DeletionModal.vue';
 
   const emit = defineEmits<{
     (e: 'deleted'): void;
@@ -47,22 +48,11 @@
 </script>
 
 <template>
-  <Modal :visible="visible" @close="close">
-    <template #header>Delete</template>
-    <template #body>
-      <div>Are you sure you want to delete this card?</div>
-      <div class="text-danger flex justify-center">This action cannot be undone!</div>
-      <div v-if="isDeleting" class="text-danger flex items-center">Deleting...</div>
-    </template>
-    <template #footer>
-      <div class="flex justify-between">
-        <button type="button" class="btn-warning" @click="close" :disabled="isDeleting">
-          Cancel
-        </button>
-        <button type="button" class="btn-danger" @click="doDelete" :disabled="isDeleting">
-          Delete
-        </button>
-      </div>
-    </template>
-  </Modal>
+  <DeletionModal
+    :visible="visible"
+    :is-deleting="isDeleting"
+    :text="'this card'"
+    @close="close"
+    @delete="doDelete"
+  />
 </template>

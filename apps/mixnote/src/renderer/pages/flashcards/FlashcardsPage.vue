@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-  import { computed, onMounted, ref, useTemplateRef } from 'vue';
+  import { computed, onMounted, reactive, ref, useTemplateRef } from 'vue';
   import { useRouter } from 'vue-router';
   import { useFlashcardsStore } from '@renderer/store/flashcards';
   import { useStatisticsStore } from '@renderer/store/statistics';
@@ -7,6 +7,7 @@
   import { Note } from '@common/schemas/notes';
   import { InvokeChannels } from '@preload/channels/invoke';
   import Flashcard from './Flashcard.vue';
+  import DeletionModal from '@interapp/components/DeletionModal.vue';
 
   const router = useRouter();
 
@@ -22,6 +23,11 @@
 
   const hasLoaded = ref(false);
   const isEditing = ref(false);
+
+  const deletion = reactive({
+    visible: false,
+    isDeleting: false,
+  });
 
   const note = ref<Note | null>(null);
   const cannotGoPrev = computed(() => {
@@ -103,6 +109,13 @@
 
 <template>
   <div class="flashcards-page flex flex-col h-screen">
+    <DeletionModal
+      :visible="deletion.visible"
+      :is-deleting="deletion.isDeleting"
+      :text="note?.name"
+      text-danger
+      @close="deletion.visible = false"
+    />
     <div class="grow relative">
       <div v-show="note" class="absolute inset-0 overflow-hidden">
         <Flashcard ref="flashcard-ref" :note="note" :reveal="reveal" :is-editing="isEditing" />
@@ -127,7 +140,7 @@
         <button type="button" class="btn-warning" @click="exit">Exit</button>
       </template>
       <template v-else>
-        <button type="button" class="btn-danger">Delete</button>
+        <button type="button" class="btn-danger" @click="deletion.visible = true">Delete</button>
         <button type="button" class="btn-warning" @click="cancel">Cancel</button>
         <button type="button" class="btn-success" @click="save">Save</button>
       </template>

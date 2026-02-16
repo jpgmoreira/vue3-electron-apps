@@ -140,6 +140,7 @@
     :visible="visible === 'delete'"
     :is-deleting="isDeleting"
     :text="`profile ${record?.name}`"
+    text-danger
     @close="close"
     @delete="doDelete"
   />

@@ -70,6 +70,7 @@
     :visible="visible === 'single'"
     :is-deleting="isDeleting"
     :text="name"
+    text-danger
     @close="close"
     @delete="callback"
   />
@@ -79,6 +80,7 @@
     :visible="visible === 'multiple'"
     :is-deleting="isDeleting"
     :text="deleteMultipleText"
+    text-danger
     @close="close"
     @delete="callback"
   />

@@ -1,14 +1,17 @@
 <script lang="ts" setup>
+  import { computed } from 'vue';
   import Modal from '@interapp/components/Modal.vue';
-  defineProps<{
+  const props = defineProps<{
     visible: boolean;
     isDeleting: boolean;
     text?: string;
+    textDanger?: boolean;
   }>();
   const emit = defineEmits<{
     (e: 'close'): void;
     (e: 'delete'): void;
   }>();
+  const textClass = computed(() => (props.textDanger ? 'text-danger font-bold' : ''));
   function close() {
     emit('close');
   }
@@ -23,7 +26,7 @@
     <template #body>
       <div>
         Are you sure you want to delete
-        <span class="text-danger font-bold">{{ text }}</span>
+        <span :class="textClass">{{ text }}</span>
         ?
       </div>
       <div class="text-danger flex justify-center">This action cannot be undone!</div>

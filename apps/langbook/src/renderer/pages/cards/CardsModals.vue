@@ -87,6 +87,7 @@
     :visible="visible === 'single'"
     :is-deleting="isDeleting"
     :text="deleteNode?.text"
+    text-danger
     @close="close"
     @delete="doDelete"
   />
@@ -96,6 +97,7 @@
     :visible="visible === 'multiple'"
     :is-deleting="isDeleting"
     :text="deleteMultipleText"
+    text-danger
     @close="close"
     @delete="doDelete"
   />
