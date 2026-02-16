@@ -1,9 +1,9 @@
 <script setup lang="ts">
   import { Node } from '@interapp/components/Explorer/common/tree';
   import { ref, computed } from 'vue';
-  import Modal from '@interapp/components/Modal.vue';
   import { DeleteNodeCallback } from '@interapp/components/Explorer/renderer/Explorer.vue';
   import { sleep } from '@interapp/utils/utils';
+  import DeletionModal from '@interapp/components/DeletionModal.vue';
 
   export type ModalType = 'single' | 'multiple' | null;
 
@@ -82,50 +82,20 @@
 
 <template>
   <!-- Delete single: -->
-  <Modal :visible="visible === 'single'" @close="close">
-    <template #header>Delete</template>
-    <template #body>
-      <div>
-        Are you sure you want to delete
-        <span class="text-danger font-bold">{{ deleteNode?.text }}</span>
-        ?
-      </div>
-      <div class="text-danger flex justify-center">This action cannot be undone!</div>
-      <div v-if="isDeleting" class="text-danger flex items-center">Deleting...</div>
-    </template>
-    <template #footer>
-      <div class="flex justify-between">
-        <button type="button" class="btn-warning" @click="close" :disabled="isDeleting">
-          Cancel
-        </button>
-        <button type="button" class="btn-danger" @click="doDelete" :disabled="isDeleting">
-          Delete
-        </button>
-      </div>
-    </template>
-  </Modal>
+  <DeletionModal
+    :visible="visible === 'single'"
+    :is-deleting="isDeleting"
+    :text="deleteNode?.text"
+    @close="close"
+    @delete="doDelete"
+  />
 
   <!-- Delete multiple: -->
-  <Modal :visible="visible === 'multiple'" @close="close">
-    <template #header>Delete</template>
-    <template #body>
-      <div>
-        Are you sure you want to delete
-        <span class="text-danger font-bold">{{ deleteMultipleText }}</span>
-        ?
-      </div>
-      <div class="text-danger flex justify-center">This action cannot be undone!</div>
-      <div v-if="isDeleting" class="text-danger flex items-center">Deleting...</div>
-    </template>
-    <template #footer>
-      <div class="flex justify-between">
-        <button type="button" class="btn-warning" @click="close" :disabled="isDeleting">
-          Cancel
-        </button>
-        <button type="button" class="btn-danger" @click="doDelete" :disabled="isDeleting">
-          Delete
-        </button>
-      </div>
-    </template>
-  </Modal>
+  <DeletionModal
+    :visible="visible === 'multiple'"
+    :is-deleting="isDeleting"
+    :text="deleteMultipleText"
+    @close="close"
+    @delete="doDelete"
+  />
 </template>

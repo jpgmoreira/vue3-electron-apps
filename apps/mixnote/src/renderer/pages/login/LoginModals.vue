@@ -7,8 +7,12 @@
   import { APP_NAME } from '@common/constants';
   import { useRouter } from 'vue-router';
   import { sleep } from '@interapp/utils/utils';
+  import DeletionModal from '@interapp/components/DeletionModal.vue';
+
   export type ModalType = 'create' | 'rename' | 'delete' | null;
+
   defineExpose({ show });
+
   const profileStore = useProfileStore();
   const toastStore = useToastStore();
   const router = useRouter();
@@ -18,6 +22,7 @@
   const isDeleting = ref(false);
   const createInput = useTemplateRef('create-input');
   const renameInput = useTemplateRef('rename-input');
+
   function show(which: ModalType, selected: ProfileRecord | null) {
     text.value = selected ? selected.name : '';
     if (which === 'create') text.value = '';
@@ -131,26 +136,11 @@
   </Modal>
 
   <!-- Delete modal: -->
-  <Modal :visible="visible === 'delete'" @close="close">
-    <template #header>Delete</template>
-    <template #body>
-      <div>
-        Are you sure you want to delete profile
-        <span class="text-danger font-bold">{{ record?.name }}</span>
-        ?
-      </div>
-      <div class="text-danger flex justify-center">This action cannot be undone!</div>
-      <div v-if="isDeleting" class="text-danger flex items-center">Deleting...</div>
-    </template>
-    <template #footer>
-      <div class="flex justify-between">
-        <button type="button" class="btn-warning" @click="close" :disabled="isDeleting">
-          Cancel
-        </button>
-        <button type="button" class="btn-danger" @click="doDelete" :disabled="isDeleting">
-          Delete
-        </button>
-      </div>
-    </template>
-  </Modal>
+  <DeletionModal
+    :visible="visible === 'delete'"
+    :is-deleting="isDeleting"
+    :text="`profile ${record?.name}`"
+    @close="close"
+    @delete="doDelete"
+  />
 </template>
