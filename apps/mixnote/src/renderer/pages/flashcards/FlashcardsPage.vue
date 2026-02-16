@@ -8,6 +8,7 @@
   import { InvokeChannels } from '@preload/channels/invoke';
   import Flashcard from './Flashcard.vue';
   import DeletionModal from '@interapp/components/DeletionModal.vue';
+  import { sleep } from '@interapp/utils/utils';
 
   const router = useRouter();
 
@@ -90,6 +91,21 @@
     note.value = updated;
   }
 
+  function closeDelete() {
+    if (deletion.isDeleting) return;
+    deletion.visible = false;
+  }
+
+  async function doDelete() {
+    if (!note.value) throw new Error('Delete: note not set!');
+    try {
+      deletion.isDeleting = true;
+      await sleep(1000);
+    } finally {
+      deletion.isDeleting = false;
+    }
+  }
+
   async function recomputeQueues() {
     await window.api.invoke(InvokeChannels.recomputeQueues);
   }
@@ -114,7 +130,8 @@
       :is-deleting="deletion.isDeleting"
       :text="note?.name"
       text-danger
-      @close="deletion.visible = false"
+      @close="closeDelete"
+      @delete="doDelete"
     />
     <div class="grow relative">
       <div v-show="note" class="absolute inset-0 overflow-hidden">
