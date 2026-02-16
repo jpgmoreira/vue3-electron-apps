@@ -209,11 +209,11 @@
       <div>Bucket: {{ statistics.filteredBucket }}</div>
     </div>
     <footer class="custom-footer flex justify-evenly">
+      <button type="button" class="btn-primary" :disabled="!card" @click="goEdit">Edit</button>
       <button type="button" class="btn-primary" @click="goPrev" :disabled="cannotGoPrev">
         Prev
       </button>
       <button type="button" class="btn-primary" @click="goNext" :disabled="!card">Next</button>
-      <button type="button" class="btn-primary" :disabled="!card" @click="goEdit">Edit</button>
       <button type="button" class="btn-warning" @click="exit">Exit</button>
     </footer>
   </div>

@@ -80,6 +80,9 @@ export const useNotesStore = defineStore('notes', {
       delete this.notes[noteId];
       await this.fetchNote(noteId);
     },
+    removeNoteFromCache(noteId: string) {
+      delete this.notes[noteId];
+    },
     async refetchCache(noteIds: string[]) {
       if (this.isFetchingCache) return;
       try {

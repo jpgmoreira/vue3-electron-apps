@@ -9,6 +9,10 @@
   import Flashcard from './Flashcard.vue';
   import DeletionModal from '@interapp/components/DeletionModal.vue';
   import { sleep } from '@interapp/utils/utils';
+  import { useProfileStore } from '@renderer/store/profile';
+  import { useTabsStore } from '@renderer/store/tabs';
+  import { useNotesStore } from '@renderer/store/notes';
+  import { TreeChannels } from '@interapp/components/Explorer/preload/channels';
 
   const router = useRouter();
 
@@ -16,6 +20,10 @@
   const { history, index, reveal } = storeToRefs(flashcardsStore);
 
   const statisticsStore = useStatisticsStore();
+  const profileStore = useProfileStore();
+  const tabsStore = useTabsStore();
+  const notesStore = useNotesStore();
+
   const statistics = computed(() => statisticsStore.statistics);
 
   const flashcardRef = useTemplateRef('flashcard-ref');
@@ -42,6 +50,10 @@
     return window.api.invoke<Note | null>(InvokeChannels.getFlashcard, id);
   }
 
+  async function setCurrentNote() {
+    note.value = await getFlashcard(history.value[index.value] || null);
+  }
+
   async function goNext() {
     if (!reveal.value) {
       reveal.value = true;
@@ -50,7 +62,7 @@
     reveal.value = false;
     if (index.value < history.value.length - 1) {
       index.value++;
-      note.value = await getFlashcard(history.value[index.value]);
+      await setCurrentNote();
       return;
     }
     const next = await getFlashcard(null);
@@ -68,7 +80,7 @@
     }
     reveal.value = true;
     index.value--;
-    note.value = await getFlashcard(history.value[index.value]);
+    await setCurrentNote();
   }
 
   function startEdit() {
@@ -98,10 +110,22 @@
 
   async function doDelete() {
     if (!note.value) throw new Error('Delete: note not set!');
+    if (deletion.isDeleting) return;
     try {
       deletion.isDeleting = true;
       await sleep(1000);
+      await window.explorer.invoke(TreeChannels.deleteNode, 0, note.value.id);
+      await window.api.invoke(InvokeChannels.recomputeQueues);
+      await statisticsStore.refetch();
+      await profileStore.refetch();
+      await tabsStore.refetch();
+      notesStore.removeNoteFromCache(note.value.id);
+      flashcardsStore.noteWasDeleted(note.value.id);
+      reveal.value = false;
+      isEditing.value = false;
+      await setCurrentNote();
     } finally {
+      deletion.visible = false;
       deletion.isDeleting = false;
     }
   }
@@ -149,11 +173,13 @@
     </div>
     <footer class="custom-footer flex justify-evenly">
       <template v-if="!isEditing">
+        <button type="button" class="btn-primary" :disabled="!reveal || !note" @click="startEdit">
+          Edit
+        </button>
         <button type="button" class="btn-primary" @click="goPrev" :disabled="cannotGoPrev">
           Prev
         </button>
         <button type="button" class="btn-primary" @click="goNext" :disabled="!note">Next</button>
-        <button type="button" class="btn-primary" :disabled="!note" @click="startEdit">Edit</button>
         <button type="button" class="btn-warning" @click="exit">Exit</button>
       </template>
       <template v-else>
