@@ -6,10 +6,11 @@ import { cloneDeep } from '@interapp/utils/utils';
 
 export const useNotesStore = defineStore('notes', {
   state: () => ({
-    // This notes cache is used only for the editor, not the flashcards!
-    // To avoid race-condition problems, I do not clear the cache when closing a note.
-    // By the application normal usage I can assume it will never store a very large number of notes.
-    // The entire cache is refetched in the case where you clear the bucket or frequency properties
+    // - The notes cached here are just notes from the editor tabs.
+    // - Notes from the flashcards study are not cached.
+    // - To avoid race-condition problems, I do not clear the cache when closing a note.
+    //   By the application normal usage I can assume it will never store a very large number of notes.
+    // - The entire cache is refetched in the case where you clear the bucket or frequency properties
     //   of the selected cards in the pre-flashcards window.
     notes: {} as Record<string, Note>,
     timers: {} as Record<string, ReturnType<typeof setTimeout> | undefined>,
@@ -74,9 +75,10 @@ export const useNotesStore = defineStore('notes', {
       this.notes[noteId] = note;
       return note;
     },
-    async refetchNote(noteId: string): Promise<Note> {
+    async refetchNote(noteId: string) {
+      if (!(noteId in this.notes)) return;
       delete this.notes[noteId];
-      return this.fetchNote(noteId);
+      await this.fetchNote(noteId);
     },
     async refetchCache(noteIds: string[]) {
       if (this.isFetchingCache) return;

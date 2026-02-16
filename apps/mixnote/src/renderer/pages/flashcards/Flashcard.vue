@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-  import { ref, useTemplateRef, watch } from 'vue';
+  import { ref, useTemplateRef, watch, nextTick } from 'vue';
   import { getEmptyNote, Note, NoteFrequency } from '@common/schemas/notes';
   import { FocusIcon } from 'lucide-vue-next';
   import { cloneDeep } from '@interapp/utils/utils';
@@ -35,7 +35,7 @@
 
   async function updateBucket() {
     await updateNote();
-    statisticsStore.refetch();
+    await statisticsStore.refetch();
   }
 
   async function changeFrequency(frequency: NoteFrequency) {
@@ -76,6 +76,14 @@
     () => props.reveal,
     () => (focus.value = false)
   );
+  watch(
+    () => props.isEditing,
+    async (newVal: boolean) => {
+      await nextTick();
+      editorRef?.value?.setPreviewOnly(!newVal);
+    },
+    { immediate: true }
+  );
 </script>
 
 <template>
@@ -97,7 +105,7 @@
     </div>
 
     <!-- BODY -->
-    <div class="body grow flex flex-col" v-if="reveal">
+    <div class="body grow flex flex-col" v-show="reveal">
       <MdEditor
         ref="editor-ref"
         class="grow"
