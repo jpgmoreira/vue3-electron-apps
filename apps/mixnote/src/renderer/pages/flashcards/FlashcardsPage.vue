@@ -95,7 +95,7 @@
 </script>
 
 <template>
-  <div class="flashcards-page flex flex-col h-screen select-none">
+  <div class="flashcards-page flex flex-col h-screen">
     <div class="grow relative">
       <div v-show="note" class="absolute inset-0 overflow-hidden">
         <Flashcard ref="flashcard-ref" :note="note" :reveal="reveal" :is-editing="isEditing" />
