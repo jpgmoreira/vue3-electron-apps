@@ -88,7 +88,10 @@
 </script>
 
 <template>
-  <div class="flashcard flex flex-col absolute inset-0 overflow-y-auto">
+  <div
+    class="flashcard flex flex-col absolute inset-0 overflow-y-auto"
+    :class="{ 'is-editing': isEditing }"
+  >
     <!-- TOP -->
     <div class="top flex justify-between items-end">
       <div class="opacity-50">{{ localNote.name }}</div>

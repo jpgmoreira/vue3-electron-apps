@@ -20,3 +20,8 @@
   field-sizing: content;
   resize: none;
 }
+
+.theme-dark .flashcard:not(.is-editing) .md-editor-toolbar-wrapper,
+.theme-dark .flashcard:not(.is-editing) .md-editor-footer {
+  display: none;
+}
