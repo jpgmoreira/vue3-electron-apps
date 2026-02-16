@@ -77,6 +77,13 @@
     isEditing.value = false;
   }
 
+  async function save() {
+    if (!flashcardRef.value) throw new Error('Save: flashcard ref not set!');
+    const updated = await flashcardRef.value.updateNote();
+    isEditing.value = false;
+    note.value = updated;
+  }
+
   async function recomputeQueues() {
     await window.api.invoke(InvokeChannels.recomputeQueues);
   }
@@ -122,7 +129,7 @@
       <template v-else>
         <button type="button" class="btn-danger">Delete</button>
         <button type="button" class="btn-warning" @click="cancel">Cancel</button>
-        <button type="button" class="btn-success">Save</button>
+        <button type="button" class="btn-success" @click="save">Save</button>
       </template>
     </footer>
   </div>

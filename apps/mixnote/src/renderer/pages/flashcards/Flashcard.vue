@@ -35,20 +35,20 @@
 
   async function updateBucket() {
     await updateNote();
-    await statisticsStore.refetch();
   }
 
   async function changeFrequency(frequency: NoteFrequency) {
     localNote.value.frequency = frequency;
     await updateNote();
-    await statisticsStore.refetch();
   }
 
-  async function updateNote() {
+  async function updateNote(): Promise<Note> {
     const clone = cloneDeep(localNote.value);
     await window.api.invoke(InvokeChannels.updateNote, clone);
     await window.api.invoke(InvokeChannels.recomputeQueues);
     await notesStore.refetchNote(clone.id);
+    await statisticsStore.refetch();
+    return clone;
   }
 
   function reset() {
@@ -60,6 +60,7 @@
 
   defineExpose({
     reset,
+    updateNote,
   });
 
   watch(
