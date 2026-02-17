@@ -366,6 +366,12 @@
     updateTree(newTree);
   }
 
+  // --- Drag: ---
+
+  function nodeDragStart(node: Node, e: DragEvent) {
+    e.dataTransfer?.setData(`explorer/${node.type}`, node.id);
+  }
+
   // --- Helpers: ---
 
   function isCheckIndeterminate(node: Node) {
@@ -579,15 +585,17 @@
                 <span v-if="node.type === 'dir' && props.dirIcon" class="dir-icon"></span>
 
                 <input
+                  type="text"
                   v-model.trim="node.text"
                   class="node-input"
                   :class="{ selected: node.selected }"
                   :readonly="renamingNode !== node"
-                  @mousedown.prevent
                   @keydown.enter="applyRenaming"
                   @keydown.esc="undoRenaming"
                   @blur="applyRenaming"
-                  @click.right.stop="(e: MouseEvent) => showContextMenu(node.type, node, e)"
+                  @click.right.stop="showContextMenu(node.type, node, $event)"
+                  draggable="true"
+                  @dragstart="nodeDragStart(node, $event)"
                 />
               </div>
               <span v-if="node.type === 'dir' && props.filesHint" class="files-hint">

@@ -109,7 +109,8 @@
   }
 
   function groupDrop(groupIndex: number, e: DragEvent) {
-    const noteId = e.dataTransfer?.getData('application/note');
+    let noteId = e.dataTransfer?.getData('application/note');
+    noteId = noteId || e.dataTransfer?.getData('explorer/file');
     if (!noteId) return;
     setActiveGroup(groupIndex);
     tabsStore.explorerNoteClicked(noteId);
