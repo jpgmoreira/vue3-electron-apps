@@ -1,7 +1,6 @@
 <script setup lang="ts">
   import { Node } from '@interapp/components/Explorer/common/tree';
   import { ref, computed } from 'vue';
-  import Modal from '@interapp/components/Modal.vue';
   import { DeleteNodeCallback } from '@interapp/components/Explorer/renderer/Explorer.vue';
   import { sleep } from '@interapp/utils/utils';
   import DeletionModal from '@interapp/components/DeletionModal.vue';

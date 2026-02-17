@@ -2,7 +2,6 @@
   import { Card } from '@common/schemas/card';
   import { InvokeChannels } from '@preload/channels/invoke';
   import { ref } from 'vue';
-  import Modal from '@interapp/components/Modal.vue';
   import { sleep } from '@interapp/utils/utils';
   import DeletionModal from '@interapp/components/DeletionModal.vue';
 
