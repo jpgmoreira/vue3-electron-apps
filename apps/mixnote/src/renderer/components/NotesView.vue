@@ -109,7 +109,7 @@
   }
 
   function groupDrop(groupIndex: number, e: DragEvent) {
-    let noteId = e.dataTransfer?.getData('application/note');
+    let noteId = e.dataTransfer?.getData('editor/note');
     noteId = noteId || e.dataTransfer?.getData('explorer/file');
     if (!noteId) return;
     setActiveGroup(groupIndex);
@@ -117,7 +117,7 @@
   }
 
   function tabDragStart(noteId: string, e: DragEvent) {
-    e.dataTransfer?.setData('application/note', noteId);
+    e.dataTransfer?.setData('editor/note', noteId);
   }
 
   function resizerMouseDown(e: MouseEvent, index: number) {
