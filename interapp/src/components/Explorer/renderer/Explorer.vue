@@ -585,7 +585,6 @@
                 <span v-if="node.type === 'dir' && props.dirIcon" class="dir-icon"></span>
 
                 <input
-                  type="text"
                   v-model.trim="node.text"
                   class="node-input"
                   :class="{ selected: node.selected }"
