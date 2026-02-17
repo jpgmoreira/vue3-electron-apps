@@ -59,9 +59,34 @@ config({
     },
   },
   markdownItConfig(md) {
-    md.set({
-      typographer: true,
+    md.set({ typographer: true });
+    // Replace spaces in the start of lines:
+    md.core.ruler.before('normalize', 'preserve_leading_spaces', (state) => {
+      const src = state.src;
+      const segments = src.split(/(```[\s\S]*?```)/g);
+      for (let i = 0; i < segments.length; i++) {
+        // Do not replace inside of code blocks.
+        if (segments[i].startsWith('```')) continue;
+        segments[i] = segments[i].replace(/^ +/gm, (match) =>
+          '<span class="custom-space"></span>'.repeat(match.length)
+        );
+      }
+      state.src = segments.join('');
     });
+    // Replace spaces in the middle of the text:
+    md.renderer.rules.text = function (tokens, idx) {
+      const token = tokens[idx];
+      if (
+        token.markup === '`' ||
+        token.type === 'code_inline' ||
+        token.type === 'code_block' ||
+        token.type === 'fence'
+      ) {
+        return token.content;
+      }
+      return token.content.replace(/ /g, '<span class="custom-space"></span>');
+    };
+    // Replace arrows:
     md.core.ruler.after('inline', 'arrows', (state) => {
       state.tokens.forEach((token) => {
         if (token.type === 'inline' && token.children) {

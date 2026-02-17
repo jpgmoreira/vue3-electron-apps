@@ -30,6 +30,7 @@
   --md-theme-code-block-color: #c7d6e7;
   --md-theme-code-block-bg-color: #181818 !important;
   --md-theme-color: #eee !important;
+  --md-theme-border-color: #525252;
 }
 
 /* Links */
@@ -72,9 +73,18 @@
 
 /* Inline code */
 
-.md-editor-preview code:not(.md-editor-code code):not(pre code) {
+.theme-dark .md-editor-preview code:not(.md-editor-code code):not(pre code) {
   font-family: 'Fira Code', 'JetBrains Mono', monospace !important;
   border-radius: 4px;
   white-space: nowrap;
   border: 1px solid #1a5594;
+}
+
+/* Checkboxes */
+
+.theme-dark .md-editor-preview .task-list-item {
+  margin: 0;
+}
+.theme-dark .md-editor-preview .task-list-item > span.custom-space:first-of-type {
+  width: 0;
 }

@@ -3,5 +3,6 @@
 @import './components/mdEditor/editorContainer.css';
 @import './components/mdEditor/mark.css';
 @import './components/mdEditor/div.css';
+@import './components/mdEditor/space.css';
 @import './components/notesView.css';
 @import './components/flashcard.css';
