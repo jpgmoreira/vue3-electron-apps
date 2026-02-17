@@ -216,17 +216,20 @@
       <div class="flex grow flex-col max-w-full relative">
         <!-- Tab headers: -->
         <div class="flex flex-wrap">
-          <div
-            v-for="tab in group.tabs"
-            class="tab-header flex justify-between whitespace-nowrap"
-            :class="{ preview: tab.preview, active: tab.active }"
-            :key="tab.id"
-            @mousedown.middle.stop="closeTab(group, tab.id)"
-            @click="tabHeaderClick(group, tab.id)"
-          >
-            <span class="tab-title">{{ notesStore.getNoteFromCache(tab.noteId).name }}</span>
-            <span @click.stop="closeTab(group, tab.id)"><XIcon /></span>
-          </div>
+          <!-- Tabs: -->
+          <TransitionGroup name="tab-move" tag="div" class="flex flex-wrap">
+            <div
+              v-for="tab in group.tabs"
+              class="tab-header flex justify-between whitespace-nowrap"
+              :class="{ preview: tab.preview, active: tab.active }"
+              :key="tab.id"
+              @mousedown.middle.stop="closeTab(group, tab.id)"
+              @click="tabHeaderClick(group, tab.id)"
+            >
+              <span class="tab-title">{{ notesStore.getNoteFromCache(tab.noteId).name }}</span>
+              <span @click.stop="closeTab(group, tab.id)"><XIcon /></span>
+            </div>
+          </TransitionGroup>
           <!-- Tab group buttons -->
           <div class="ml-auto flex tab-actions flex-wrap" @click.stop>
             <button type="button" v-if="tabGroups.length > 1" @click="closeTabGroup(group.id)">
@@ -249,3 +252,34 @@
     </div>
   </div>
 </template>
+
+<style scoped>
+  /* 1. Removal animation: fade + horizontal shrink */
+  .tab-move-leave-active {
+    transition:
+      opacity 120ms ease,
+      transform 120ms ease,
+      width 120ms ease,
+      margin 120ms ease;
+    position: absolute;
+  }
+  .tab-move-leave-to {
+    opacity: 0;
+    transform: translateY(-3px) scaleX(0.6); /* horizontal shrink */
+    width: 0;
+    margin-left: 0;
+    margin-right: 0;
+  }
+  /* 2. Smooth movement for remaining items */
+  .tab-move-move {
+    transition: transform 120ms ease;
+  }
+  /* 3. Optional enter animation (similar to VSCode when creating a tab) */
+  .tab-move-enter-from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  .tab-move-enter-active {
+    transition: all 120ms ease;
+  }
+</style>
