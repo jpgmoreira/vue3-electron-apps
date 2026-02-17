@@ -108,6 +108,17 @@
     tab.preview = false;
   }
 
+  function groupDrop(groupIndex: number, e: DragEvent) {
+    const noteId = e.dataTransfer?.getData('application/note');
+    if (!noteId) return;
+    setActiveGroup(groupIndex);
+    tabsStore.explorerNoteClicked(noteId);
+  }
+
+  function tabDragStart(noteId: string, e: DragEvent) {
+    e.dataTransfer?.setData('application/note', noteId);
+  }
+
   function resizerMouseDown(e: MouseEvent, index: number) {
     resize.isResizing = true;
     resize.index = index;
@@ -204,6 +215,8 @@
       :style="computeTabGroupStyle(group)"
       @click="setActiveGroup(index)"
       :class="{ active: group.active }"
+      @dragover.prevent
+      @drop="groupDrop(index, $event)"
     >
       <!-- Resizer -->
       <div
@@ -224,6 +237,8 @@
             :key="tab.id"
             @mousedown.middle.stop="closeTab(group, tab.id)"
             @click="tabHeaderClick(group, tab.id)"
+            draggable="true"
+            @dragstart="tabDragStart(tab.noteId, $event)"
           >
             <span class="tab-title">{{ notesStore.getNoteFromCache(tab.noteId).name }}</span>
             <span @click.stop="closeTab(group, tab.id)"><XIcon /></span>
