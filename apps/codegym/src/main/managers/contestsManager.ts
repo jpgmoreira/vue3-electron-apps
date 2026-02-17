@@ -29,7 +29,7 @@ export class ContestsManager {
   }
 
   constructor(emitter: EventEmitter, counter: NodeCounterManager) {
-    emitter.on(CommonEvents.clearProfileData, () => this.clear);
+    emitter.on(CommonEvents.clearProfileData, () => this.clear());
     this.counter = counter;
     this.dummy = deepFreeze(getEmptyContest('', '', 0));
   }

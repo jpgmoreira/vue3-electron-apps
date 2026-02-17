@@ -29,7 +29,7 @@ export class FileProxy<T extends JSONObject> {
   private _target: T;
   private _proxy: T;
 
-  constructor(filePath: string, targetObject: T, debounce = 500, indent = 2) {
+  constructor(filePath: string, targetObject: T, debounce = 500, indent = 0) {
     this.filePath = filePath;
     this.debounce = debounce;
     this.indent = indent;

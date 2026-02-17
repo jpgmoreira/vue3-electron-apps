@@ -20,7 +20,7 @@ export class OjContextManager {
   }
 
   constructor(emitter: EventEmitter) {
-    emitter.on(CommonEvents.clearProfileData, () => this.clear);
+    emitter.on(CommonEvents.clearProfileData, () => this.clear());
   }
 
   public loadProfile(profileId: string) {
