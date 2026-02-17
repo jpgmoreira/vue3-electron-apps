@@ -1,4 +1,5 @@
 import { ensureDirExists } from './fileUtils';
+import { is } from '@electron-toolkit/utils';
 import type { JSONValue, JSONObject } from '@interapp/types/json';
 import fs from 'fs';
 import util from 'util';
@@ -29,10 +30,9 @@ export class FileProxy<T extends JSONObject> {
   private _target: T;
   private _proxy: T;
 
-  constructor(filePath: string, targetObject: T, debounce = 500, indent = 0) {
+  constructor(filePath: string, targetObject: T) {
     this.filePath = filePath;
-    this.debounce = debounce;
-    this.indent = indent;
+    this.indent = is.dev ? 2 : 0;
     const dir = path.dirname(filePath);
     ensureDirExists(dir);
     if (!fs.existsSync(filePath)) {
