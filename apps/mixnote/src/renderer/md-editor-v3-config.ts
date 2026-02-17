@@ -60,20 +60,19 @@ config({
   },
   markdownItConfig(md) {
     md.set({ typographer: true });
-    // Replace spaces in the start of lines:
+    // Replace spaces in the start of lines (outside code blocks)
     md.core.ruler.before('normalize', 'preserve_leading_spaces', (state) => {
       const src = state.src;
       const segments = src.split(/(```[\s\S]*?```)/g);
       for (let i = 0; i < segments.length; i++) {
-        // Do not replace inside of code blocks.
-        if (segments[i].startsWith('```')) continue;
+        if (/^```/.test(segments[i])) continue;
         segments[i] = segments[i].replace(/^ +/gm, (match) =>
           '<span class="custom-space"></span>'.repeat(match.length)
         );
       }
       state.src = segments.join('');
     });
-    // Replace spaces in the middle of the text:
+    // Replace spaces in the middle of the text, and handle new lines
     md.renderer.rules.text = function (tokens, idx) {
       const token = tokens[idx];
       if (
@@ -86,7 +85,7 @@ config({
       }
       return token.content.replace(/ /g, '<span class="custom-space"></span>');
     };
-    // Replace arrows:
+    // Replace arrows
     md.core.ruler.after('inline', 'arrows', (state) => {
       state.tokens.forEach((token) => {
         if (token.type === 'inline' && token.children) {

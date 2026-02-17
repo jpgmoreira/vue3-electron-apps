@@ -2,3 +2,8 @@
   display: inline-block;
   width: 0.35rem;
 }
+
+.theme-dark .md-editor .md-editor-preview div.custom-new-line {
+  height: 1rem;
+  background: red;
+}

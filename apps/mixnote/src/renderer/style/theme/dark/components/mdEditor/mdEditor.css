@@ -48,7 +48,7 @@
 }
 
 .theme-dark .md-editor .md-editor-code * {
-  filter: saturate(1.25);
+  filter: saturate(1.05);
 }
 
 /* Tables */
@@ -84,7 +84,17 @@
 
 .theme-dark .md-editor-preview .task-list-item {
   margin: 0;
+  margin-left: -20px;
 }
 .theme-dark .md-editor-preview .task-list-item > span.custom-space:first-of-type {
-  width: 0;
+  width: 0px;
+}
+.theme-dark .md-editor-preview .task-list-item input {
+  margin: 0;
+}
+.theme-dark .md-editor-preview .task-list-item p {
+  display: flex;
+  gap: 1.5px;
+  align-items: center;
+  margin: 0;
 }
