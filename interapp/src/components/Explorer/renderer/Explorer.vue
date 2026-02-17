@@ -585,7 +585,9 @@
                 <span v-if="node.type === 'dir' && props.dirIcon" class="dir-icon"></span>
 
                 <input
+                  type="text"
                   v-model.trim="node.text"
+                  spellcheck="false"
                   class="node-input"
                   :class="{ selected: node.selected }"
                   :readonly="renamingNode !== node"
@@ -622,6 +624,7 @@
     background-color: transparent;
     field-sizing: content; /** CSS experimental. On recent electron versions it should work fine. */
     font-size: 15px;
+    width: fit-content !important;
   }
 
   .node-caret {
