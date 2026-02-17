@@ -62,8 +62,7 @@ config({
     md.set({ typographer: true });
     // Replace spaces in the start of lines (outside code blocks):
     md.core.ruler.before('normalize', 'preserve_leading_spaces', (state) => {
-      const src = state.src;
-      const segments = src.split(/(```[\s\S]*?```)/g);
+      const segments = state.src.split(/(```[\s\S]*?```)/g);
       for (let i = 0; i < segments.length; i++) {
         if (/^```/.test(segments[i])) continue;
         segments[i] = segments[i].replace(/^ +/gm, (match) =>
@@ -73,19 +72,9 @@ config({
       state.src = segments.join('');
     });
     // Replace spaces in the middle of the text:
-    md.renderer.rules.text = function (tokens, idx) {
-      const token = tokens[idx];
-      if (
-        token.markup === '`' ||
-        token.type === 'code_inline' ||
-        token.type === 'code_block' ||
-        token.type === 'fence'
-      ) {
-        return token.content;
-      }
-      return token.content.replace(/ /g, '<span class="custom-space"></span>');
-    };
-    // Replace arrows:
+    md.renderer.rules.text = (tokens, idx) =>
+      tokens[idx].content.replace(/ /g, '<span class="custom-space"></span>');
+    // Arrows:
     md.core.ruler.after('inline', 'arrows', (state) => {
       state.tokens.forEach((token) => {
         if (token.type === 'inline' && token.children) {
