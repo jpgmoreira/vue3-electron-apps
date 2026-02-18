@@ -74,4 +74,11 @@
 
 .theme-dark .md-editor-preview code:not(.md-editor-code code):not(pre code) {
   border: 1px solid #1a5594;
+  background: rgba(26, 85, 148, 0.15);
+}
+
+/* Blockquote */
+
+.theme-dark .md-editor-preview blockquote {
+  color: #aaa;
 }

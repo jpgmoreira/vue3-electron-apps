@@ -197,12 +197,19 @@
   /* Inline code */
   .md-editor-preview code:not(.md-editor-code code):not(pre code) {
     font-family: 'Fira Code', 'JetBrains Mono', monospace !important;
-    border-radius: 4px;
+    padding: 1px 5px;
+    border-radius: 3px;
     white-space: nowrap;
   }
   /* Horizontal rule */
   .md-editor-preview hr {
     padding: 4px;
     border-block-start-width: 2px !important;
+  }
+  /* Blockquote */
+  .md-editor-preview blockquote {
+    font-style: italic;
+    margin-left: 0;
+    padding-left: 12px;
   }
 </style>
