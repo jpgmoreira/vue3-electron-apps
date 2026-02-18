@@ -44,7 +44,6 @@
 .theme-dark .md-editor .md-editor-code {
   border: 1px solid rgb(97.4, 97.4, 97.4);
   border-radius: var(--md-theme-code-block-radius);
-  filter: contrast(1.02);
 }
 
 .theme-dark .md-editor .md-editor-code * {

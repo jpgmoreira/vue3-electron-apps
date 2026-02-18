@@ -166,7 +166,8 @@
   }
   .md-editor-code code {
     margin-top: -18px;
-    font-size: 14.8px !important;
+    font-size: 14px !important;
+    font-family: 'Liberation Mono', monospace !important;
   }
   /* Unordered lists */
   .md-editor-preview ul {
