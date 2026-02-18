@@ -199,4 +199,9 @@
     border-radius: 4px;
     white-space: nowrap;
   }
+  /* Horizontal rule */
+  .md-editor-preview hr {
+    padding: 4px;
+    border-block-start-width: 2px !important;
+  }
 </style>
