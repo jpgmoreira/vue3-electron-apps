@@ -189,8 +189,9 @@
   }
   /* Checkboxes */
   .md-editor-preview .task-list-item {
-    gap: 4px;
-    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 5px;
   }
   /* Inline code */
   .md-editor-preview code:not(.md-editor-code code):not(pre code) {
