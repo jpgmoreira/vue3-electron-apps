@@ -8,6 +8,13 @@ import hljs from 'highlight.js';
 import { config } from 'md-editor-v3';
 import { lineNumbers } from '@codemirror/view';
 
+const SPACE_WIDTH = 0.7; // ch.
+
+function getSpaceSpan(match: string) {
+  const width = SPACE_WIDTH * match.length;
+  return `<span style="display: inline-block; width: ${width}ch"></span>`;
+}
+
 const atomDarkCss = new URL('node_modules/highlight.js/styles/atom-one-dark.css', import.meta.url)
   .href;
 const katexCss = new URL('node_modules/katex/dist/katex.css', import.meta.url).href;
@@ -65,15 +72,12 @@ config({
       const segments = state.src.split(/(```[\s\S]*?```)/g);
       for (let i = 0; i < segments.length; i++) {
         if (/^```/.test(segments[i])) continue;
-        segments[i] = segments[i].replace(/^ +/gm, (match) =>
-          '<span class="custom-space"></span>'.repeat(match.length)
-        );
+        segments[i] = segments[i].replace(/^ +/gm, getSpaceSpan);
       }
       state.src = segments.join('');
     });
     // Replace spaces in the middle of the text:
-    md.renderer.rules.text = (tokens, idx) =>
-      tokens[idx].content.replace(/ /g, '<span class="custom-space"></span>');
+    md.renderer.rules.text = (tokens, idx) => tokens[idx].content.replace(/ +/gm, getSpaceSpan);
     // Arrows:
     md.core.ruler.after('inline', 'arrows', (state) => {
       state.tokens.forEach((token) => {
