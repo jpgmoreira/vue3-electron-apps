@@ -95,7 +95,6 @@
     ref="editor-ref"
     language="en-US"
     theme="dark"
-    :tabWidth="4"
     @onUploadImg="uploadImage"
     @onChange="emit('change', $event)"
     noUploadImg
