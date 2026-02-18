@@ -74,27 +74,5 @@
 /* Inline code */
 
 .theme-dark .md-editor-preview code:not(.md-editor-code code):not(pre code) {
-  font-family: 'Fira Code', 'JetBrains Mono', monospace !important;
-  border-radius: 4px;
-  white-space: nowrap;
   border: 1px solid #1a5594;
-}
-
-/* Checkboxes */
-
-.theme-dark .md-editor-preview .task-list-item {
-  margin: 0;
-  margin-left: -20px;
-}
-.theme-dark .md-editor-preview .task-list-item > span.custom-space:first-of-type {
-  width: 0px;
-}
-.theme-dark .md-editor-preview .task-list-item input {
-  margin: 0;
-}
-.theme-dark .md-editor-preview .task-list-item p {
-  display: flex;
-  gap: 1.5px;
-  align-items: center;
-  margin: 0;
 }

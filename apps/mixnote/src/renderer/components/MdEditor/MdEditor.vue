@@ -190,8 +190,13 @@
   }
   /* Checkboxes */
   .md-editor-preview .task-list-item {
-    display: flex;
-    align-items: center;
     gap: 4px;
+    margin: 0;
+  }
+  /* Inline code */
+  .md-editor-preview code:not(.md-editor-code code):not(pre code) {
+    font-family: 'Fira Code', 'JetBrains Mono', monospace !important;
+    border-radius: 4px;
+    white-space: nowrap;
   }
 </style>

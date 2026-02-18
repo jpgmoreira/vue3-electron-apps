@@ -47,6 +47,7 @@
   },
   "devDependencies": {
     "@testing-library/vue": "^8.1.0",
+    "@types/markdown-it": "^14.1.2",
     "@vitejs/plugin-vue": "^6.0.1",
     "electron": "^38.1.2",
     "electron-builder": "^25.1.8",
