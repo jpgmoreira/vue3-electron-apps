@@ -102,7 +102,6 @@
   const renamingNode = ref<Node | null>(null);
   const originalName = ref('');
   const scrollTimer = ref<ReturnType<typeof setTimeout> | undefined>(undefined);
-  const firstActivation = ref(true);
 
   const showFilesSelectedBadge = ref(false);
   const nodeContainerOffset = ref(0);
@@ -466,25 +465,14 @@
 
   // --- Hooks: ---
 
-  onActivated(async () => {
-    if (firstActivation.value) {
-      firstActivation.value = false;
-      return;
-    }
-    const newTree = await window.explorer.invoke<TreeSnapshot>(
-      TreeChannels.getPage,
-      lastScrollTop.value
-    );
-    updateTree(newTree);
-    scrollContainer.value!.scrollTop = lastScrollTop.value;
-  });
   onMounted(async () => {
-    const firstTree = await window.explorer.invoke<TreeSnapshot>(TreeChannels.getPage, 0);
+    const scrollTop = lastScrollTop.value;
+    const firstTree = await window.explorer.invoke<TreeSnapshot>(TreeChannels.getPage, scrollTop);
     updateTree(firstTree);
     hasLoaded.value = true;
     await nextTick();
     if (scrollContainer.value) {
-      scrollContainer.value.scrollTop = lastScrollTop.value;
+      scrollContainer.value.scrollTop = scrollTop;
     }
     nodeContainerOffset.value = (tree.value?.page[0]?.ui.position || 0) * rowHeight;
     window.addEventListener('click', windowClick);
