@@ -10,6 +10,8 @@ import {
   NoteFrequency,
   PersistentNote,
 } from '@common/schemas/notes';
+import { open, type Database } from 'sqlite';
+import sqlite3 from 'sqlite3';
 import { ensureDirExists } from '@interapp/utils/fileUtils';
 import { ProfileManager } from '../profileManager';
 import { TabsManager } from '../tabsManager';
@@ -21,8 +23,12 @@ import { Statistics } from '@common/schemas/statistics';
 import { ExplorerManager } from '@interapp/components/Explorer/main/explorerManager';
 import { Filters, getEmptyFilters } from '@common/schemas/filters';
 import { cloneDeep } from '@interapp/utils/utils';
+import { setDbPragmas } from '@interapp/utils/sql';
+import { Meta } from '@common/schemas/meta';
 
 export class NotesManager {
+  private db: Database | null = null;
+
   private profileId: string | null = null;
   private profileManager: ProfileManager;
   private tabsManager: TabsManager;
@@ -30,9 +36,10 @@ export class NotesManager {
   private flashcardsManager: FlashcardsManager;
   private explorerManager: ExplorerManager;
 
-  private lastReviewedAt: FileProxy<TimestampMap> | null = null;
-  private frequencies: FileProxy<FrequencyMap> | null = null;
-  private bucket: FileProxy<BooleanMap> | null = null;
+  private lastReviewedAt: TimestampMap = {};
+  private frequencies: FrequencyMap = {};
+  private bucket: BooleanMap = {};
+
   private filters: FileProxy<Filters> | null = null;
 
   private filtered: string[] = [];
@@ -62,24 +69,42 @@ export class NotesManager {
     return dirPath;
   }
 
-  private guardMaps() {
-    if (!this.lastReviewedAt) throw new Error('lastReviewedAt not set!');
-    if (!this.frequencies) throw new Error('frequencies not set!');
-    if (!this.bucket) throw new Error('bucket not set!');
+  private guardDb(db: Database | null): asserts db is Database {
+    if (!db) throw new Error('Database not initialized');
   }
 
-  public loadProfile(profileId: string) {
+  public async loadProfile(profileId: string) {
+    await this.clear();
     this.profileId = profileId;
     const dirPath = path.join(DATA_DIR, 'profileData', this.profileId);
-    const lastReviewedPath = path.join(dirPath, 'lastReviewedAt.json');
-    const frequenciesPath = path.join(dirPath, 'frequencies.json');
-    const bucketPath = path.join(dirPath, 'bucket.json');
     const filtersPath = path.join(dirPath, 'filters.json');
-    this.lastReviewedAt = new FileProxy(lastReviewedPath, {});
-    this.frequencies = new FileProxy(frequenciesPath, {});
-    this.bucket = new FileProxy(bucketPath, {});
+    const filename = path.join(dirPath, 'meta.sqlite');
+    this.db = await open({
+      filename,
+      driver: sqlite3.Database,
+    });
+    await setDbPragmas(this.db);
+    await this.createTables();
+    const records = (await this.db.all('SELECT * FROM meta')) as Meta[];
+    for (const record of records) {
+      this.lastReviewedAt[record.noteId] = record.lastReviewedAt;
+      this.frequencies[record.noteId] = record.frequency;
+      this.bucket[record.noteId] = record.bucket;
+    }
     this.filters = new FileProxy(filtersPath, getEmptyFilters());
-    this.flashcardsManager.setMaps(this.lastReviewedAt.target, this.frequencies.target);
+    this.flashcardsManager.setMaps(this.lastReviewedAt, this.frequencies);
+  }
+
+  private async createTables() {
+    this.guardDb(this.db);
+    await this.db.exec(`
+    CREATE TABLE IF NOT EXISTS meta (
+      noteId TEXT PRIMARY KEY,
+      lastReviewedAt INTEGER NOT NULL,
+      frequency TEXT NOT NULL,
+      bucket BOOLEAN NOT NULL
+    );
+  `);
   }
 
   public createNote(name: string): Note {
@@ -253,12 +278,16 @@ export class NotesManager {
     }
   }
 
-  public clear() {
+  public async clear() {
     this.flashcardsManager.clear();
     this.profileId = null;
-    this.lastReviewedAt = null;
-    this.frequencies = null;
-    this.bucket = null;
+    this.lastReviewedAt = {};
+    this.frequencies = {};
+    this.bucket = {};
     this.filters = null;
+    if (this.db) {
+      await this.db.close();
+    }
+    this.db = null;
   }
 }

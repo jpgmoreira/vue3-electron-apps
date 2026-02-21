@@ -29,6 +29,7 @@ export class SessionsManager {
   }
 
   public async loadProfile(profileId: string) {
+    await this.clear();
     const filename = path.join(DATA_DIR, 'profileData', profileId, 'sessions.sqlite');
     this.db = await open({
       filename,

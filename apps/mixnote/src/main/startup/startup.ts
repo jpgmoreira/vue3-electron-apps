@@ -32,7 +32,7 @@ export async function loadStartupData(): Promise<StartupData> {
     uiManager.loadProfile(currProfile.id);
     nodeCounterManager.loadProfile(currProfile.id);
     settingsManager.loadProfile(currProfile.id);
-    notesManager.loadProfile(currProfile.id);
+    await notesManager.loadProfile(currProfile.id);
     tabsManager.loadProfile(currProfile.id);
     const treePath = path.join(profileDir, 'tree.json');
     explorerManager.loadTree(treePath);
