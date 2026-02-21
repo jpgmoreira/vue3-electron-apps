@@ -95,16 +95,14 @@
 /* =========================================
    FREQUENCY COLOR STATES
 ========================================= */
-.theme-dark .flashcard.low .head textarea,
-.theme-dark .flashcard.low .body {
-  background: rgba(160, 60, 60, 0.18) !important;
+.theme-dark .flashcard.low .head textarea {
+  background: rgba(160, 60, 60, 0.18);
   outline: 1px solid rgba(200, 80, 80, 0.55);
   outline-offset: -1px;
 }
 
-.theme-dark .flashcard.high .head textarea,
-.theme-dark .flashcard.high .body {
-  background: rgba(60, 140, 90, 0.18) !important;
+.theme-dark .flashcard.high .head textarea {
+  background: rgba(60, 140, 90, 0.18);
   outline: 1px solid rgba(90, 200, 140, 0.55);
   outline-offset: -1px;
 }
