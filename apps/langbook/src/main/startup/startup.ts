@@ -35,7 +35,7 @@ export async function loadStartupData(): Promise<StartupData> {
     // The order of initialization below is important.
     uiManager.loadProfile(currProfile.id);
     nodeCounterManager.loadProfile(currProfile.id);
-    sessionsManager.loadProfile(currProfile.id);
+    await sessionsManager.loadProfile(currProfile.id);
     filtersManager.loadProfile(currProfile.id);
     tagsManager.loadProfile(currProfile.id);
     settingsManager.loadProfile(currProfile.id);

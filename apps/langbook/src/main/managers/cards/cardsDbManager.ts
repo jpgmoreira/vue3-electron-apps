@@ -15,11 +15,16 @@ export class CardsDbManager {
       driver: sqlite3.Database,
     });
     await setDbPragmas(this.db);
-    await this.createTables(this.db);
+    await this.createTables();
   }
 
-  private async createTables(db: Database) {
-    await db.exec(`
+  private guard(db: Database | null): asserts db is Database {
+    if (!db) throw new Error('Cards db not initialized');
+  }
+
+  private async createTables() {
+    this.guard(this.db);
+    await this.db.exec(`
     CREATE TABLE IF NOT EXISTS cards (
       id TEXT PRIMARY KEY,
       front TEXT NOT NULL,
@@ -39,7 +44,7 @@ export class CardsDbManager {
   }
 
   public async loadAllCards(): Promise<Card[]> {
-    if (!this.db) throw new Error('Db not initialized');
+    this.guard(this.db);
     const result = (await this.db.all('SELECT * FROM cards')) as DBCard[];
     return result.map(this.deserializeCard);
   }
@@ -65,7 +70,7 @@ export class CardsDbManager {
   }
 
   public async insertCard(card: Card) {
-    if (!this.db) throw new Error('Db not initialized');
+    this.guard(this.db);
     const serialized = this.serializeCard(card);
     await this.db.run(
       `
@@ -94,7 +99,7 @@ export class CardsDbManager {
   }
 
   public async updateCard(card: Card) {
-    if (!this.db) throw new Error('Db not initialized');
+    this.guard(this.db);
     const serialized = this.serializeCard(card);
     await this.db.run(
       `
@@ -123,12 +128,12 @@ export class CardsDbManager {
   }
 
   public async deleteCard(cardId: string) {
-    if (!this.db) throw new Error('Db not initialized');
+    this.guard(this.db);
     await this.db.run('DELETE FROM cards WHERE id = ?', [cardId]);
   }
 
   public async clearFilteredBucket(filtered: Card[]) {
-    if (!this.db) throw new Error('Db not initialized');
+    this.guard(this.db);
     await this.db.run('BEGIN TRANSACTION');
     try {
       const stmt = await this.db.prepare('UPDATE cards SET bucket = FALSE WHERE id = ?');
@@ -146,7 +151,7 @@ export class CardsDbManager {
   }
 
   public async clearFilteredFrequency(filtered: Card[], frequency: CardFrequency) {
-    if (!this.db) throw new Error('Db not initialized');
+    this.guard(this.db);
     await this.db.run('BEGIN TRANSACTION');
     try {
       const stmt = await this.db.prepare(`
@@ -170,17 +175,17 @@ export class CardsDbManager {
   // -- Externally managed transactions: use with caution! ---
 
   public async beginTransaction() {
-    if (!this.db) throw new Error('Db not initialized');
+    this.guard(this.db);
     await this.db.run('BEGIN TRANSACTION');
   }
 
   public async commit() {
-    if (!this.db) throw new Error('Db not initialized');
+    this.guard(this.db);
     await this.db.run('COMMIT');
   }
 
   public async rollback() {
-    if (!this.db) throw new Error('Db not initialized');
+    this.guard(this.db);
     await this.db.run('ROLLBACK');
   }
 

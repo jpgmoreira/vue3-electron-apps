@@ -78,7 +78,7 @@ export class CardsManager {
     await this.mediaManager.cardWasCreated(card, this.profileId);
     await this.dbManager.insertCard(card);
     this.profileManager.addCards(1);
-    this.sessionsManager.cardWasCreated(card);
+    await this.sessionsManager.cardWasCreated(card);
     this.tagsManager.cardWasCreated(card);
     this.cardsMap[card.id] = card;
     this.filter();
@@ -113,7 +113,7 @@ export class CardsManager {
     this.profileManager.addCards(-1);
     this.mediaManager.deleteMediaFolder(cardId, this.profileId);
     await this.dbManager.deleteCard(cardId);
-    this.sessionsManager.cardWasDeleted(card);
+    await this.sessionsManager.cardWasDeleted(card);
     this.tagsManager.cardWasDeleted(card);
     // I do not call "this.filter" here because this method
     //   can potentially be called a very large number of times
@@ -128,7 +128,7 @@ export class CardsManager {
     if (!oldCard) throw new Error('Card not found!');
     await this.mediaManager.cardWasUpdated(card, this.profileId);
     await this.dbManager.updateCard(card);
-    this.sessionsManager.cardWasUpdated(oldCard, card);
+    await this.sessionsManager.cardWasUpdated(oldCard, card);
     this.tagsManager.cardWasUpdated(oldCard, card);
     this.cardsMap[card.id] = card;
     this.filter();

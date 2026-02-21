@@ -28,11 +28,15 @@ export class HistoryManager {
     await createHistoryTables(this.db);
   }
 
+  private guard(db: Database | null): asserts db is Database {
+    if (!db) throw new Error('History DB not initialized!');
+  }
+
   public async fetchHistoryPage<T extends Oj>(
     oj: T,
     top: number
   ): Promise<FetchHistoryPageResponseDTO<T>> {
-    if (!this.db) throw new Error('History DB not initialized!');
+    this.guard(this.db);
     const data = await this.db.all<OjProblem[T][]>(
       `SELECT * FROM ${oj} ORDER BY timestamp DESC LIMIT $limit OFFSET $offset`,
       { $limit: HISTORY_PAGE_SIZE, $offset: top }
@@ -43,7 +47,7 @@ export class HistoryManager {
   }
 
   public async insertIntoHistory(problem: OjProblem[Oj]) {
-    if (!this.db) throw new Error('History DB not initialized!');
+    this.guard(this.db);
     await this.db.run('BEGIN TRANSACTION');
     try {
       const columns = Object.keys(problem);
@@ -80,7 +84,7 @@ export class HistoryManager {
   }
 
   public async replaceHistorySnapshot(snapshot: OjProblem[Oj]) {
-    if (!this.db) throw new Error('History DB not initialized!');
+    this.guard(this.db);
     await this.db.run('BEGIN TRANSACTION');
     try {
       const columns = Object.keys(snapshot);

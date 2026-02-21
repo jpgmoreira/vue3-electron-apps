@@ -22,13 +22,14 @@ export class GraphManager {
       driver: sqlite3.Database,
     });
     await setDbPragmas(this.db);
-    await this.createTables(this.db);
+    await this.createTables();
     const result = await this.db.all('SELECT * FROM graph ORDER BY date');
     return result as GraphRecord[];
   }
 
-  private async createTables(db: Database) {
-    await db.exec(`
+  private async createTables() {
+    if (!this.db) throw new Error('Database not initialized');
+    await this.db.exec(`
     CREATE TABLE IF NOT EXISTS graph (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       date INTEGER UNIQUE NOT NULL,

@@ -9,9 +9,9 @@ ipcMain.handle(InvokeChannels.createFolder, (_: IpcMainInvokeEvent): number => {
   return number;
 });
 
-ipcMain.handle(InvokeChannels.createSession, (_: IpcMainInvokeEvent): Session => {
+ipcMain.handle(InvokeChannels.createSession, async (_: IpcMainInvokeEvent): Promise<Session> => {
   const number = nodeCounterManager.getCounter().nextFile;
-  const session = sessionsManager.createSession(number);
+  const session = await sessionsManager.createSession(number);
   nodeCounterManager.increment('file');
   profileManager.addSessions(1);
   return session;
