@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-  import { ref, useTemplateRef, watch, nextTick } from 'vue';
+  import { ref, useTemplateRef, watch, nextTick, computed } from 'vue';
   import { getEmptyNote, Note, NoteFrequency } from '@common/schemas/notes';
   import { FocusIcon } from 'lucide-vue-next';
   import { cloneDeep } from '@interapp/utils/utils';
@@ -24,6 +24,13 @@
   const focus = ref(false);
 
   const localNote = ref<Note>(getEmptyNote('', 0));
+
+  const flashcardClass = computed(() => ({
+    'is-editing': props.isEditing,
+    focus: focus.value,
+    high: localNote.value.frequency === 'high',
+    low: localNote.value.frequency === 'low',
+  }));
 
   function toggleFocus() {
     focus.value = !focus.value;
@@ -88,10 +95,7 @@
 </script>
 
 <template>
-  <div
-    class="flashcard flex flex-col absolute inset-0 overflow-y-auto"
-    :class="{ 'is-editing': isEditing, focus }"
-  >
+  <div class="flashcard flex flex-col absolute inset-0 overflow-y-auto" :class="flashcardClass">
     <!-- TOP -->
     <div class="top flex justify-between items-center">
       <div class="opacity-50">{{ localNote.name }}</div>
