@@ -10,10 +10,10 @@ ipcMain.handle(InvokeChannels.createFolder, (_: IpcMainInvokeEvent): number => {
   return number;
 });
 
-ipcMain.handle(InvokeChannels.createNote, (_: IpcMainInvokeEvent): Note => {
+ipcMain.handle(InvokeChannels.createNote, async (_: IpcMainInvokeEvent): Promise<Note> => {
   const number = nodeCounterManager.getCounter().nextFile;
   const name = `Note ${number}`;
-  const note = notesManager.createNote(name);
+  const note = await notesManager.createNote(name);
   nodeCounterManager.increment('file');
   profileManager.addNotes(1);
   return note;
@@ -42,13 +42,13 @@ ipcMain.handle(
   }
 );
 
-ipcMain.handle(InvokeChannels.clearFilteredBucket, (_: IpcMainInvokeEvent) => {
-  notesManager.clearFilteredBucket();
+ipcMain.handle(InvokeChannels.clearFilteredBucket, async (_: IpcMainInvokeEvent) => {
+  await notesManager.clearFilteredBucket();
 });
 
 ipcMain.handle(
   InvokeChannels.clearFilteredFrequency,
-  (_: IpcMainInvokeEvent, frequency: NoteFrequency) => {
-    notesManager.clearFilteredFrequency(frequency);
+  async (_: IpcMainInvokeEvent, frequency: NoteFrequency) => {
+    await notesManager.clearFilteredFrequency(frequency);
   }
 );

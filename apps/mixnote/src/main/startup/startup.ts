@@ -38,7 +38,7 @@ export async function loadStartupData(): Promise<StartupData> {
     explorerManager.loadTree(treePath);
     explorerManager.registerDeleteCallback(async (node: Node) => {
       if (node.type === 'file') {
-        notesManager.deleteNote(node.id);
+        await notesManager.deleteNote(node.id);
       }
     });
     ui = uiManager.getUISettings();

@@ -89,7 +89,7 @@ export class NotesManager {
     for (const record of records) {
       this.lastReviewedAt[record.noteId] = record.lastReviewedAt;
       this.frequencies[record.noteId] = record.frequency;
-      this.bucket[record.noteId] = record.bucket;
+      this.bucket[record.noteId] = Boolean(record.bucket);
     }
     this.filters = new FileProxy(filtersPath, getEmptyFilters());
     this.flashcardsManager.setMaps(this.lastReviewedAt, this.frequencies);
@@ -107,9 +107,9 @@ export class NotesManager {
   `);
   }
 
-  public createNote(name: string): Note {
+  public async createNote(name: string): Promise<Note> {
     if (!this.profileId) throw new Error('Profile not initialized.');
-    this.guardMaps();
+    this.guardDb(this.db);
     const now = Date.now();
     const note = getEmptyNote(name, now);
     const persistent = getEmptyPersistentNote(name, now);
@@ -117,32 +117,37 @@ export class NotesManager {
     ensureDirExists(dirPath);
     const fPath = path.join(dirPath, `${note.id}.json`);
     fs.writeFileSync(fPath, JSON.stringify(persistent), 'utf-8');
-    this.lastReviewedAt!.proxy[note.id] = now;
-    this.frequencies!.proxy[note.id] = note.frequency;
-    this.bucket!.proxy[note.id] = note.bucket;
+    this.lastReviewedAt[note.id] = now;
+    this.frequencies[note.id] = note.frequency;
+    this.bucket[note.id] = note.bucket;
+    await this.db.run(
+      `INSERT INTO meta (noteId, lastReviewedAt, frequency, bucket)
+      VALUES (?, ?, ?, ?)`,
+      [note.id, now, note.frequency, note.bucket]
+    );
     return note;
   }
 
-  public deleteNote(noteId: string) {
-    this.guardMaps();
+  public async deleteNote(noteId: string) {
+    this.guardDb(this.db);
     const dirPath = this.guard(noteId);
     fs.rmSync(dirPath, { recursive: true, force: true });
     this.profileManager.addNotes(-1);
     this.tabsManager.noteWasDeleted(noteId);
-    delete this.lastReviewedAt!.proxy[noteId];
-    delete this.frequencies!.proxy[noteId];
-    delete this.bucket!.proxy[noteId];
+    delete this.lastReviewedAt[noteId];
+    delete this.frequencies[noteId];
+    delete this.bucket[noteId];
+    await this.db.run('DELETE FROM meta WHERE noteId = ?', [noteId]);
   }
 
   public getNote(noteId: string): Note {
-    this.guardMaps();
     const dirPath = this.guard(noteId);
     const notePath = path.join(dirPath, `${noteId}.json`);
     const persistent = JSON.parse(fs.readFileSync(notePath, 'utf-8')) as PersistentNote;
     let note: Note = {
       ...persistent,
-      bucket: this.bucket!.target[noteId],
-      frequency: this.frequencies!.target[noteId],
+      bucket: this.bucket[noteId],
+      frequency: this.frequencies[noteId],
     };
     note = this.mediaManager.preparePaths(note, dirPath);
     return note;
@@ -161,33 +166,37 @@ export class NotesManager {
 
   public async updateNote(note: Note) {
     if (!this.profileId) throw new Error('Profile not initialized.');
-    this.guardMaps();
+    this.guardDb(this.db);
     await this.mediaManager.noteWasUpdated(note, this.profileId);
     this.atomicallyUpdateNote(note);
-    const frequenciesProxy = this.frequencies!.proxy;
-    const bucketProxy = this.bucket!.proxy;
-    if (note.frequency !== frequenciesProxy[note.id]) {
-      frequenciesProxy[note.id] = note.frequency;
+    if (note.frequency !== this.frequencies[note.id]) {
+      this.frequencies[note.id] = note.frequency;
+      await this.db.run('UPDATE meta SET frequency = ? WHERE noteId = ?', [
+        note.frequency,
+        note.id,
+      ]);
     }
-    if (note.bucket !== bucketProxy[note.id]) {
-      bucketProxy[note.id] = note.bucket;
+    if (note.bucket !== this.bucket[note.id]) {
+      this.bucket[note.id] = note.bucket;
+      await this.db.run('UPDATE meta SET bucket = ? WHERE noteId = ?', [note.bucket, note.id]);
     }
   }
 
   public async getFlashcard(noteId: string | null): Promise<Note | null> {
-    this.guardMaps();
     if (noteId) return this.getNote(noteId);
+    this.guardDb(this.db);
     const nextId = this.flashcardsManager.getNextFlashcard();
     if (!nextId) return null;
-    this.lastReviewedAt!.proxy[nextId] = Date.now();
+    const now = Date.now();
+    this.lastReviewedAt[nextId] = now;
+    await this.db.run('UPDATE meta SET lastReviewedAt = ? WHERE noteId = ?', [now, nextId]);
     return this.getNote(nextId);
   }
 
   public getStatistics(): Statistics {
-    this.guardMaps();
     this.filter();
-    const frequencies = this.frequencies!.target;
-    const bucket = this.bucket!.target;
+    const frequencies = this.frequencies;
+    const bucket = this.bucket;
     const total = Object.keys(frequencies).length;
     const totalBucket = Object.values(bucket).filter(Boolean).length;
     const totalLow = Object.values(frequencies).filter((v) => v === 'low').length;
@@ -213,13 +222,12 @@ export class NotesManager {
   }
 
   private filter() {
-    this.guardMaps();
     if (!this.filters) throw new Error('Filters not set!');
     const filters = this.filters.target;
-    const allIds = new Set(Object.keys(this.frequencies!.target));
+    const allIds = new Set(Object.keys(this.frequencies));
     const selectedNodes = this.explorerManager.getSelectedNodes();
-    const bucket = this.bucket!.target;
-    const frequencies = this.frequencies!.target;
+    const bucket = this.bucket;
+    const frequencies = this.frequencies;
     // Explorer:
     const explorerIds = selectedNodes.filter((n) => allIds.has(n));
     // Bucket:
@@ -261,20 +269,43 @@ export class NotesManager {
     this.flashcardsManager.recomputeQueues(this.filtered);
   }
 
-  public clearFilteredBucket() {
-    this.guardMaps();
-    for (const id of this.filtered) {
-      this.bucket!.proxy[id] = false;
+  public async clearFilteredBucket() {
+    this.guardDb(this.db);
+    await this.db.run('BEGIN TRANSACTION');
+    try {
+      const stmt = await this.db.prepare('UPDATE meta SET bucket = FALSE WHERE noteId = ?');
+      for (const id of this.filtered) {
+        await stmt.run([id]);
+        this.bucket[id] = false;
+      }
+      await stmt.finalize();
+      await this.db.run('COMMIT');
+    } catch (err) {
+      await this.db.run('ROLLBACK');
+      console.error('Failed clearing bucket:', err);
     }
   }
 
-  public clearFilteredFrequency(frequency: NoteFrequency) {
-    this.guardMaps();
-    for (const id of this.filtered) {
-      const proxy = this.frequencies!.proxy;
-      if (proxy[id] === frequency) {
-        proxy[id] = 'normal';
+  public async clearFilteredFrequency(frequency: NoteFrequency) {
+    this.guardDb(this.db);
+    await this.db.run('BEGIN TRANSACTION');
+    try {
+      const stmt = await this.db.prepare(`
+        UPDATE meta
+        SET frequency = 'normal'
+        WHERE noteId = ?
+      `);
+      for (const id of this.filtered) {
+        if (this.frequencies[id] === frequency) {
+          await stmt.run([id]);
+          this.frequencies[id] = 'normal';
+        }
       }
+      await stmt.finalize();
+      await this.db.run('COMMIT');
+    } catch (err) {
+      await this.db.run('ROLLBACK');
+      console.error('Failed clearing frequency:', err);
     }
   }
 
