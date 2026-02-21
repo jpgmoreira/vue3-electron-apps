@@ -12,7 +12,6 @@
     onBeforeUnmount,
     useTemplateRef,
     computed,
-    onActivated,
   } from 'vue';
   import { useToastStore } from '@interapp/store/toast';
   import { GenericResponseDTO } from '@interapp/dto/genericResponseDTO';
@@ -418,22 +417,21 @@
   // --- Events: ---
 
   function handleScroll() {
-    if (!scrollContainer.value) return;
     contextState.visible = false;
-    const scrollTop = scrollContainer.value.scrollTop;
-    if (scrollTop === lastScrollTop.value) return; // Do not react on x scroll;
-    lastScrollTop.value = scrollTop;
+    const container = scrollContainer.value;
+    if (!container) return;
+    const pre = container.scrollTop;
+    if (pre === lastScrollTop.value) return; // Do not react on x scroll;
     clearTimeout(scrollTimer.value);
     scrollTimer.value = setTimeout(async () => {
       const container = scrollContainer.value;
       if (!container) return;
-      const newTree = await window.explorer.invoke<TreeSnapshot>(
-        TreeChannels.getPage,
-        lastScrollTop.value
-      );
+      const curr = container.scrollTop;
+      const newTree = await window.explorer.invoke<TreeSnapshot>(TreeChannels.getPage, curr);
       updateTree(newTree);
       nodeContainerOffset.value = (tree.value?.page[0].ui.position || 0) * rowHeight; // This is the key! Using a computed-value causes flickering.
-      emit('scroll', lastScrollTop.value);
+      emit('scroll', curr);
+      lastScrollTop.value = curr;
     }, 40);
   }
 
