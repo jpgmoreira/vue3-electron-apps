@@ -22,7 +22,7 @@ export class NodeCounterManager {
   }
 
   public loadProfile(profileId: string) {
-    const fPath = path.join(DATA_DIR, 'profileData', profileId, 'nodeCounter.json');
+    const fPath = path.join(DATA_DIR, 'profileData', profileId, 'counter.json');
     this._proxy = new FileProxy(fPath, getEmptyNodeCounter());
   }
 
