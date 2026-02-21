@@ -103,14 +103,12 @@
   const scrollTimer = ref<ReturnType<typeof setTimeout> | undefined>(undefined);
 
   const showFilesSelectedBadge = ref(false);
-  const nodeContainerOffset = ref(0);
 
   const scrollContainer = useTemplateRef('scroll-container');
   const explorer = useTemplateRef('explorer');
 
-  const ghostStyle = computed(() => ({
-    height: `${rowHeight * (tree.value?.nSurfaceNodes || 0) + paddingBottom}px`,
-  }));
+  const ghostStyle = ref({ height: '0px' });
+  const nodeContainerStyle = ref({ transform: 'translateY(0)px' });
 
   const selectedFilesText = computed(() => {
     if (!tree.value) return '0 files';
@@ -385,6 +383,8 @@
       emit('file-selection-changed');
     }
     tree.value = newTree;
+    ghostStyle.value.height = `${rowHeight * newTree.nSurfaceNodes + paddingBottom}px`;
+    nodeContainerStyle.value.transform = `translateY(${rowHeight * newTree.page[0]?.ui.position || 0}px)`;
   }
 
   function getNodeIndentStyle(node: Node) {
@@ -424,15 +424,12 @@
     if (pre === lastScrollTop.value) return; // Do not react on x scroll;
     clearTimeout(scrollTimer.value);
     scrollTimer.value = setTimeout(async () => {
-      const container = scrollContainer.value;
-      if (!container) return;
       const curr = container.scrollTop;
       const newTree = await window.explorer.invoke<TreeSnapshot>(TreeChannels.getPage, curr);
       updateTree(newTree);
-      nodeContainerOffset.value = (tree.value?.page[0].ui.position || 0) * rowHeight; // This is the key! Using a computed-value causes flickering.
       emit('scroll', curr);
       lastScrollTop.value = curr;
-    }, 40);
+    }, 60);
   }
 
   function containerMouseEnter() {
@@ -472,7 +469,6 @@
     if (scrollContainer.value) {
       scrollContainer.value.scrollTop = scrollTop;
     }
-    nodeContainerOffset.value = (tree.value?.page[0]?.ui.position || 0) * rowHeight;
     window.addEventListener('click', windowClick);
     window.addEventListener('keydown', windowKeyDown);
     window.addEventListener('keyup', windowKeyUp);
@@ -537,10 +533,7 @@
     >
       <div class="relative">
         <div :style="ghostStyle"></div>
-        <div
-          :style="{ transform: `translateY(${nodeContainerOffset}px)` }"
-          class="nodes-container absolute top-0 left-0"
-        >
+        <div :style="nodeContainerStyle" class="nodes-container absolute top-0 left-0">
           <div
             v-for="node in tree.page"
             :key="node.id"
